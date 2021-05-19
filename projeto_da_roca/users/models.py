@@ -33,3 +33,23 @@ class Profile(models.Model):
     profile_type = models.CharField(max_length=10, default='customer', choices= PROFILE_TYPE_CHOICES )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profiles')
 
+
+class ServiceAddress(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
+    city = models.CharField(max_length=50, null=False, blank=False)
+    state = models.CharField(max_length=2, null=False, blank=False)
+
+class DeliveryTime(models.Model):
+    DAYS = (
+        ('monday', 'Segunda-feira'),
+        ('tuesday', 'Terça-feira'),
+        ('wednesday', 'Quarta-feira'),
+        ('thursday', 'Quinta-feira'),
+        ('friday', 'Sexta-feira'),
+        ('saturday', 'Sábado'),
+        ('sunday', 'Domingo'),
+    )
+    service_address = models.ForeignKey(ServiceAddress, on_delete=models.CASCADE, null=False, blank=False)
+    time = models.TimeField(null=False, blank=False)
+    day = models.CharField(max_length=15, null=False, blank=False, choices=DAYS)
+
