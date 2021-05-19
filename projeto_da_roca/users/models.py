@@ -5,12 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    USER_TYPE_CHOICES = (
-        ('admin', 'Administrador'),
-        ('customer', 'Cliente'),
-        ('producer', 'Produtor'),
-    )
-    user_type = models.CharField(max_length=10, default='customer', choices=USER_TYPE_CHOICES)
+    
     cpf = models.CharField(max_length=11, null=True, blank=True)
     phone_number = models.CharField(max_length=50, null=True, blank=True)
 
@@ -28,3 +23,13 @@ class Address(models.Model):
     district = models.CharField(max_length=100, null=True, blank=True)
     street = models.CharField(max_length=100, null=True, blank=True)
     house_number = models.CharField(max_length=10, null=True, blank=True)
+
+class Profile(models.Model):
+    PROFILE_TYPE_CHOICES = (
+        ('admin', 'Administrador'),
+        ('customer', 'Cliente'),
+        ('producer', 'Produtor'),
+    )
+    profile_type = models.CharField(max_length=10, default='customer', choices= PROFILE_TYPE_CHOICES )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profiles')
+
