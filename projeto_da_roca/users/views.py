@@ -11,11 +11,10 @@ from django.shortcuts import render
 def list_users(request):
     now = datetime.datetime.now()
     html = "<html><body>It is now %s.</body></html>" % now
-
     return HttpResponse(html)
 
 
 def cadastro_cliente(request):
-
     return render(request, 'cadastro_cliente.html')
+
 
