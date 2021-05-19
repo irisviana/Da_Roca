@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+    <!-- CSS link -->
+
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo.css' %}">
+
+    <!-- jQuery CDN -->
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- jQuery mask CDN -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <!-- JS link -->
+
+    <script href="{% static 'js/scripts.js' %}"></script>
+
+
+    <title>Da Roça - Cadastro</title>
+
+  </head>
+
+  <body>
+
+    <div class="container">
+
+        <div class="row">
+
+            <div class="col-12" align="center">
+
+                <img href="{% static 'images/logo.png' %}">
+
+                <h3 class="mb-5">Cadastro de informações pessoais</h3>
+
+                <form>
+
+                    <div class="form-group mt-5">
+
+                        <label class="titulos">Dados Pessoais</label>
+
+                        <input class="form-control" type="text" id="nome_cliente" required="required" placeholder="Nome">
+
+                        <input class="form-control mt-4" type="email" id="email_cliente" required="required" placeholder="Email">
+
+                        <input class="form-control mt-4" type="text" id="cpf_cliente" required="required" placeholder="CPF" title="Digite o CPF no formato nnn.nnn.nnn-nn" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}">
+
+                        <input class="form-control mt-4 mb-4" type="text" id="telefone_cliente" required="required" placeholder="Telefone" title="Digite o Telefone com código de área" pattern="\d{11-12}"
+                        >
+
+                    </div>
+
+                     <div class="form-group mt-5">
+
+                        <label class="titulos">Dados de endereço</label>
+
+                        <input class="form-control" type="text" id="CEP_endereco" required="required" placeholder="CEP" title="Digite o CEP no formato nnnnn-nnn" pattern= "\d{5}-?\d{3}">
+
+                        <input class="form-control mt-4" type="Cidade" id="cidade_endereco" required="required" placeholder="Cidade">
+
+                        <input class="form-control mt-4" type="text" id="rua_endereco" required="required" placeholder="Rua">
+
+                        <input class="form-control mt-4 mb-4" type="text" id="numero_endereco" required="required" placeholder="Número"
+                        >
+
+                        <input class="form-control mt-4 mb-4" type="text" id="bairro_endereco" required="required" placeholder="Bairro"
+                        >
+
+                        <select class="form-control" id="estado_endereco" required="required">
+                            <option>Escolha seu estado</option>
+                            <option>AC</option>
+                            <option>AL</option>
+                            <option>AP</option>
+                            <option>AM</option>
+                            <option>BA</option>
+                            <option>CE</option>
+                            <option>DF</option>
+                            <option>ES</option>
+                            <option>GO</option>
+                            <option>MA</option>
+                            <option>MT</option>
+                            <option>MS</option>
+                            <option>MG</option>
+                            <option>PA</option>
+                            <option>PB</option>
+                            <option>PR</option>
+                            <option>PE</option>
+                            <option>PI</option>
+                            <option>RJ</option>
+                            <option>RN</option>
+                            <option>RS</option>
+                            <option>RO</option>
+                            <option>RR</option>
+                            <option>SC</option>
+                            <option>SP</option>
+                            <option>SE</option>
+                            <option>TO</option>
+                        </select>
+
+                    </div>
+
+                    <div class="form-group mt-5">
+
+                        <label class="titulos">Cadastre uma senha</label>
+
+                        <input class="form-control" type="password" id="senha_cliente" required="required" placeholder="Digite uma senha">
+
+                        <input class="form-control mt-4" type="password" id="senha_confirmada_cliente" required="required" placeholder="Digite novamente sua senha">
+
+                    </div>
+
+                    <button type="submit" id="enviar_dados" class="btn btn-outline-success btn-lg mt-3 mb-4" onclick= "return validarSenha()">Enviar</button>
+                </form>
+
+            </div><!--fim div formulario-->
+
+        </div> <!--fim row principal-->
+
+    </div> <!--fim container da pagina-->
+
+    <footer>
+       <div class="row">
+           <div class="col-12" align="center">
+               <a href="#">Criando uma conta você concorda com nossos termos & privacidades</a>
+           </div>
+       </div>
+    </footer>
+
+
+
+
+
+
+    <!-- JavaScript (Opcional) -->
+    <!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
