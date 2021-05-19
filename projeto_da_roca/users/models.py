@@ -34,3 +34,16 @@ class ServiceAddress(models.Model):
     city = models.CharField(max_length=50, null=False, blank=False)
     state = models.CharField(max_length=2, null=False, blank=False)
 
+class DeliveryTime(models.Model):
+    DAYS = (
+        ('monday', 'Segunda-feira'),
+        ('tuesday', 'Terça-feira'),
+        ('wednesday', 'Quarta-feira'),
+        ('thursday', 'Quinta-feira'),
+        ('friday', 'Sexta-feira'),
+        ('saturday', 'Sábado'),
+        ('sunday', 'Domingo'),
+    )
+    service_address = models.ForeignKey(ServiceAddress, on_delete=models.CASCADE, null=False, blank=False)
+    time = models.TimeField(null=False, blank=False)
+    day = models.CharField(max_length=15, null=False, blank=False, choices=DAYS)
