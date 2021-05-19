@@ -16,5 +16,3 @@ def list_users(request):
 
 def cadastro_cliente(request):
     return render(request, 'cadastro_cliente.html')
-
-
