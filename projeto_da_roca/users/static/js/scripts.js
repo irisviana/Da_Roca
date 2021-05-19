@@ -17,3 +17,4 @@ $(document).ready(function($){
         $("#telefone_cliente").mask("(00)00000-0000");
         $("#CEP_endereco").mask("00000-000");
 });
+
