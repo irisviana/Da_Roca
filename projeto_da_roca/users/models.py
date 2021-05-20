@@ -23,6 +23,7 @@ class Address(models.Model):
     street = models.CharField(max_length=100, null=True, blank=True)
     house_number = models.CharField(max_length=10, null=True, blank=True)
 
+
 class Profile(models.Model):
     PROFILE_TYPE_CHOICES = (
         ('admin', 'Administrador'),
@@ -32,10 +33,12 @@ class Profile(models.Model):
     profile_type = models.CharField(max_length=10, default='customer', choices= PROFILE_TYPE_CHOICES )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profiles')
 
+
 class ServiceAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
     city = models.CharField(max_length=50, null=False, blank=False) 
     state = models.CharField(max_length=2, null=False, blank=False)
+
 
 class DeliveryTime(models.Model):
     DAYS = (
