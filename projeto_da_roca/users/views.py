@@ -2,7 +2,6 @@ import datetime
 
 from django.http import HttpResponse
 
-from django.shortcuts import render
 from django.shortcuts import render,redirect,reverse
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
@@ -32,11 +31,14 @@ def loginPage(request):
             login(request, user)
             return redirect('home')
 
+
         else:
+
             messages.error(request, 'email ou senha estão incorretos')
 
-    return render(request, 'registration/login.html')
-
+            return render(request, 'registration/login.html')
 
 def home(request):
+
     return render(request, 'home.html')
+
