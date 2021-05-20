@@ -31,13 +31,13 @@
                     <td>
                         <form action="{% url 'horarioentrega-deletar' %}" method="post">
                             {% csrf_token %}
-                            <input type="hidden" name="horarioEntregaId" value="{{ horarioEntrega.id }}">
+                            <input type="hidden" name="horarioEntregaId" value="{{ delivery_time.id }}">
                             <input type="submit" value="Remover">
                         </form>
                     </td>
-                    <td>{{ horarioEntrega.hora }}</td>
-                    <td>{{ horarioEntrega.dia }}</td>
-                    <td>{{ horarioEntrega.enderecoAtendimento.id }}</td>
+                    <td>{{ delivery_time.hora }}</td>
+                    <td>{{ delivery_time.dia }}</td>
+                    <td>{{ delivery_time.enderecoAtendimento.id }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
