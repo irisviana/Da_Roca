@@ -4,51 +4,51 @@ from django.contrib.auth.models import AbstractUser
 # Create your models here.
 
 
-class User(AbstractUser):
+class Usuario(AbstractUser):
     cpf = models.CharField(max_length=11, null=True, blank=True)
-    phone_number = models.CharField(max_length=50, null=True, blank=True)
+    numeroTelefone = models.CharField(max_length=50, null=True, blank=True)
 
 
-class Address(models.Model):
-    ADDRESS_TYPE_CHOICES = (
-        ('user', 'Usuário'),
+class Endereco(models.Model):
+    OPCOES_TIPO_ENDERECO = (
+        ('usuario', 'Usuário'),
         ('order', 'Pedido'),
     )
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    address_type = models.CharField(max_length=5, default='user', choices=ADDRESS_TYPE_CHOICES)
-    zip_code = models.CharField(max_length=20, null=True, blank=True)
-    state = models.CharField(max_length=2, null=True, blank=True)
-    city = models.CharField(max_length=100, null=True, blank=True)
-    district = models.CharField(max_length=100, null=True, blank=True)
-    street = models.CharField(max_length=100, null=True, blank=True)
-    house_number = models.CharField(max_length=10, null=True, blank=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)
+    tipoEndereco = models.CharField(max_length=5, default='user', choices=OPCOES_TIPO_ENDERECO)
+    cep = models.CharField(max_length=20, null=True, blank=True)
+    estado = models.CharField(max_length=2, null=True, blank=True)
+    cidade = models.CharField(max_length=100, null=True, blank=True)
+    bairro = models.CharField(max_length=100, null=True, blank=True)
+    rua = models.CharField(max_length=100, null=True, blank=True)
+    numeroCasa = models.CharField(max_length=10, null=True, blank=True)
 
-class Profile(models.Model):
-    PROFILE_TYPE_CHOICES = (
+class Perfil(models.Model):
+    OPCOES_TIPO_PERFIL = (
         ('admin', 'Administrador'),
-        ('customer', 'Cliente'),
-        ('producer', 'Produtor'),
+        ('cliente', 'Cliente'),
+        ('produtor', 'Produtor'),
     )
-    profile_type = models.CharField(max_length=10, default='customer', choices= PROFILE_TYPE_CHOICES )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profiles')
+    tipoPerfil = models.CharField(max_length=10, default='cliente', choices= OPCOES_TIPO_PERFIL )
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='perfil')
 
 
-class ServiceAddress(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
-    city = models.CharField(max_length=50, null=False, blank=False)
-    state = models.CharField(max_length=2, null=False, blank=False)
+class EnderecoAtendimento(models.Model):
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, null=False, blank=False)
+    cidade = models.CharField(max_length=50, null=False, blank=False)
+    estado = models.CharField(max_length=2, null=False, blank=False)
 
-class DeliveryTime(models.Model):
-    DAYS = (
-        ('monday', 'Segunda-feira'),
-        ('tuesday', 'Terça-feira'),
-        ('wednesday', 'Quarta-feira'),
-        ('thursday', 'Quinta-feira'),
-        ('friday', 'Sexta-feira'),
-        ('saturday', 'Sábado'),
-        ('sunday', 'Domingo'),
+class HorarioEntrega(models.Model):
+    DIAS = (
+        ('segunda', 'Segunda-feira'),
+        ('terca', 'Terça-feira'),
+        ('quarta', 'Quarta-feira'),
+        ('quinta', 'Quinta-feira'),
+        ('sexta', 'Sexta-feira'),
+        ('sabado', 'Sábado'),
+        ('domingo', 'Domingo'),
     )
-    service_address = models.ForeignKey(ServiceAddress, on_delete=models.CASCADE, null=False, blank=False)
-    time = models.TimeField(null=False, blank=False)
-    day = models.CharField(max_length=15, null=False, blank=False, choices=DAYS)
+    horarioEntrega = models.ForeignKey(EnderecoAtendimento, on_delete=models.CASCADE, null=False, blank=False)
+    hora = models.TimeField(null=False, blank=False)
+    dia = models.CharField(max_length=15, null=False, blank=False, choices=DIAS)
 
