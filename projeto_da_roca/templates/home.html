@@ -1,0 +1,12 @@
+<!-- templates/home.html -->
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+{% else %}
+  <p>Você nã está logado</p>
+  <a href="{% url 'login' %}">Log In</a>
+{% endif %}
+{% endblock %}
