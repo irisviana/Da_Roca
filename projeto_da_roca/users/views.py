@@ -2,12 +2,12 @@ import datetime
 import json
 
 from django.http import HttpResponse
-from django.http.response import JsonResponse
 from django.shortcuts import render,redirect,reverse
 from django.contrib.auth import login, authenticate 
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm 
 from .models import EnderecoAtendimento, Usuario
+
 
 # Create your views here.
 
@@ -17,8 +17,11 @@ def list_users(request):
     html = "<html><body>It is now %s.</body></html>" % now
     return HttpResponse(html)
 
-def loginPage(request):
+def cadastro_cliente(request):
+    return render(request, 'cadastro_cliente.html')
 
+
+def loginPage(request):
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -27,7 +30,6 @@ def loginPage(request):
         if user is not None:
             login(request, user)
             return redirect('home')
-        
         else:
             messages.error(request,'email ou senha estão incorretos')
         
