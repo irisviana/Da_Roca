@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horários de Entrega</title>
+</head>
+<body>
+    <header>
+
+    </header>
+    <div class="body">
+        <h3>Horários de Entrega</h3>
+        <a href="{% url 'horarioentrega-cadastro' %}">Novo horário de entrega</a>
+        {% if mensagem %}
+            <p>{{ mensagem }}</p>
+        {% endif %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Ações</th>
+                    <th>Id</th>
+                    <th>Dia</th>
+                    <th>Hora</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for horarioEntrega in horariosEntrega %}
+                <tr>
+                    <td>
+                        <form action="{% url 'horarioentrega-deletar' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="horarioEntregaId" value="{{ horarioEntrega.id }}">
+                            <input type="submit" value="Remover">
+                        </form>
+                    </td>
+                    <td>{{ horarioEntrega.hora }}</td>
+                    <td>{{ horarioEntrega.dia }}</td>
+                    <td>{{ horarioEntrega.enderecoAtendimento.id }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <footer>
+
+    </footer>
+</body>
+</html>

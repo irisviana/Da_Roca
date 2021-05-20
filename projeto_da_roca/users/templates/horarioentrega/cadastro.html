@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+
+    </header>
+    <div class="body">
+        <h3>Novo horário de entrega</h3>
+        <form action="{% url 'horarioentrega-cadastro' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="endereco-atendimento">Endereço Atendimento</label>
+                <input type="number" name="enderecoAtendimentoId" id="endereco-atendimento">
+            </div>
+            <div class="form-group">
+                <label for="hora">Hora</label>
+                <input type="time" name="hora" id="hora">
+            </div>
+            <div class="form-group">
+                <label for="dia">Dia</label>
+                <select name="dia" id="dia">
+                    <option value="segunda">Segunda-feira</option>
+                    <option value="terca">Terça-feira</option>
+                    <option value="quarta">Quarta-feira</option>
+                    <option value="quinta">Quinta-feira</option>
+                    <option value="sexta">Sexta-feira</option>
+                    <option value="sabado">Sábado</option>
+                    <option value="domingo">Domingo</option>
+                </select>
+            </div>
+            <button type="submit">Cadastrar</button>
+        </form>
+    </div>
+    <footer>
+
+    </footer>
+</body>
+</html>

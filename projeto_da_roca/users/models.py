@@ -15,7 +15,7 @@ class Endereco(models.Model):
         ('order', 'Pedido'),
     )
     usuario = models.ForeignKey(Usuario, on_delete=models.SET_NULL, null=True, blank=True)
-    tipoEndereco = models.CharField(max_length=5, default='user', choices=OPCOES_TIPO_ENDERECO)
+    tipoEndereco = models.CharField(max_length=10, default='user', choices=OPCOES_TIPO_ENDERECO)
     cep = models.CharField(max_length=20, null=True, blank=True)
     estado = models.CharField(max_length=2, null=True, blank=True)
     cidade = models.CharField(max_length=100, null=True, blank=True)
@@ -48,7 +48,7 @@ class HorarioEntrega(models.Model):
         ('sabado', 'Sábado'),
         ('domingo', 'Domingo'),
     )
-    horarioEntrega = models.ForeignKey(EnderecoAtendimento, on_delete=models.CASCADE, null=False, blank=False)
+    enderecoAtendimento = models.ForeignKey(EnderecoAtendimento, on_delete=models.CASCADE, null=False, blank=False)
     hora = models.TimeField(null=False, blank=False)
     dia = models.CharField(max_length=15, null=False, blank=False, choices=DIAS)
 
