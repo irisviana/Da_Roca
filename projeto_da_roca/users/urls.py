@@ -5,4 +5,5 @@ urlpatterns = [
     path('', list_users),
     path('cadastro_cliente/', cadastro_cliente, name='cadastro_cliente'),
     path('horarioentrega/listar', HorarioEntregaView.listarHorarioEntrega, name='horarioentrega-listar'),
+    path('horarioentrega/cadastro', HorarioEntregaView.criarHorarioEntrega, name='horarioentrega-cadastro'),
 ]
