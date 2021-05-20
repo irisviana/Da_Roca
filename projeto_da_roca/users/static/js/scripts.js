@@ -1,7 +1,7 @@
 
 
 function validarSenha(){
-   var senha, senha2
+   var senha, senha2;
    senha = document.getElementById("senha_cliente").value;
    senha2 = document.getElementById("senha_confirmada_cliente").value;
 
