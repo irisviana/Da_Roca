@@ -1,13 +1,13 @@
 import datetime
 import json
 
+from django.forms.models import model_to_dict
 from django.http import HttpResponse
 from django.shortcuts import render,redirect,reverse
 from django.contrib.auth import login, authenticate 
 from django.contrib import messages
 from django.contrib.auth.forms import AuthenticationForm 
 from .models import EnderecoAtendimento, Usuario, HorarioEntrega
-
 
 # Create your views here.
 
@@ -81,12 +81,20 @@ class EnderecoAtendimentoView():
 
         return render(request, 'htmlListagemDoServiceAddress', { "mensagem" : mensagem })
     
-class DeliveryTimeView():
+class HorarioEntregaView():
 
-    def lerHorarioEntrega(self, request):
-        return render(request, 'usuario/horarioentrega/home.html')
+    @classmethod
+    def listarHorarioEntrega(self, request):
 
+        horariosEntrega = HorarioEntrega.objects.all()
+
+        return render(request, 'horarioentrega/home.html', {
+            "horariosEntrega": horariosEntrega,
+        })
+
+    @classmethod
     def criarHorarioEntrega(self, request):
+        mensagem = ''
         if request.method == 'POST':
             enderecoAtendimentoId = request.POST['enderecoAtendimentoId']
             hora = request.POST['hora']
@@ -101,10 +109,11 @@ class DeliveryTimeView():
 
             mensagem = 'Horário de entrega criado com sucesso.'
         
-        return render(request, 'usuario/horarioentrega/home.html', {
-            'mensagem': mensagem if mensagem else '',
+        return render(request, 'horarioentrega/cadastro.html', {
+            'mensagem': mensagem,
         })
 
+    @classmethod
     def atualizerHorarioEntrega(self, request):
         if request.mothod == 'POST':
             horarioEntregaId = request.POST['horarioEntregaId']
@@ -123,20 +132,27 @@ class DeliveryTimeView():
             'mensagem': mensagem if mensagem else '',
         })
 
+    @classmethod
     def deletarHorarioEntrega(self, request):
-        if request.mothod == 'POST':
+        mensagem = ''
+        if request.method == 'POST':
             horarioEntregaId = request.POST['horarioEntregaId']
-            hora = request.POST['hora']
-            dia = request.POST['dia']
 
-            horarioEntrega = HorarioEntrega.objects.get(id = horarioEntregaId)
+            try:
+                horarioEntrega = HorarioEntrega.objects.get(id = horarioEntregaId)
+                horarioEntrega.delete()
 
-            horarioEntrega.delete()
+                mensagem = 'Horário de entrega removido com sucesso.'
+            except HorarioEntrega.DoesNotExist as e:
+                print(str(e))
+                mensagem = 'Horário de entrega não existe.'
 
-            mensagem = 'Horário de entrega removido com sucesso.'
+            horariosEntrega = HorarioEntrega.objects.all()
 
-        return render(request, 'usuario/horarioentrega/home.html', {
-            'mensagem': mensagem if mensagem else '',
+
+        return render(request, 'horarioentrega/home.html', {
+            'mensagem': mensagem,
+            'horariosEntrega': horariosEntrega,
         })
 
 
