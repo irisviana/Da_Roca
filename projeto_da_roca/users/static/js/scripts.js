@@ -1,10 +1,11 @@
 
 
 function validarSenha(){
-   senha = document.getElementById('senha_cliente').value;
-   senha2 = document.getElementById('senha_confirmada_cliente').value;
+   var senha, senha2
+   senha = document.getElementById("senha_cliente").value;
+   senha2 = document.getElementById("senha_confirmada_cliente").value;
 
-   if(senha!= senha2) {
+   if(senha!== senha2) {
        alert("As senhas não conferem, verifique por favor !");
        return false;
    }
