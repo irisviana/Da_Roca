@@ -1,18 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Horários de Entrega</title>
-</head>
-<body>
-    <header>
+{% block t %}
 
-    </header>
-    <div class="body">
+{% endblock %}
+{% block content %}
+<div class="body">
         <h3>Horários de Entrega</h3>
-        <a href="{% url 'horarioentrega-cadastro' %}">Novo horário de entrega</a>
+        <a href="{% url 'create_delivery_time' %}">Novo horário de entrega</a>
         {% if mensagem %}
             <p>{{ mensagem }}</p>
         {% endif %}
@@ -26,25 +18,24 @@
                 </tr>
             </thead>
             <tbody>
-                {% for horarioEntrega in horariosEntrega %}
+                {% for delivery_time in delivery_times %}
                 <tr>
                     <td>
-                        <form action="{% url 'horarioentrega-deletar' %}" method="post">
+                        <form action="{% url 'delete_delivery_time' %}" method="post">
                             {% csrf_token %}
                             <input type="hidden" name="horarioEntregaId" value="{{ delivery_time.id }}">
                             <input type="submit" value="Remover">
                         </form>
                     </td>
-                    <td>{{ delivery_time.hora }}</td>
-                    <td>{{ delivery_time.dia }}</td>
-                    <td>{{ delivery_time.enderecoAtendimento.id }}</td>
+                    <td>{{ delivery_time.time }}</td>
+                    <td>{{ delivery_time.day }}</td>
+                    <td>{{ delivery_time.service_address.id }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    <footer>
+{% endblock %}
+    <title>Horários de Entrega</title>
 
-    </footer>
-</body>
-</html>
+    

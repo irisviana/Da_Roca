@@ -1,53 +1,20 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="pt-br">
-  <head>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-
-    <!-- CSS link -->
-
-    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-
-    <!-- jQuery CDN -->
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-
-    <!-- jQuery mask CDN -->
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <!-- JS link -->
-
-    <script href="{% static 'static/js/scripts.js' %}"></script>
-
-
+{% block title %}
     <title>Da Roça - Cadastro</title>
 
-  </head>
+{% endblock %}
 
-  <body>
-
-    <div class="container">
-
+{% block content %}
         <div class="row">
 
             <div class="col-12" align="center">
-
                 <img href="{% static 'static/images/logo.png' %}">
-
                 <h3 class="mb-5">Cadastro de informações pessoais</h3>
-
                 <form>
-
                     <div class="form-group mt-5">
-
                         <label class="titulos">Dados Pessoais</label>
-
                         <input class="form-control" type="text" id="nome_cliente" required="required" placeholder="Nome">
 
                         <input class="form-control mt-4" type="email" id="email_cliente" required="required" placeholder="Email">
@@ -106,44 +73,33 @@
                             <option>TO</option>
                         </select>
 
-                    </div>
+                     </div>
 
                     <div class="form-group mt-5">
-
                         <label class="titulos">Cadastre uma senha</label>
 
-                        <input class="form-control" type="password" id="senha_cliente" required="required" placeholder="Digite uma senha">
+                        <input class="form-control" type="password" id="senha_cliente" required="required"
+                               placeholder="Digite uma senha">
 
-                        <input class="form-control mt-4" type="password" id="senha_confirmada_cliente" required="required" placeholder="Digite novamente sua senha">
+                        <input class="form-control mt-4" type="password" id="senha_confirmada_cliente"
+                               required="required" placeholder="Digite novamente sua senha">
 
                     </div>
 
-                    <button type="submit" id="enviar_dados" class="btn btn-outline-success btn-lg mt-3 mb-4" onclick= "return validarSenha()">Enviar</button>
+                    <button type="submit" id="enviar_dados" class="btn btn-outline-success btn-lg mt-3 mb-4"
+                            onclick="return validarSenha()">Enviar
+                    </button>
                 </form>
+            </div>
+        </div>
 
-            </div><!--fim div formulario-->
-
-        </div> <!--fim row principal-->
-
-    </div> <!--fim  container da pagina-->
-
-    <footer>
-       <div class="row">
-           <div class="col-12" align="center">
-               <a href="#">Criando uma conta você concorda com nossos termos & privacidade</a>
-           </div>
-       </div>
-    </footer>
+{% endblock %}
 
 
-
-
-
-
-    <!-- JavaScript (Opcional) -->
-    <!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  </body>
-</html>
+{% block footer %}
+    <div class="row">
+        <div class="col-12" align="center">
+            <a href="#">Criando uma conta você concorda com nossos termos & privacidade</a>
+        </div>
+    </div>
+{% endblock %}
