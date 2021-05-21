@@ -25,10 +25,16 @@
                 {% crispy form %}
 
             </div>
+            <div class="mt-4">
+                <div class="d-flex justify-content-center links">
+                    Já possui uma conta? <a href="{% url 'login' %}" class="ml-2 text-underline">Clique aqui para efetuar login</a>
+                </div>
+            </div>
             <a class="terms-privacy" href="#">
                 <span>Criando uma conta você concorda com nossos <br> Termos & Privacidades</span>
             </a>
         </div>
+        
     </div>
     <script>
         $("#id_cpf").mask("000.000.000-00");

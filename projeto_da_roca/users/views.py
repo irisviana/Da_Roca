@@ -2,11 +2,12 @@ import datetime
 
 from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
-from django.http import HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
+from django.shortcuts import render, redirect, reverse
 
-from .forms import UserForm
 from .forms import AddressForm
+from .forms import UserForm
 from .models import DeliveryTime
 from .models import ServiceAddress
 from .models import User
@@ -27,8 +28,11 @@ class UserView:
     def create_users(cls, request):
         if request.method == 'POST':
             form = UserForm(request.POST)
+
             if form.is_valid():
-                form.save()
+                user = form.save()
+                login(request, user)
+                return redirect('home')
         else:
             form = UserForm()
         return render(request, '../templates/registration/create_costumer.html', {'form': form})
@@ -77,7 +81,7 @@ class ServiceAddressView:
     def list_service_address(cls, request):
         service_address = ServiceAddress.objects.all()
 
-        return render(request, '../templates/service_address/home.html', {
+        return render(request, 'service_address/home.html', {
             "services_address": service_address,
         })
 
@@ -88,18 +92,20 @@ class ServiceAddressView:
         if request.method == 'POST':
             city = request.POST['cidade']
             state = request.POST['estado']
-            userId = request.POST['usuarioId']
+            # userId = request.POST['usuarioId']
 
-            user = User.objects.get(id = userId)
-            
+            # user = User.objects.get(id = userId)
+            user = request.user
             service_address = ServiceAddress(
-                userId=user, city=city, state=state)
+                user=user, city=city, state=state)
 
             service_address.save()
 
             message = "Endereço de atendimento criado com sucesso."
+            service_address = ServiceAddress.objects.all()
+            return HttpResponseRedirect(reverse('list_service_address'))
 
-        return render(request, '../templates/service_address/create.html', {
+        return render(request, 'service_address/create.html', {
             'message': message,
         })
 
@@ -139,11 +145,9 @@ class ServiceAddressView:
                 message = 'Endereço de entrega não existe.'
 
             services_address = ServiceAddress.objects.all()
-            
-        return render(request, '../templates/service_address/home.html', {
-            "message": message,
-            'service_address': services_address,
-        })
+
+        return HttpResponseRedirect(reverse('list_service_address'))
+
 
 class DeliveryTimeView:
     @classmethod
@@ -179,6 +183,7 @@ class DeliveryTimeView:
                 delivery_time.save()
 
                 message = 'Horário de entrega criado com sucesso.'
+                return HttpResponseRedirect(reverse('list_service_address'))
         
         return render(request, '../templates/delivery_time/create.html', {
             'message': message,
@@ -204,7 +209,6 @@ class DeliveryTimeView:
         elif request.method == 'GET':
 
             delivery_time = DeliveryTime.objects.get(id=delivery_time_id)
-
 
         return render(request, '../templates/delivery_time/create.html', {
             'mensagem': message,
