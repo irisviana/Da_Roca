@@ -1,0 +1,45 @@
+<!-- templates/service_address/create.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} 
+<title>Novo endereço de atendimento</title>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="body">
+        {% if mensagem %}
+            <p>{{ mensagem }}</p>
+        {% endif %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Ações</th>
+                    <th>Id</th>
+                    <th>Cidade</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service_address in services_address %}
+                <tr>
+                    <td>
+                        <form action="{% url 'enderecoatendimento-deletar' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="enderecoAtendimentoId" value="{{ enderecoAtendimento.id }}">
+                            <input type="submit" value="Remover">
+                        </form>
+                    </td>
+                    <td>{{ service_address.city }}</td>
+                    <td>{{ service_address.state }}</td>
+                    <td>{{ service_address.user.id }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
