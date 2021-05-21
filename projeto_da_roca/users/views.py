@@ -1,7 +1,7 @@
 import datetime
 
 from django.contrib import messages
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate,logout
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
@@ -35,6 +35,13 @@ def login_page(request):
             messages.error(request, 'email ou senha estão incorretos')
 
     return render(request, 'registration/login.html')
+
+def logout_page(request):
+    logout(request)
+    return render(request, 'registration/login.html')
+
+
+
 
 
 def home(request):
