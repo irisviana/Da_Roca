@@ -4,7 +4,7 @@
     margin: 0;
     padding: 0;
     height: 100%;
-    background: #8AFF8A !important;
+    background: #C0FFE1;
   }
   .user_card {
     width: 350px;
@@ -77,11 +77,13 @@
   }
 
   body {
-    background-color: #b4eeb4;
+    
     color: #008b45;
+    background: url('{% static "images/marcadagua.svg" %}') 
   }
 
   .titulos {
     font-size: 26px;
   }
+
 
