@@ -53,49 +53,78 @@ def home(request):
     return render(request, 'home.html')
 
 
-# class ServiceAddressView:
-#     @classmethod
-#     def create_service_address(cls, request):
-#         message = ""
-#         if request.method == 'POST':
-#             city = request.POST['cidade']
-#             estado = request.POST['estado']
-#             usuarioId = request.POST['usuarioId']
-#
-#             usuario = Usuario.objects.get(id = usuarioId)
-#             enderecoAtendimento = EnderecoAtendimento(cidade=cidade, estado=estado, usuario=usuario)
-#             enderecoAtendimento.save()
-#             mensagem = "Endereço de atendimento cadastrado com sucesso."
-#
-#         return render(request, 'htmlListagemDoServiceAddress', {"mensagem": mensagem})
-#
-#     @classmethod
-#     def deleteEnderecoAtendimentoView(self, request):
-#         mensagem = ""
-#         if request.method == 'POST':
-#             enderecoAtendimentoId = request.POST['enderecoAtendimentoId']
-#             enderecoAtendimento = EnderecoAtendimento.objects.get(id=enderecoAtendimentoId)
-#
-#             enderecoAtendimento.delete()
-#             mensagem = "Endereço de atendimento deletado com sucesso."
-#
-#         return render(request, 'htmlListagemDoServiceAddress', {"mensage": mensagem})
-#
-#     @classmethod
-#     def atualizaEnderecoAtendimentoView(cls, request):
-#         mensagem = ""
-#         if request.method == 'POST':
-#             cidade = request.POST['cidade']
-#             estado = request.POST['estado']
-#             enderecoAtendimentoId = request.POST['id']
-#
-#             enderecoAtendimento = EnderecoAtendimento.objects.get(id = enderecoAtendimentoId)
-#             enderecoAtendimento.update(cidade = cidade, estado = estado)
-#
-#             mensagem = "Endereço de atendimento atualizado com sucesso."
-#
-#         return render(request, 'htmlListagemDoServiceAddress', {"mensagem": mensagem})
+class ServiceAddressView:
+    @classmethod
+    def list_service_address(cls, request):
+        service_address = ServiceAddress.objects.all()
 
+        return render(request, '../templates/service_address/home.html', {
+            "services_address": service_address,
+        })
+
+
+    @classmethod
+    def create_service_address(cls, request):
+        message = ''
+        if request.method == 'POST':
+            city = request.POST['cidade']
+            state = request.POST['estado']
+            userId = request.POST['usuarioId']
+
+            user = User.objects.get(id = userId)
+            
+            service_address = ServiceAddress(
+                userId=user, city=city, state=state)
+
+            service_address.save()
+
+            message = "Endereço de atendimento criado com sucesso."
+
+        return render(request, '../templates/service_address/create.html', {
+            'message': message,
+        })
+
+    @classmethod
+    def update_service_address(cls, request):
+        message = ''
+        if request.method == 'POST':
+            service_address_id = request.POST['enderecoEntredaId']
+            city = request.get('cidade')
+            state = request.get('estado')
+            
+            service_address = ServiceAddress.objects.get(id=service_address_id)
+            
+            service_address.update(
+                city=city if city else service_address.city,
+                state=state if state else service_address.state)
+
+            message = "Endereço de atendimento atualizado com sucesso."
+
+        return render(request, 'usuario/service_address/create.html', {
+            'mesage': message,
+        })
+
+    @classmethod
+    def delete_service_address(cls, request):
+        message = ''
+        if request.method == 'POST':
+            service_address_id = request.POST['enderecoAtendimentoId']
+            
+            try:
+                service_address = ServiceAddress.objects.get(id=service_address_id)
+                service_address.delete()
+
+                message = "Endereço de atendimento deletado com sucesso."
+            except ServiceAddress.DoesNotExist as e:
+                print(str(e)) 
+                message = 'Endereço de entrega não existe.'
+
+            services_address = ServiceAddress.objects.all()
+            
+        return render(request, '../templates/service_address/home.html', {
+            "message": message,
+            'service_address': services_address,
+        })
 
 class DeliveryTimeView:
     @classmethod
