@@ -1,32 +1,51 @@
 import datetime
 
 from django.contrib import messages
-from django.contrib.auth import login, authenticate,logout
+from django.contrib.auth import login, authenticate, logout
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
+from .forms import UserForm
+from .forms import AddressForm
+from .models import DeliveryTime
 from .models import ServiceAddress
 from .models import User
-from .models import DeliveryTime
-from .forms import UserForm
+
 
 # Create your views here.
 
 
-def list_users(request):
-    now = datetime.datetime.now()
-    html = "<html><body>It is now %s.</body></html>" % now
-    return HttpResponse(html)
+class UserView:
+
+    @classmethod
+    def list_users(cls, request):
+        now = datetime.datetime.now()
+        html = "<html><body>It is now %s.</body></html>" % now
+        return HttpResponse(html)
+
+    @classmethod
+    def create_users(cls, request):
+        if request.method == 'POST':
+            form = UserForm(request.POST)
+            if form.is_valid():
+                form.save()
+        else:
+            form = UserForm()
+        return render(request, '../templates/registration/create_costumer.html', {'form': form})
 
 
-def create_users(request):
-    if request.method == 'POST':
-        form = UserForm(request.POST)
-        if form.is_valid():
-            form.save()
-    else:
-        form = UserForm()
-    return render(request, '../templates/registration/create_costumer.html', {'form': form})
+class AddressView:
+
+    @classmethod
+    def create_address(cls, request, username):
+        user = get_object_or_404(User, username=username)
+        form = AddressForm(request.POST or None)
+        if request.method == 'POST':
+            if form.is_valid():
+                address = form.save()
+                address.user = user
+                address.save()
+        return render(request, '../templates/address/create_address.html', {'form': form})
 
 
 def login_page(request):

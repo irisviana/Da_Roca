@@ -27,7 +27,7 @@ class Address(models.Model):
     city = models.CharField(max_length=100, null=True, blank=True)
     district = models.CharField(max_length=100, null=True, blank=True)
     street = models.CharField(max_length=100, null=True, blank=True)
-    house_number = models.CharField(max_length=10, null=True, blank=True)
+    house_number = models.IntegerField(null=True, blank=True)
 
 
 class Profile(models.Model):
@@ -36,7 +36,7 @@ class Profile(models.Model):
         ('customer', 'Cliente'),
         ('producer', 'Produtor'),
     )
-    profile_type = models.CharField(max_length=10, default='customer', choices=PROFILE_TYPE_CHOICES )
+    profile_type = models.CharField(max_length=10, default='customer', choices=PROFILE_TYPE_CHOICES)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profiles')
 
 

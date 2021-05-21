@@ -4,6 +4,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from .models import User
+from .models import Address
 from .utils import validate_cpf
 
 
@@ -56,3 +57,58 @@ class UserForm(forms.ModelForm):
         if User.objects.filter(cpf=cpf).exists():
             raise ValidationError('O CPF já está cadastrado')
         return self.cleaned_data
+
+
+class AddressForm(forms.ModelForm):
+    STATE_CHOICES = (
+        ('', 'Estado'),
+        ('AC', 'Acre'),
+        ('AL', 'Alagoas'),
+        ('AP', 'Amapá'),
+        ('AM', 'Amazonas'),
+        ('BA', 'Bahia'),
+        ('CE', 'Ceará'),
+        ('ES', 'Espírito Santo'),
+        ('GO', 'Goiás'),
+        ('MA', 'Maranhão'),
+        ('MT', 'Mato Grosso'),
+        ('MS', 'Mato Grosso do Sul'),
+        ('MG', 'Minas Gerais'),
+        ('PA', 'Pará'),
+        ('PB', 'Paraíba'),
+        ('PR', 'Paraná'),
+        ('PE', 'Pernambuco'),
+        ('PI', 'Piauí'),
+        ('RJ', 'Rio de Janeiro'),
+        ('RN', 'Rio Grande do Norte'),
+        ('RO', 'Rondônio'),
+        ('RR', 'Roraima'),
+        ('SC', 'Santa Catarina'),
+        ('SP', 'São Paulo'),
+        ('SE', 'Sergipe'),
+        ('TO', 'Tocantins'),
+        ('DF', 'Distrito Federal'),
+    )
+    state = forms.ChoiceField(choices=STATE_CHOICES, required=True)
+
+    class Meta:
+        model = Address
+        fields = ('zip_code', 'state', 'city', 'district', 'street', 'house_number')
+
+    def __init__(self, *args, **kwargs):
+        super(AddressForm, self).__init__(*args, **kwargs)
+
+        # If you pass FormHelper constructor a form instance
+        # It builds a default layout with all its fields
+        self.helper = FormHelper(self)
+        self.helper.form_show_labels = False
+        self.helper.layout = Layout(
+            Field('zip_code', placeholder='CEP'),
+            Field('city', placeholder='Cidade'),
+            Field('street', placeholder='Rua'),
+            Field('house_number', placeholder='Número da casa'),
+            Field('district', placeholder='Bairro'),
+            Field('state', placeholder='Estado'),
+            Submit('save', 'Cadastrar'),
+
+        )
