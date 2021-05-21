@@ -19,7 +19,7 @@ def list_users(request):
 
 
 def create_users(request):
-    return render(request, '../templates/cadastro_cliente.html')
+    return render(request, '../templates/registration/create_costumer.html')
 
 
 def login_page(request):
@@ -88,11 +88,10 @@ def home(request):
 class DeliveryTimeView:
     @classmethod
     def list_delivery_time(cls, request):
-
-        delivery_time = DeliveryTimeView.objects.all()
+        delivery_time = DeliveryTime.objects.all()
 
         return render(request, '../templates/delivery_time/home.html', {
-            "delivery_time": delivery_time,
+            "delivery_times": delivery_time,
         })
 
     @classmethod
