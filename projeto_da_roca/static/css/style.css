@@ -6,19 +6,16 @@
     height: 100%;
     background: #C0FFE1;
   }
+
   .user_card {
     width: 350px;
     margin-top: auto;
     margin-bottom: auto;
-    background: #fff;
     position: relative;
     display: flex;
     justify-content: center;
     flex-direction: column;
-    padding: 50px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    -moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    padding: 1em;
     border-radius: 5px;
 
   }
@@ -38,13 +35,20 @@
     color: #0F8D50;
     border-color: #0F8D50;
   }
+  
   .login_btn:focus {
     box-shadow: none !important;
     outline: 0px !important;
   }
+
   .login_container {
     padding: 0 2rem;
   }
+
+  .login_logo {
+    width: 5em;  
+  }
+
   .input-group-text {
     background: #0F8D50;
     color: white !important;
@@ -52,17 +56,25 @@
     border-radius: 0.25rem 0 0 0.25rem !important;
   
   }
+
   .input_user,
   .input_pass:focus {
     box-shadow: none !important;
     outline: 0px !important;
   }
+
+  .form-control {
+    border: 1px solid #008b45;
+  }
+
   .ml-2{
     color:  #0F8D50;
   }
+
   .mt-4{
      color: black;
   }
+
   .form-control{
     background: #DCFFEE;
     color: black;
@@ -77,9 +89,7 @@
   }
 
   body {
-    
     color: #008b45;
-    background: url('{% static "images/marcadagua.svg" %}') 
   }
 
   .titulos {

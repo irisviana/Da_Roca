@@ -25,6 +25,10 @@
             integrity="sha512-pHVGpX7F/27yZ0ISY+VVjyULApbDlD0/X0rgGbTqCE7WFW5MezNTWG/dnhtbBuICzsd0WQPgpE4REBLv+UqChw=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+          integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+
+
     <script href="{% static 'static/js/scripts.js' %}"></script>
     {% block head %}
 
@@ -32,6 +36,12 @@
 
     {% block title %}
     {% endblock %}
+
+    <style>
+            body {
+                background: #DCFFEE url('{% static "images/marcadagua.svg" %}') no-repeat fixed left;
+            }
+    </style>
 </head>
 
 <body>
