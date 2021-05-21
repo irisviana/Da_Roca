@@ -42,17 +42,22 @@ class UserForm(forms.ModelForm):
             cpf = cpf.replace('.', '').replace('-', '')
             if validate_cpf(cpf):
                 return cpf
-        raise ValidationError('O CPF já está cadastrado')
+        raise ValidationError('O CPF é invalido')
 
     def clean(self):
         email = self.cleaned_data.get('email')
         cpf = self.cleaned_data.get('cpf')
         password = self.cleaned_data.get('password')
         confirm_password = self.cleaned_data.get('confirm_password')
+        name = self.cleaned_data.get('first_name')
+        if name is None:
+             raise ValidationError('O nome precissa ser informado')
         if password != confirm_password:
             raise ValidationError('As senhas precisam ser idênticas')
         if User.objects.filter(email=email).exists():
             raise ValidationError('O e-mail já está cadastrado')
         if User.objects.filter(cpf=cpf).exists():
             raise ValidationError('O CPF já está cadastrado')
+
+
         return self.cleaned_data
