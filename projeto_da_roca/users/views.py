@@ -105,14 +105,14 @@ class DeliveryTimeView:
     def create_delivery_time(cls, request):
         message = ''
         if request.method == 'POST':
-            service_address_id = request.POST['enderecoAtendimentoId']
-            time = request.POST['hora']
-            day = request.POST['dia']
+            service_address_id = request.POST['service_address_id']
+            time = request.POST['time']
+            day = request.POST['day']
 
             service_address = ServiceAddress.objects.get(id=service_address_id)
 
             delivery_time = DeliveryTime(
-                service_address=service_address, time=time, dia=day)
+                service_address=service_address, time=time, day=day)
 
             delivery_time.save()
 
@@ -123,10 +123,10 @@ class DeliveryTimeView:
         })
 
     @classmethod
-    def update_delivery_time(cls, request):
+    def update_delivery_time(cls, request, delivery_time_id):
         message = ''
-        if request.mothod == 'POST':
-            delivery_time_id = request.POST['horarioEntregaId']
+        if request.method == 'POST':
+            delivery_time_id = delivery_time_id
             time = request.POST.get('time', None)
             day = request.POST.get('day', None)
 
@@ -137,16 +137,22 @@ class DeliveryTimeView:
                 day=day if day else delivery_time.day)
 
             message = 'Horário de entrega atualizado com sucesso.'
+        
+        elif request.method == 'GET':
 
-        return render(request, 'usuario/delivery_time/create.html', {
+            delivery_time = DeliveryTime.objects.get(id=delivery_time_id)
+
+
+        return render(request, '../templates/delivery_time/create.html', {
             'mensagem': message,
+            'delivery_time': delivery_time
         })
 
     @classmethod
     def delete_delivery_time(cls, request):
         message = ''
         if request.method == 'POST':
-            delivery_time_id = request.POST['horarioEntregaId']
+            delivery_time_id = request.POST['delivery_time_id']
 
             try:
                 delivery_time = DeliveryTime.objects.get(id=delivery_time_id)

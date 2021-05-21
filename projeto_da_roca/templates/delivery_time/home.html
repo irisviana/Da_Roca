@@ -36,15 +36,18 @@
                 {% for delivery_time in delivery_times %}
                 <tr>
                     <td>
-                        <form action="{% url 'delete_delivery_time' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="horarioEntregaId" value="{{ delivery_time.id }}">
-                            <input type="submit" value="Remover">
-                        </form>
+                        <div class="actions">
+                            <form action="{% url 'delete_delivery_time' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="delivery_time_id" value="{{ delivery_time.id }}">
+                                <input class="btn btn-primary" type="submit" value="Remover">
+                            </form>
+                            <a class="btn btn-primary" href="{% url 'update_delivery_time' delivery_time.id %}">Editar</a>
+                        </div>
                     </td>
-                    <td>{{ delivery_time.time }}</td>
-                    <td>{{ delivery_time.day }}</td>
                     <td>{{ delivery_time.service_address.id }}</td>
+                    <td>{{ delivery_time.day }}</td>
+                    <td>{{ delivery_time.time }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

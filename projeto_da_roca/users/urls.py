@@ -7,4 +7,5 @@ urlpatterns = [
     path('delivery_time/list', DeliveryTimeView.list_delivery_time, name='list_delivery_time'),
     path('delivery_time/create', DeliveryTimeView.create_delivery_time, name='create_delivery_time'),
     path('delivery_time/delete', DeliveryTimeView.delete_delivery_time, name='delete_delivery_time'),
+    path('delivery_time/update/<int:delivery_time_id>', DeliveryTimeView.update_delivery_time, name='update_delivery_time'),
 ]

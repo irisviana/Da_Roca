@@ -6,11 +6,12 @@
 <title>Novo horário de entrega</title>
 {% endblock %}
 
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
 {% block content %}
     <div class="d-flex flex-column align-items-center">
-        <div class="mb-5" class="login_logo">
-            <img src="{% static 'images/logo.svg' %}" alt="Logo do DaRoça">
-        </div>
         <div>
             <h4>Onde você irá atender</h4>
         </div>
@@ -19,16 +20,16 @@
         <form action="{% url 'create_delivery_time' %}" method="post">
             {% csrf_token %}
             <div class="form-group">
-                <label for="endereco-atendimento">Endereço Atendimento</label>
-                <input class="form-control" type="number" name="enderecoAtendimentoId" id="endereco-atendimento">
+                <label for="service_address">Endereço Atendimento</label>
+                <input class="form-control" type="number" name="service_address_id" id="service_address">
             </div>
             <div class="form-group">
-                <label for="hora">Hora</label>
-                <input class="form-control" type="time" name="hora" id="hora">
+                <label for="time">Hora</label>
+                <input class="form-control" type="time" name="time" id="time">
             </div>
             <div class="form-group">
-                <label for="dia">Dia</label>
-                <select class="form-control" name="dia" id="dia">
+                <label for="day">Dia</label>
+                <select class="form-control" name="day" id="day">
                     <option value="segunda">Segunda-feira</option>
                     <option value="terca">Terça-feira</option>
                     <option value="quarta">Quarta-feira</option>
