@@ -11,11 +11,19 @@
 {% endblock %}
 
 {% block content %}
-    <div class="body">
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Endereços de atendimento</h4>
+        </div>
+    </div>
+    <div class="inner_container mt-4">
+        <a class="btn btn-primary" href="{% url 'create_service_address' %}">
+            Novo
+        </a>
         {% if mensagem %}
             <p>{{ mensagem }}</p>
         {% endif %}
-        <table>
+        <table class="custom_table mt-5">
             <thead>
                 <tr>
                     <th>Ações</th>
@@ -28,11 +36,14 @@
                 {% for service_address in services_address %}
                 <tr>
                     <td>
-                        <form action="{% url 'enderecoatendimento-deletar' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="enderecoAtendimentoId" value="{{ enderecoAtendimento.id }}">
-                            <input type="submit" value="Remover">
-                        </form>
+                        <div class="actions">
+                            <form action="{% url 'delete_service_address' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="service_address_id" value="{{ service_address.id }}">
+                                <input class="btn btn-primary" type="submit" value="Remover">
+                            </form>
+                            <a href="{% url 'list_delivery_time' service_address.id %}" class="btn btn-primary">Horários</a>
+                        </div>
                     </td>
                     <td>{{ service_address.city }}</td>
                     <td>{{ service_address.state }}</td>
