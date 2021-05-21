@@ -8,6 +8,7 @@ from django.shortcuts import render, redirect
 from .models import ServiceAddress
 from .models import User
 from .models import DeliveryTime
+from .forms import UserForm
 
 # Create your views here.
 
@@ -19,7 +20,13 @@ def list_users(request):
 
 
 def create_users(request):
-    return render(request, '../templates/registration/create_costumer.html')
+    if request.method == 'POST':
+        form = UserForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = UserForm()
+    return render(request, '../templates/registration/create_costumer.html', {'form': form})
 
 
 def login_page(request):
@@ -36,12 +43,10 @@ def login_page(request):
 
     return render(request, 'registration/login.html')
 
+
 def logout_page(request):
     logout(request)
     return render(request, 'registration/login.html')
-
-
-
 
 
 def home(request):
