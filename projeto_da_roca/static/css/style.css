@@ -28,7 +28,7 @@
   }
 
   #form-title{
-     color: green!important;
+     color: #0F8D50;
     
   }
 
@@ -46,7 +46,7 @@
     padding: 0 2rem;
   }
   .input-group-text {
-    background: green !important;
+    background: #0F8D50;
     color: white !important;
     border: 0 !important;
     border-radius: 0.25rem 0 0 0.25rem !important;
@@ -58,8 +58,14 @@
     outline: 0px !important;
   }
   .ml-2{
-    color: green!important;
-
+    color:  #0F8D50;
+  }
+  .mt-4{
+     color: black;
+  }
+  .form-control{
+    background: #DCFFEE;
+    color: black;
   }
 
   #messages {
