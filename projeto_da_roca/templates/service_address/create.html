@@ -1,0 +1,71 @@
+<!-- templates/serive_address/create.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} 
+<title>Novo endereço de atendimento</title>
+{% endblock %}
+
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center">
+        <div class="mb-5" class="login_logo">
+            <img src="{% static 'images/logo.svg' %}" alt="Logo do DaRoça">
+        </div>
+        <div>
+            <h4>Onde você irá atender</h4>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center form_container">
+        <form action="{% url 'create_service_address' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="cidade">Cidade</label>
+                <input class="form-control" type="text" name="cidade" id="cidade">
+            </div>
+            <div class="form-group">
+                <label for="estado">Estado</label>
+                <select class="form-control" name="estado" id="estado">
+                    <option value="AC">Acre</option>
+                    <option value="AL">Alagoas</option>
+                    <option value="AP">Amapá</option>
+                    <option value="AM">Amazonas</option>
+                    <option value="BA">Bahia</option>
+                    <option value="CE">Ceará</option>
+                    <option value="DF">Distrito Federal</option>
+                    <option value="ES">Espírito Santo</option>
+                    <option value="GO">Goiás</option>
+                    <option value="MA">Maranhão</option>
+                    <option value="MT">Mato Grosso</option>
+                    <option value="MS">Mato Grosso do Sul</option>
+                    <option value="MG">Minas Gerais</option>
+                    <option value="PA">Pará</option>
+                    <option value="PB">Paraíba</option>
+                    <option value="PR">Paraná</option>
+                    <option value="PE">Pernambuco</option>
+                    <option value="PI">Piauí</option>
+                    <option value="RJ">Rio de Janeiro</option>
+                    <option value="RN">Rio Grande do Norte</option>
+                    <option value="RS">Rio Grande do Sul</option>
+                    <option value="RO">Rondônia</option>
+                    <option value="RR">Roraima</option>
+                    <option value="SC">Santa Catarina</option>
+                    <option value="SP">São Paulo</option>
+                    <option value="SE">Sergipe</option>
+                    <option value="TO">Tocantins</option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Cadastrar</button>
+        </form>
+    </div>
+{% endblock %}
+
+
+
+
+
+
+
+   
+        
+
