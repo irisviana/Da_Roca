@@ -2,8 +2,8 @@ import datetime
 
 from django.contrib import messages
 from django.contrib.auth import login, authenticate,logout
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.http import HttpResponse,HttpResponseRedirect
+from django.shortcuts import render, redirect,reverse
 
 from .models import ServiceAddress
 from .models import User
@@ -61,7 +61,7 @@ class ServiceAddressView:
     def list_service_address(cls, request):
         service_address = ServiceAddress.objects.all()
 
-        return render(request, '../templates/service_address/home.html', {
+        return render(request, 'service_address/home.html', {
             "services_address": service_address,
         })
 
@@ -72,18 +72,21 @@ class ServiceAddressView:
         if request.method == 'POST':
             city = request.POST['cidade']
             state = request.POST['estado']
-            userId = request.POST['usuarioId']
+            #userId = request.POST['usuarioId']
 
-            user = User.objects.get(id = userId)
-            
+            #user = User.objects.get(id = userId)
+            user= request.user
             service_address = ServiceAddress(
-                userId=user, city=city, state=state)
+                user=user, city=city, state=state)
 
             service_address.save()
 
             message = "Endereço de atendimento criado com sucesso."
-
-        return render(request, '../templates/service_address/create.html', {
+            service_address = ServiceAddress.objects.all()
+            return HttpResponseRedirect(reverse('list_service_address'))
+            
+        
+        return render(request, 'service_address/create.html', {
             'message': message,
         })
 
@@ -124,10 +127,7 @@ class ServiceAddressView:
 
             services_address = ServiceAddress.objects.all()
             
-        return render(request, '../templates/service_address/home.html', {
-            "message": message,
-            'service_address': services_address,
-        })
+        return HttpResponseRedirect(reverse('list_service_address'))
 
 class DeliveryTimeView:
     @classmethod
@@ -163,6 +163,7 @@ class DeliveryTimeView:
                 delivery_time.save()
 
                 message = 'Horário de entrega criado com sucesso.'
+                return HttpResponseRedirect(reverse('list_service_address'))
         
         return render(request, '../templates/delivery_time/create.html', {
             'message': message,
