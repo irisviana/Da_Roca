@@ -3,24 +3,27 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    <title>Da Roça - Cadastro</title>
-
+	<title>Cadastro</title>
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        <img href="{% static 'images/logo.png' %}">
-        <h3 class="mb-5">Cadastro de informações pessoais</h3>
-        {% crispy form %}
-    </div>
+	<div class="d-flex justify-content-center h-100">
+		<div class="user_card">
+			<div class="d-flex flex-column align-items-center">
+				<div class="mb-5" class="login_logo">
+					<img src="{% static 'images/logo.svg' %}" alt="Logo do DaRoça">
+				</div>
+				<div>
+					<h3 id="form-title">Login</h3>
+				</div>
+			</div>
+			<div class="d-flex justify-content-center form_container">
+				{% crispy form %}
 
-{% endblock %}
-
-
-{% block footer %}
-    <div class="row">
-        <div class="col-12" align="center">
-            <a href="#">Criando uma conta você concorda com nossos termos & privacidade</a>
-        </div>
-    </div>
+			</div>
+			{% for message in messages %}
+				<p id="messages">{{message}}</p>
+			{% endfor %}
+		</div>
+	</div>
 {% endblock %}
