@@ -3,8 +3,8 @@ from .views import list_users, create_users, DeliveryTimeView
 
 urlpatterns = [
     path('', list_users),
-    path('cadastro_cliente/', create_users, name='cadastro_cliente'),
-    path('delivery_time/listar', DeliveryTimeView.list_delivery_time, name='delivery_time-listar'),
-    path('delivery_time/cadastro', DeliveryTimeView.create_delivery_time, name='delivery_time-cadastro'),
-    path('delivery_time/deletar', DeliveryTimeView.delete_delivery_time, name='delivery_time-deletar'),
+    path('costumer/create', create_users, name='create_customer'),
+    path('delivery_time/list', DeliveryTimeView.list_delivery_time, name='list_delivery_time'),
+    path('delivery_time/create', DeliveryTimeView.create_delivery_time, name='create_delivery_time'),
+    path('delivery_time/delete', DeliveryTimeView.delete_delivery_time, name='delete_delivery_time'),
 ]
