@@ -1,15 +1,29 @@
-{% block title %}
-    <title>Horários de Entrega</title>
+<!-- templates/delivery_time/create.html -->
+{% extends 'base.html' %}
+{% load static %}
 
+{% block title %}
+<title>Novo horário de entrega</title>
 {% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
 {% block content %}
-<div class="body">
-        <h3>Horários de Entrega</h3>
-        <a href="{% url 'create_delivery_time' %}">Novo horário de entrega</a>
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Horários de entrega</h4>
+        </div>
+    </div>
+    <div class="inner_container mt-4">
+        <a class="btn btn-primary" href="{% url 'create_delivery_time' service_address_id %}">
+            Novo
+        </a>
         {% if mensagem %}
             <p>{{ mensagem }}</p>
         {% endif %}
-        <table>
+        <table class="custom_table mt-5">
             <thead>
                 <tr>
                     <th>Ações</th>
@@ -22,15 +36,18 @@
                 {% for delivery_time in delivery_times %}
                 <tr>
                     <td>
-                        <form action="{% url 'delete_delivery_time' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="horarioEntregaId" value="{{ delivery_time.id }}">
-                            <input type="submit" value="Remover">
-                        </form>
+                        <div class="actions">
+                            <form action="{% url 'delete_delivery_time' service_address_id %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="delivery_time_id" value="{{ delivery_time.id }}">
+                                <input class="btn btn-primary" type="submit" value="Remover">
+                            </form>
+                            <a class="btn btn-primary" href="{% url 'update_delivery_time' delivery_time.id %}">Editar</a>
+                        </div>
                     </td>
-                    <td>{{ delivery_time.time }}</td>
-                    <td>{{ delivery_time.day }}</td>
                     <td>{{ delivery_time.service_address.id }}</td>
+                    <td>{{ delivery_time.day }}</td>
+                    <td>{{ delivery_time.time }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

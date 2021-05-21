@@ -211,3 +211,14 @@
     align-self: center;
     text-align: center;
   }
+
+  .actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  .actions > * {
+    flex: 0 1 80px;
+    margin: 0 1em 0 0
+  }
+

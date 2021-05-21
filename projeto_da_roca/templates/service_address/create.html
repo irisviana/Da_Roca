@@ -6,12 +6,12 @@
 <title>Novo endereço de atendimento</title>
 {% endblock %}
 
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
 
 {% block content %}
     <div class="d-flex flex-column align-items-center">
-        <div class="mb-5" class="login_logo">
-            <img src="{% static 'images/logo.svg' %}" alt="Logo do DaRoça">
-        </div>
         <div>
             <h4>Onde você irá atender</h4>
         </div>
