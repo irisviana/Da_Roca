@@ -1,105 +1,43 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
+
+{% block head %}
+    <script href="{% static 'js/scripts.js' %}"></script>
+{% endblock %}
 
 {% block title %}
-    <title>Da Roça - Cadastro</title>
-
+    <title>Cadastro</title>
 {% endblock %}
 
 {% block content %}
-        <div class="row">
-
-            <div class="col-12" align="center">
-                <img href="{% static 'static/images/logo.png' %}">
-                <h3 class="mb-5">Cadastro de informações pessoais</h3>
-                <form>
-                    <div class="form-group mt-5">
-                        <label class="titulos">Dados Pessoais</label>
-                        <input class="form-control" type="text" id="nome_cliente" required="required" placeholder="Nome">
-
-                        <input class="form-control mt-4" type="email" id="email_cliente" required="required" placeholder="Email">
-
-                        <input class="form-control mt-4" type="text" id="cpf_cliente" required="required" placeholder="CPF" title="Digite o CPF no formato nnn.nnn.nnn-nn" pattern="\d{3}\.\d{3}\.\d{3}-\d{2}">
-
-                        <input class="form-control mt-4 mb-4" type="text" id="telefone_cliente" required="required" placeholder="Telefone" title="Digite o Telefone com código de área" pattern="\d{11-12}"
-                        >
-
-                    </div>
-
-                     <div class="form-group mt-5">
-
-                        <label class="titulos">Dados de endereço</label>
-
-                        <input class="form-control" type="text" id="CEP_endereco" required="required" placeholder="CEP" title="Digite o CEP no formato nnnnn-nnn" pattern= "\d{5}-?\d{3}">
-
-                        <input class="form-control mt-4" type="Cidade" id="cidade_endereco" required="required" placeholder="Cidade">
-
-                        <input class="form-control mt-4" type="text" id="rua_endereco" required="required" placeholder="Rua">
-
-                        <input class="form-control mt-4 mb-4" type="text" id="numero_endereco" required="required" placeholder="Número"
-                        >
-
-                        <input class="form-control mt-4 mb-4" type="text" id="bairro_endereco" required="required" placeholder="Bairro"
-                        >
-
-                        <select class="form-control" id="estado_endereco" required="required">
-                            <option>Escolha seu estado</option>
-                            <option>AC</option>
-                            <option>AL</option>
-                            <option>AP</option>
-                            <option>AM</option>
-                            <option>BA</option>
-                            <option>CE</option>
-                            <option>DF</option>
-                            <option>ES</option>
-                            <option>GO</option>
-                            <option>MA</option>
-                            <option>MT</option>
-                            <option>MS</option>
-                            <option>MG</option>
-                            <option>PA</option>
-                            <option>PB</option>
-                            <option>PR</option>
-                            <option>PE</option>
-                            <option>PI</option>
-                            <option>RJ</option>
-                            <option>RN</option>
-                            <option>RS</option>
-                            <option>RO</option>
-                            <option>RR</option>
-                            <option>SC</option>
-                            <option>SP</option>
-                            <option>SE</option>
-                            <option>TO</option>
-                        </select>
-
-                     </div>
-
-                    <div class="form-group mt-5">
-                        <label class="titulos">Cadastre uma senha</label>
-
-                        <input class="form-control" type="password" id="senha_cliente" required="required"
-                               placeholder="Digite uma senha">
-
-                        <input class="form-control mt-4" type="password" id="senha_confirmada_cliente"
-                               required="required" placeholder="Digite novamente sua senha">
-
-                    </div>
-
-                    <button type="submit" id="enviar_dados" class="btn btn-outline-success btn-lg mt-3 mb-4"
-                            onclick="return validarSenha()">Enviar
-                    </button>
-                </form>
+    <div class="d-flex justify-content-center h-100">
+        <div class="user_card w-100">
+            <div class="d-flex flex-column align-items-center">
+                <div class="mb-6" class="login_logo">
+                    <img src="{% static 'images/logo.svg' %}" alt="Logo do DaRoça">
+                </div>
+                <div>
+                    <h4 id="form-title">Cadastro de informações pessoais</h4>
+                </div>
             </div>
+            <div class="d-flex justify-content-center form_container">
+                {% crispy form %}
+
+            </div>
+            <div class="mt-4">
+                <div class="d-flex justify-content-center links">
+                    Já possui uma conta? <a href="{% url 'login' %}" class="ml-2 text-underline">Clique aqui para efetuar login</a>
+                </div>
+            </div>
+            <a class="terms-privacy" href="#">
+                <span>Criando uma conta você concorda com nossos <br> Termos & Privacidades</span>
+            </a>
         </div>
-
-{% endblock %}
-
-
-{% block footer %}
-    <div class="row">
-        <div class="col-12" align="center">
-            <a href="#">Criando uma conta você concorda com nossos termos & privacidade</a>
-        </div>
+        
     </div>
+    <script>
+        $("#id_cpf").mask("000.000.000-00");
+        $("#id_phone_number").mask("(00)00000-0000");
+    </script>
 {% endblock %}

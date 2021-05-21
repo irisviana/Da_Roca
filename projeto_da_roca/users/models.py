@@ -1,12 +1,18 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import uuid
 
 # Create your models here.
 
 
 class User(AbstractUser):
-    cpf = models.CharField(max_length=11, null=True, blank=True)
+    email = models.EmailField(unique=True)
+    cpf = models.CharField(max_length=11, null=True, blank=True, unique=True)
     phone_number = models.CharField(max_length=50, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.username = uuid.uuid4().hex[:30]
+        super().save(*args, **kwargs)
 
 
 class Address(models.Model):
@@ -30,7 +36,7 @@ class Profile(models.Model):
         ('customer', 'Cliente'),
         ('producer', 'Produtor'),
     )
-    profile_type = models.CharField(max_length=10, default='customer', choices= PROFILE_TYPE_CHOICES )
+    profile_type = models.CharField(max_length=10, default='customer', choices=PROFILE_TYPE_CHOICES )
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profiles')
 
 
