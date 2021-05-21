@@ -17,12 +17,8 @@
         </div>
     </div>
     <div class="d-flex justify-content-center form_container">
-        <form action="{% url 'create_delivery_time' %}" method="post">
+        <form action="{% url 'create_delivery_time' service_address_id %}" method="post">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="service_address">Endereço Atendimento</label>
-                <input class="form-control" type="number" name="service_address_id" id="service_address">
-            </div>
             <div class="form-group">
                 <label for="time">Hora</label>
                 <input class="form-control" type="time" name="time" id="time">

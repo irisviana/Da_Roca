@@ -39,9 +39,10 @@
                         <div class="actions">
                             <form action="{% url 'delete_service_address' %}" method="post">
                                 {% csrf_token %}
-                                <input type="hidden" name="enderecoAtendimentoId" value="{{ enderecoAtendimento.id }}">
+                                <input type="hidden" name="service_address_id" value="{{ service_address.id }}">
                                 <input class="btn btn-primary" type="submit" value="Remover">
                             </form>
+                            <a href="{% url 'list_delivery_time' service_address.id %}" class="btn btn-primary">Horários</a>
                         </div>
                     </td>
                     <td>{{ service_address.city }}</td>

@@ -17,7 +17,7 @@
         </div>
     </div>
     <div class="inner_container mt-4">
-        <a class="btn btn-primary" href="{% url 'create_delivery_time' %}">
+        <a class="btn btn-primary" href="{% url 'create_delivery_time' service_address_id %}">
             Novo
         </a>
         {% if mensagem %}
@@ -37,7 +37,7 @@
                 <tr>
                     <td>
                         <div class="actions">
-                            <form action="{% url 'delete_delivery_time' %}" method="post">
+                            <form action="{% url 'delete_delivery_time' service_address_id %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="delivery_time_id" value="{{ delivery_time.id }}">
                                 <input class="btn btn-primary" type="submit" value="Remover">

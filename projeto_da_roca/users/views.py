@@ -103,7 +103,7 @@ class ServiceAddressView:
     def delete_service_address(cls, request):
         message = ''
         if request.method == 'POST':
-            service_address_id = request.POST['enderecoAtendimentoId']
+            service_address_id = request.POST['service_address_id']
             
             try:
                 service_address = ServiceAddress.objects.get(id=service_address_id)
@@ -123,32 +123,42 @@ class ServiceAddressView:
 
 class DeliveryTimeView:
     @classmethod
-    def list_delivery_time(cls, request):
-        delivery_time = DeliveryTime.objects.all()
+    def list_delivery_time(cls, request, service_address_id):
+        
+        if service_address_id:
+            delivery_time = DeliveryTime.objects.filter(service_address=service_address_id)
+        else:
+            delivery_time = DeliveryTime.objects.all()
 
         return render(request, '../templates/delivery_time/home.html', {
             "delivery_times": delivery_time,
+            'service_address_id': service_address_id,
         })
 
     @classmethod
-    def create_delivery_time(cls, request):
+    def create_delivery_time(cls, request, service_address_id):
         message = ''
         if request.method == 'POST':
-            service_address_id = request.POST['service_address_id']
+            service_address_id = service_address_id if service_address_id else request.POST.get('service_address_id', None)
             time = request.POST['time']
             day = request.POST['day']
 
-            service_address = ServiceAddress.objects.get(id=service_address_id)
+            if not service_address_id:
+                message = 'Horário de entrega precisa de endereço de atendimento.'
 
-            delivery_time = DeliveryTime(
-                service_address=service_address, time=time, day=day)
+            else:
+                service_address = ServiceAddress.objects.get(id=service_address_id)
 
-            delivery_time.save()
+                delivery_time = DeliveryTime(
+                    service_address=service_address, time=time, day=day)
 
-            message = 'Horário de entrega criado com sucesso.'
+                delivery_time.save()
+
+                message = 'Horário de entrega criado com sucesso.'
         
         return render(request, '../templates/delivery_time/create.html', {
             'message': message,
+            'service_address_id': service_address_id
         })
 
     @classmethod
@@ -178,7 +188,7 @@ class DeliveryTimeView:
         })
 
     @classmethod
-    def delete_delivery_time(cls, request):
+    def delete_delivery_time(cls, request, service_address_id):
         message = ''
         if request.method == 'POST':
             delivery_time_id = request.POST['delivery_time_id']
@@ -194,7 +204,4 @@ class DeliveryTimeView:
 
             delivery_times = DeliveryTime.objects.all()
 
-        return render(request, '../templates/delivery_time/home.html', {
-            'message': message,
-            'delivery_time': delivery_times,
-        })
+        return redirect('list_delivery_time', service_address_id=service_address_id)
