@@ -1,14 +1,29 @@
-{% block t %}
+<!-- templates/delivery_time/create.html -->
+{% extends 'base.html' %}
+{% load static %}
 
+{% block title %} 
+<title>Novo horário de entrega</title>
 {% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
 {% block content %}
-<div class="body">
-        <h3>Horários de Entrega</h3>
-        <a href="{% url 'create_delivery_time' %}">Novo horário de entrega</a>
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Horários de entrega</h4>
+        </div>
+    </div>
+    <div class="inner_container mt-4">
+        <a class="btn btn-primary" href="{% url 'create_delivery_time' %}">
+            Novo
+        </a>
         {% if mensagem %}
             <p>{{ mensagem }}</p>
         {% endif %}
-        <table>
+        <table class="custom_table mt-5">
             <thead>
                 <tr>
                     <th>Ações</th>
@@ -36,6 +51,5 @@
         </table>
     </div>
 {% endblock %}
-    <title>Horários de Entrega</title>
 
     
