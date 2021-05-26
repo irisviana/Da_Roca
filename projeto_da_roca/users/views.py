@@ -3,13 +3,14 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth import login, authenticate,logout
 from django.http import HttpResponse,HttpResponseRedirect
-from django.shortcuts import render, redirect,reverse
+from django.shortcuts import get_object_or_404,render, redirect,reverse
 from django.contrib.auth.hashers import make_password
+
 
 from .models import ServiceAddress
 from .models import User
 from .models import DeliveryTime
-from .forms import UserForm
+from .forms import DeliveryTimeForm, UserForm
 
 # Create your views here.
 
@@ -148,72 +149,53 @@ class DeliveryTimeView:
 
     @classmethod
     def create_delivery_time(cls, request, service_address_id):
-        message = ''
+        service_address = get_object_or_404(ServiceAddress, id=service_address_id)
+        form = DeliveryTimeForm()
+
         if request.method == 'POST':
-            service_address_id = service_address_id if service_address_id else request.POST.get('service_address_id', None)
-            time = request.POST['time']
-            day = request.POST['day']
-
-            if not service_address_id:
-                message = 'Horário de entrega precisa de endereço de atendimento.'
-
-            else:
-                service_address = ServiceAddress.objects.get(id=service_address_id)
-
-                delivery_time = DeliveryTime(
-                    service_address=service_address, time=time, day=day)
-
+            form = DeliveryTimeForm(request.POST or None)
+            if form.is_valid():
+                delivery_time = form.save()
+                delivery_time.service_address = service_address
                 delivery_time.save()
 
-                message = 'Horário de entrega criado com sucesso.'
-                return HttpResponseRedirect(reverse('list_service_address'))
-        
+                return redirect('list_delivery_time', service_address_id=service_address_id)
+
         return render(request, '../templates/delivery_time/create.html', {
-            'message': message,
+            'form': form,
             'service_address_id': service_address_id
         })
 
     @classmethod
     def update_delivery_time(cls, request, delivery_time_id):
-        message = ''
+        delivery_time = get_object_or_404(DeliveryTime, id=delivery_time_id)
+        service_address = delivery_time.service_address
+        form = DeliveryTimeForm(instance=delivery_time)
+
         if request.method == 'POST':
-            delivery_time_id = delivery_time_id
-            time = request.POST.get('time', None)
-            day = request.POST.get('day', None)
+            form = DeliveryTimeForm(request.POST, instance=delivery_time)
+            if form.is_valid():
+                delivery_time = form.save(commit=False)
+                delivery_time.service_address = service_address
+                delivery_time.save()
 
-            delivery_time = DeliveryTime.objects.get(id=delivery_time_id)
-
-            delivery_time.update(
-                time=time if time else delivery_time.time,
-                day=day if day else delivery_time.day)
-
-            message = 'Horário de entrega atualizado com sucesso.'
-        
-        elif request.method == 'GET':
-
-            delivery_time = DeliveryTime.objects.get(id=delivery_time_id)
-
+                return redirect(
+                    'list_delivery_time', service_address_id=delivery_time.service_address.id)        
 
         return render(request, '../templates/delivery_time/create.html', {
-            'mensagem': message,
+            'form': form,
+            'post': delivery_time,
             'delivery_time': delivery_time
         })
 
     @classmethod
-    def delete_delivery_time(cls, request, service_address_id):
-        message = ''
+    def delete_delivery_time(cls, request):
+        service_address_id = None
         if request.method == 'POST':
             delivery_time_id = request.POST['delivery_time_id']
+            delivery_time = get_object_or_404(DeliveryTime, id=delivery_time_id)
+            service_address_id = delivery_time.service_address.id
 
-            try:
-                delivery_time = DeliveryTime.objects.get(id=delivery_time_id)
-                delivery_time.delete()
-
-                message = 'Horário de entrega removido com sucesso.'
-            except DeliveryTime.DoesNotExist as e:
-                print(str(e))
-                message = 'Horário de entrega não existe.'
-
-            delivery_times = DeliveryTime.objects.all()
+            delivery_time.delete()
 
         return redirect('list_delivery_time', service_address_id=service_address_id)
