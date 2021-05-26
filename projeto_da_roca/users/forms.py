@@ -1,9 +1,10 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Field
+from crispy_forms.layout import Hidden, Layout, Submit, Field
 from django import forms
 from django.core.exceptions import ValidationError
 
 from .models import User
+from .models import DeliveryTime
 from .utils import validate_cpf
 
 
@@ -61,3 +62,29 @@ class UserForm(forms.ModelForm):
 
 
         return self.cleaned_data
+
+
+class DeliveryTimeForm(forms.ModelForm):
+    class Meta:
+        model = DeliveryTime
+        fields = ('service_address', 'time', 'day')
+        labels = {
+            'time': 'Hora',
+            'day': 'Dia',
+        }
+        widgets = {
+            'time': forms.TimeInput(attrs={'type':'time'}),
+            'day': forms.Select(attrs={'value': 'monday'})
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(DeliveryTimeForm, self).__init__(*args, **kwargs)
+
+        # If you pass FormHelper constructor a form instance
+        # It builds a default layout with all its fields
+        self.helper = FormHelper(self)
+        self.helper.layout = Layout(
+            Field('time', type='time', placeholder='Hora'),
+            Field('day', placeholder='Dia'),
+            Submit('save', 'Cadastrar'),
+        )

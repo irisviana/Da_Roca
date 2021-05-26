@@ -1,6 +1,7 @@
 <!-- templates/delivery_time/create.html -->
 {% extends 'base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 {% block title %} 
 <title>Novo horário de entrega</title>
@@ -17,25 +18,6 @@
         </div>
     </div>
     <div class="d-flex justify-content-center form_container">
-        <form action="{% url 'create_delivery_time' service_address_id %}" method="post">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="time">Hora</label>
-                <input class="form-control" type="time" name="time" id="time">
-            </div>
-            <div class="form-group">
-                <label for="day">Dia</label>
-                <select class="form-control" name="day" id="day">
-                    <option value="segunda">Segunda-feira</option>
-                    <option value="terca">Terça-feira</option>
-                    <option value="quarta">Quarta-feira</option>
-                    <option value="quinta">Quinta-feira</option>
-                    <option value="sexta">Sexta-feira</option>
-                    <option value="sabado">Sábado</option>
-                    <option value="domingo">Domingo</option>
-                </select>
-            </div>
-            <button class="btn btn-primary" type="submit">Cadastrar</button>
-        </form>
+        {% crispy form %}
     </div>
 {% endblock %}
