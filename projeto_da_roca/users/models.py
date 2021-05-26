@@ -30,15 +30,6 @@ class Address(models.Model):
     house_number = models.CharField(max_length=10, null=True, blank=True)
 
 
-class Profile(models.Model):
-    PROFILE_TYPE_CHOICES = (
-        ('admin', 'Administrador'),
-        ('customer', 'Cliente'),
-        ('producer', 'Produtor'),
-    )
-    profile_type = models.CharField(max_length=10, default='customer', choices=PROFILE_TYPE_CHOICES )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='profiles')
-
 
 class ServiceAddress(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
