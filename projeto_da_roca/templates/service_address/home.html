@@ -42,7 +42,7 @@
                                 <input type="hidden" name="service_address_id" value="{{ service_address.id }}">
                                 <input class="btn btn-primary" type="submit" value="Remover">
                             </form>
-                            <a href="{% url 'list_delivery_time' service_address.id %}" class="btn btn-primary">Horários</a>
+                            <a class="btn btn-primary" href="{% url 'list_delivery_time' service_address.id %}">Horários</a>
                         </div>
                     </td>
                     <td>{{ service_address.city }}</td>
