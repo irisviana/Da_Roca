@@ -1,11 +1,11 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Hidden, Layout, Submit, Field
+from crispy_forms.layout import Layout, Submit, Field
 from django import forms
 from django.core.exceptions import ValidationError
 
-from .models import User
 from .models import Address
 from .models import DeliveryTime
+from .models import User
 from .utils import validate_cpf
 
 
@@ -43,17 +43,18 @@ class UserForm(forms.ModelForm):
         if cpf:
             cpf = cpf.replace('.', '').replace('-', '')
             if validate_cpf(cpf):
+                if User.objects.filter(cpf=cpf).exists():
+                    raise ValidationError('O CPF já está cadastrado')
                 return cpf
         raise ValidationError('O CPF é invalido')
 
     def clean(self):
         email = self.cleaned_data.get('email')
-        cpf = self.cleaned_data.get('cpf')
         password = self.cleaned_data.get('password')
         confirm_password = self.cleaned_data.get('confirm_password')
         name = self.cleaned_data.get('first_name')
         if name is None:
-             raise ValidationError('O nome precissa ser informado')
+            raise ValidationError('O nome precissa ser informado')
         if password != confirm_password:
             raise ValidationError('As senhas precisam ser idênticas')
         if User.objects.filter(email=email).exists():

@@ -8,6 +8,7 @@ from .views import AddressView
 urlpatterns = [
     path('', UserView.list_users),
     path('create', UserView.create_users, name='create_customer'),
+    path('<str:username>/update', UserView.update_users, name='update_customer'),
     path('<str:username>/address/create', AddressView.create_address, name='create_customer_address'),
     path('delivery_time/list/<int:service_address_id>', DeliveryTimeView.list_delivery_time, name='list_delivery_time'),
     path('delivery_time/create/<int:service_address_id>', DeliveryTimeView.create_delivery_time, name='create_delivery_time'),

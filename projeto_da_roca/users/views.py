@@ -37,6 +37,19 @@ class UserView:
             form = UserForm()
         return render(request, '../templates/registration/create_costumer.html', {'form': form})
 
+    @classmethod
+    def update_users(cls, request, username):
+        user = get_object_or_404(User, username=username)
+        form = UserForm(request.POST or None, instance=user)
+
+        if request.method == 'POST':
+            if form.is_valid():
+                user = form.save()
+                login(request, user)
+                return redirect('home')
+
+        return render(request, '../templates/registration/update_costumer.html', {'form': form})
+
 
 class AddressView:
 
