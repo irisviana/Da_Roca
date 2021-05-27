@@ -40,7 +40,7 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return render(request, 'users_profile/costumer_home.html')
         else:
             messages.error(request, 'email ou senha estão incorretos')
 
@@ -50,6 +50,9 @@ def login_page(request):
 def logout_page(request):
     logout(request)
     return render(request, 'registration/login.html')
+
+def costumer_home(request):
+    return render(request, 'users_profile/costumer_home.html')
 
 
 def home(request):
