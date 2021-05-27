@@ -13,19 +13,11 @@
   text-align: center;
 }
 
-#sidebar.active ul.components li {
-  font-size: 14px;
-}
-
-#sidebar.active .logo {
-  padding: 10px 0;
-}
-
 #sidebar .logo {
   display: block;
   color: #fff;
   font-weight: 900;
-  padding: 10px 30px;
+  padding: 10px 20px;
   -webkit-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
