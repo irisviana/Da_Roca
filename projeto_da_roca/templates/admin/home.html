@@ -1,0 +1,51 @@
+<!-- templates/admin/home.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>Administração</title>{% endblock %}
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+{% block content %}
+	
+	<div class="d-flex flex-column align-items-center">
+	<div>
+	    <h4>Administração</h4>
+	</div>
+	</div>
+	<div class="row justify-content-center">
+	<a class="clickable-card" href="">
+	    <div class="card manage">
+	        <div class="card-body">
+	        	<span class="fa fa-user-circle fa-2x"></span>
+	            <h3 class="card-title">
+	               Administradores
+	            </h3>
+	        </div>
+	        <div class="card-footer">
+	            <a href="" class="btn">
+	                Adicionar
+	            </a>
+	            <a href="{% url 'manage_admin'%}"class="btn">
+	                Gerenciar
+	            </a>
+	        </div>
+	    </div>
+	</a>
+	<a class="clickable-card" href="#">
+	    <div class="card manage">
+	        <div class="card-body">
+	        	<span class="fa fa-newspaper fa-2x"></span>
+	            <h3 class="card-title">
+	                Solicitações de venda
+	            </h3>
+	        </div>
+	        <div class="card-footer">
+	            <a href="" class="btn">
+	                Gerenciar
+	            </a>
+	        </div>   
+	    </div>
+	</a>
+	</div>
+
+{% endblock %}
