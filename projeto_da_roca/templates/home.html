@@ -1,50 +1,36 @@
 <!-- templates/home.html -->
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}<title>Gerenciar perfis</title>{% endblock %}
+{% block title %}<title>Início - DaRoça</title>{% endblock %}
 {% block header %}
     {% include 'header.html' %}
 {% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-  Bem vindo(a),{{ user.first_name }}!
   <div>
-	  <a href="{% url 'logout' %}">Logout</a>
-	  <div class="d-flex flex-column align-items-center">
-	        <div>
-	            <h4>Cadastrar perfis</h4>
-	        </div>
-	  </div>
-	  <div class="row justify-content-center">
-	    <a class="clickable-card" href="{% url 'list_service_address' %}">
-	        <div class="card manage">
-	            <div class="card-header">
-	                <span class="fa fa-newspaper"></span>
-	            </div>
-	            <div class="card-body">
-	                <h3 class="card-title">
-	                    Produtor
-	                </h3>
-	            </div>
-	        </div>
-	    </a>
-	    <a class="clickable-card" href="#">
-	        <div class="card manage">
-	            <div class="card-header">
-	                <span class="fa fa-user-circle"></span>
-	            </div>
-	            <div class="card-body">
-	                <h3 class="card-title">
-	                    Cliente
-	                </h3>
-	            </div>   
-	        </div>
-	    </a>
-	    </div>
-	{% else %}
-	  <p>Você nã está logado</p>
-	  <a href="{% url 'login' %}">Log In</a>
+	<nav class="navbar navbar-expand-lg navbar-light" style="background-color:#DCFFEE;">
+	  <a class="navbar-brand" href="{% url 'home' %}" style="color:darkgreen;">Início <span class="sr-only">(current)</span></a>
+		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+		    <span class="navbar-toggler-icon"></span>
+	  	 </button>
+		  <div class="collapse navbar-collapse" id="navbarText">
+		    <ul class="navbar-nav mr-auto">
+		      <li class="nav-item dropdown">
+		        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color:#0F8D50;">Categorias </a>
+		      </li>
+		      <li class="nav-item">
+		      	{% if user.is_authenticated %}
+		        	<a class="nav-link" href="#" style="color:#0F8D50;">Vender</a>
+		        {% else %}
+		        	<a class="nav-link" href="{% url 'login' %}"style="color:#0F8D50;">Vender</a>
+		        {% endif %}
+		      </li>
+		      <li class="nav-item">
+		        <a class="nav-link" href="#" style="color:#0F8D50;">Contato</a>
+		      </li>
+		    </ul>
+		    
+		  </div>
+	</nav>
  </div>
-{% endif %}
 {% endblock %}
