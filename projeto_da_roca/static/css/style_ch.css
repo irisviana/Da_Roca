@@ -17,22 +17,8 @@
   font-size: 14px;
 }
 
-#sidebar.active ul.components li a {
-  padding: 10px 0;
-}
-
-#sidebar.active ul.components li a span {
-  margin-right: 0;
-  display: block;
-  font-size: 24px;
-}
-
 #sidebar.active .logo {
   padding: 10px 0;
-}
-
-#sidebar.active .footer {
-  display: none;
 }
 
 #sidebar .logo {
@@ -81,13 +67,15 @@
 }
 
 #sidebar.active ul li a {
-  padding: 10px 30px;
+  padding: 10px 20px;
   display: block;
   color: white;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #sidebar.active ul.components li a span {
+  display: block;
+  font-size: 24px;
   margin-right: 15px;
 }
 
@@ -114,7 +102,7 @@
     margin-left: -80px !important;
   }
 
-   #sidebar.active {
+   #sidebar.active{
     margin-left: 0 !important;
-   }
+  }
 }
