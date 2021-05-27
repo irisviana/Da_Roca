@@ -2,9 +2,11 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Hidden, Layout, Submit, Field
 from django import forms
 from django.core.exceptions import ValidationError
+from django.forms import widgets
 
 from .models import User
 from .models import DeliveryTime
+from .models import ServiceAddress
 from .utils import validate_cpf
 
 
@@ -86,5 +88,28 @@ class DeliveryTimeForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('time', type='time', placeholder='Hora'),
             Field('day', placeholder='Dia'),
+            Submit('save', 'Cadastrar'),
+        )
+
+class ServiceAdressForm(forms.ModelForm):
+    class Meta:
+        model = ServiceAddress
+        fields = ('user', 'city', 'state')
+        labels = {
+            'city' : 'cidade',
+            'state' : 'estado',
+        }
+        widgets = {
+            'city': forms.Input(attrs={'type':'text'}),
+            'state': forms.Select(attrs={'value':'PE'}) 
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ServiceAdressForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.layout = Layout(
+            Field('city', type='text', placeholder="Cidade"),
+            Field('state', placeholder="Estado"),
             Submit('save', 'Cadastrar'),
         )
