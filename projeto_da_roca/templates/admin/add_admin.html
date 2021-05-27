@@ -16,12 +16,12 @@
         {% endif %}
 
         <div class="input-group mb-4 border rounded-pill p-1">
-            <input type="search" placeholder="Procure por pessoas" aria-describedby="button-addon3" class="form-control bg-none border-0">
+            <input id="myInput" onkeyup="myFunction()" type="search" placeholder="Procure por pessoas" aria-describedby="button-addon3" class="form-control bg-none border-0">
             <div class="input-group-append border-0">
               <button id="button-addon3" type="button" class="btn btn-link text-success"><i class="fa fa-search"></i></button>
             </div>
         </div> 
-        <table id="user_table" class="custom_table mt-5">
+        <table id="myTable" class="custom_table mt-5">
             <thead>
                 <tr>
                     <th>Ação</th>
@@ -51,6 +51,28 @@
             </tbody>
         </table>
 	</div>
-
-
 {% endblock %}
+<script>
+function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  thead = table.getElementsByTagName("table");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
