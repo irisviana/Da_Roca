@@ -59,7 +59,24 @@ def logout_page(request):
 def home(request):
     return render(request, 'home.html')
 
+def admin_home(request):
+    return render(request, 'admin/home.html')
 
+def list_admin(request):
+        admins = User.objects.all()
+
+        return render(request, 'admin/manage_admin.html', {
+            "admins": admins,
+        })
+def add_admin( request):
+    message = ''
+    
+    users = User.objects.all()
+
+    return render(request, 'admin/add_admin.html', {
+            "users": users ,
+    })
+    
 class ServiceAddressView:
     @classmethod
     def list_service_address(cls, request):
@@ -79,14 +96,15 @@ class ServiceAddressView:
             #userId = request.POST['usuarioId']
 
             #user = User.objects.get(id = userId)
-            user= request.user
-            service_address = ServiceAddress(
-                user=user, city=city, state=state)
+            if request.user.is_authenticated:
+                user= request.user
+                service_address = ServiceAddress(
+                    user=user, city=city, state=state)
 
-            service_address.save()
+                service_address.save()
 
-            message = "Endereço de atendimento criado com sucesso."
-            service_address = ServiceAddress.objects.all()
+                message = "Endereço de atendimento criado com sucesso."
+                service_address = ServiceAddress.objects.all()
             return HttpResponseRedirect(reverse('list_service_address'))
             
         

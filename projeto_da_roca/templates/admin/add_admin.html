@@ -1,0 +1,56 @@
+<!-- templates/admin/home.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>Administração</title>{% endblock %}
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+{% block content %}
+	<div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Adicionar administrador</h4>
+        </div>
+        
+        {% if mensagem %}
+            <p>{{ mensagem }}</p>
+        {% endif %}
+
+        <div class="input-group mb-4 border rounded-pill p-1">
+            <input type="search" placeholder="Procure por pessoas" aria-describedby="button-addon3" class="form-control bg-none border-0">
+            <div class="input-group-append border-0">
+              <button id="button-addon3" type="button" class="btn btn-link text-success"><i class="fa fa-search"></i></button>
+            </div>
+        </div> 
+        <table id="user_table" class="custom_table mt-5">
+            <thead>
+                <tr>
+                    <th>Ação</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr>
+                    <td>
+                        <div class="actions">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="admin_email" value="{{admin.email }}">
+                                <input class="btn btn-primary" type="submit" value="Tornar admin">
+                            </form>
+                    
+                        </div>
+                    </td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.phone_number }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+	</div>
+
+
+{% endblock %}
