@@ -91,7 +91,7 @@ class DeliveryTimeForm(forms.ModelForm):
             Submit('save', 'Cadastrar'),
         )
 
-class ServiceAdressForm(forms.ModelForm):
+class ServiceAddressForm(forms.ModelForm):
     class Meta:
         model = ServiceAddress
         fields = ('user', 'city', 'state')
@@ -99,13 +99,9 @@ class ServiceAdressForm(forms.ModelForm):
             'city' : 'cidade',
             'state' : 'estado',
         }
-        widgets = {
-            'city': forms.Input(attrs={'type':'text'}),
-            'state': forms.Select(attrs={'value':'PE'}) 
-        }
 
     def __init__(self, *args, **kwargs):
-        super(ServiceAdressForm, self).__init__(*args, **kwargs)
+        super(ServiceAddressForm, self).__init__(*args, **kwargs)
 
         self.helper = FormHelper(self)
         self.helper.layout = Layout(

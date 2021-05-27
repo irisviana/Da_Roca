@@ -10,7 +10,7 @@ from django.contrib.auth.hashers import make_password
 from .models import ServiceAddress
 from .models import User
 from .models import DeliveryTime
-from .forms import DeliveryTimeForm, ServiceAdressForm, UserForm
+from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm
 
 # Create your views here.
 
@@ -77,10 +77,10 @@ class ServiceAddressView:
     @classmethod
     def create_service_address(cls, request, user_id):
         user = get_object_or_404(User, id=user_id)
-        form = ServiceAdressForm()
+        form = ServiceAddressForm()
 
         if request.method == 'POST':
-            form = ServiceAdressForm(request.POST or None)
+            form = ServiceAddressForm(request.POST or None)
             if form.is_valid():
                 service_address = form.save()
                 service_address.user = user
@@ -97,10 +97,10 @@ class ServiceAddressView:
     def update_service_address(cls, request, service_address_id):
         service_address = get_object_or_404(ServiceAddress, id=service_address_id)
         user = service_address.user
-        form = ServiceAdressForm(instance=service_address)
+        form = ServiceAddressForm(instance=service_address)
 
         if request.method == 'POST':
-            form = ServiceAdressForm(request.POST, instance=service_address)
+            form = ServiceAddressForm(request.POST, instance=service_address)
             if form.is_valid:
                 service_address = form.save(commit=False)
                 service_address.user = user
