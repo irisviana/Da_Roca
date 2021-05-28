@@ -9,6 +9,7 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     cpf = models.CharField(max_length=11, null=True, blank=True, unique=True)
     phone_number = models.CharField(max_length=50, null=True, blank=True)
+    sale_description = models.TextField(max_length=100, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.username = uuid.uuid4().hex[:30]
@@ -77,7 +78,7 @@ class DeliveryTime(models.Model):
         ('saturday', 'Sábado'),
         ('sunday', 'Domingo'),
     )
-    service_address = models.ForeignKey(ServiceAddress, on_delete=models.CASCADE, null=True, blank=True)
+    service_address = models.ForeignKey(ServiceAddress, on_delete=models.CASCADE, null=False, blank=False)
     time = models.TimeField(null=False, blank=False)
     day = models.CharField(max_length=15, null=False, blank=False, choices=DAYS, default=DAYS[0])
 
