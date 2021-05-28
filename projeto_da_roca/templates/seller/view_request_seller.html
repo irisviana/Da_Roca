@@ -16,14 +16,16 @@
             <h4>Visualizar solicitação</h4>
         </div>
         <div class="row justify-content-center">
-        	<textarea rows="4" cols="50" type="text" value="" readonly>{{user.sale_description}}</textarea>
+            <div class="form-group">
+        	    <textarea class="form-control" rows="4" cols="50" type="text" value="" readonly>{{user.sale_description}}</textarea>
+            </div>
         </div>
         	
         <div class="actions">
                 <form action="{% url 'refuse_request_seller' %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="user_id" value="{{ user.id }}">
-                    <input class="btn btn-primary" type="submit" value="Recusar" style="background-color:#ff0000;">
+                    <input class="btn btn-danger" type="submit" value="Recusar">
                 </form>
                 <form action="{% url 'approve_request_seller' %}" method="post">
                     {% csrf_token %}
