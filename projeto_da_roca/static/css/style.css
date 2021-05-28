@@ -4,6 +4,7 @@
     --color-light: #DCFFEE;
     --color-white: #FFFFFF;
     --color-black: #000000;
+    --color-transparent: rgba(0,0,0,0);
     --color-dark-shadow: rgba(0,0,0,0.2);
     
     /* Shadows */
@@ -31,8 +32,8 @@
   .header_container, .navbar {
     display: flex;
     align-items: center;
-    padding: 0.5em;
-    max-width: 800px;
+    padding: 0.5;
+    max-width: 900px;
     margin: 0 auto;
     color: var(--color-primary);
   }
@@ -50,9 +51,13 @@
     margin: 0;
     padding: 0;
   }
+
+  .nav-item {
+    padding: 0;
+  }
   
   header nav ul li {
-    padding: 0.5em;
+    padding: 0em;
   }
 
   header a {
@@ -65,7 +70,8 @@
   }
   
   header .logo img {
-    width: 6em;
+    width: 5em;
+    margin: 0 1em;
   }
   /* 1- END OF HEADER */
 
@@ -162,8 +168,15 @@
     box-shadow: var(--shadow-button);
   }
 
-  .btn + .btn {
-    margin-top: 0.5em;
+  .btn.btn-thin {
+    width: 48px;
+    margin: 0 0.5em;
+    padding: 0.375em;
+  }
+
+  .btn.btn-nav {
+    width: min-content;
+    margin: 0 0.5em;
   }
 
   .btn-primary, .btn-primary:visited, .btn-primary:link {
@@ -178,9 +191,17 @@
   }
 
   .btn-secondary {
-    background-color: var(--color-white);
-    border: 1px solid var(--color-primary);
+    background-color: var(--color-transparent);
+    border: 1px solid var(--color-transparent);
     color: var(--color-primary);
+    box-shadow: none;
+  }
+
+  .btn-secondary:hover, .btn-secondary:active {
+    background-color: var(--color-white) !important;
+    border: 1px solid var(--color-primary);
+    color: var(--color-primary) !important;
+    box-shadow: var(--shadow-button);
   }
 
   .border-custom {
@@ -244,6 +265,10 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+  }
+
+  .card .btn + .btn {
+    margin-top: 0.5em;
   }
   /* 2- FIM DE ADMIN CARDS */
  

@@ -4,26 +4,30 @@
     <div class="logo">
         <img src="{% static 'images/logo.svg' %}" alt="Logo do DaRoça">
     </div>
+    <div class="input-group border-custom rounded-pill p-1">
+        <input type="search" placeholder="O que você procura?" aria-describedby="button-addon3" class="form-control bg-none border-0">
+        <div class="input-group-append border-0">
+            <button id="button-addon3" type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+        </div>
+    </div>
     <nav>
         <ul>
+            <li><a class="btn btn-secondary btn-thin" href="" title="Produtos favoritos"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>
+            <li><a class="btn btn-secondary btn-thin" href="" title="Cesta de produtos"><i class="fa fa-shopping-basket fa-2x" aria-hidden="true" ></i></a></li>
+
             {% if user.is_authenticated %}
-                <li><a href="{% url 'customer_home' %}" title="Configurações de perfil"><i class="fa fa-user-circle fa-2x" aria-hidden="true"></i></a>
-                Bem vindo(a),{{ user.first_name }}!</li>
+                <li>
+                    <a class="btn btn-secondary btn-nav" href="{% url 'customer_home' %}" title="Configurações de perfil">
+                        <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>
+                        {{ user.first_name }}
+                    </a>
+                </li>
+                <li><a class="btn btn-secondary btn-thin" href="{% url 'logout' %}" title="Sair"><i class="fas fa-sign-out-alt fa-2x"></i></a></li>
             {% else %}
-                <li><a href="{% url 'login' %}"></i>Acesso</a></li>
-            {% endif %}
-            <li><a href="" title="Produtos favoritos"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>
-            <li><a href="" title="Cesta de produtos"><i class="fa fa-shopping-basket fa-2x" aria-hidden="true" ></i></a></li>
-            {% if user.is_authenticated %}
-                <li><a href="{% url 'logout' %}" title="Sair"><i class="fas fa-sign-out-alt fa-2x"></i></a></li>
+                <li><a class="btn btn-secondary btn-nav" href="{% url 'login' %}"></i>Acesso</a></li>
+                <li><a class="btn btn-primary btn-nav" href="{% url 'create_customer' %}"></i>Cadastre-se</a></li>
             {% endif %}
         </ul>
-       <div class="input-group mb-4 border-custom rounded-pill p-1">
-            <input type="search" placeholder="O que você procura?" aria-describedby="button-addon3" class="form-control bg-none border-0">
-            <div class="input-group-append border-0">
-              <button id="button-addon3" type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
-            </div>
-        </div>  
     </nav>
 </div>
 {% block content %}

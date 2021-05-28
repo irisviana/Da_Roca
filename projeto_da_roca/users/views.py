@@ -44,7 +44,7 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            return render(request, 'users_profile/customer_home.html')
+            return redirect('home')
         else:
             messages.error(request, 'email ou senha estão incorretos')
 
@@ -52,36 +52,46 @@ def login_page(request):
 
 
 def logout_page(request):
-    logout(request)
-    return redirect('home')
+    if request.user.is_authenticated:
+        logout(request)
+        return redirect('home')
+    return redirect('login')
 
 def customer_home(request):
-    return render(request, 'users_profile/customer_home.html')
-
+    if request.user.is_authenticated:
+        return render(request, 'users_profile/customer_home.html')
+    return redirect('login')
 
 def home(request):
     return render(request, 'home.html')
 
 def admin_home(request):
-    return render(request, 'admin/home.html')
+    if request.user.is_authenticated:
+        return render(request, 'admin/home.html')
+    return redirect('login')
 
 def list_admin(request):
+    if request.user.is_authenticated:
         admins = User.objects.all()
 
         return render(request, 'admin/manage_admin.html', {
             "admins": admins,
         })
-def add_admin( request):
-    message = ''
+    return redirect('login')
     
-    users = User.objects.all()
+def add_admin( request):
+    if request.user.is_authenticated:    
+        users = User.objects.all()
 
-    return render(request, 'admin/add_admin.html', {
-            "users": users ,
-    })
+        return render(request, 'admin/add_admin.html', {
+                "users": users ,
+        })
+    return redirect('login')
 
 def seller_home(request):
-    return render(request, 'seller/home_seller.html')
+    if request.user.is_authenticated:
+        return render(request, 'seller/home_seller.html')
+    return redirect('login')
     
 def request_seller(request):
     '''
@@ -91,11 +101,14 @@ def request_seller(request):
         user.user_permissions.add(permission)
         message = ''
     '''
-    if request.method == 'POST':
-        sale_description = request.POST['sale_description']
-        print(sale_description)
-        
-    return render(request, 'seller/home_seller.html')
+    if request.user.is_authenticated:
+    
+        if request.method == 'POST':
+            sale_description = request.POST['sale_description']
+            print(sale_description)
+            
+        return render(request, 'seller/home_seller.html')
+    return redirect('login')
 
 class ServiceAddressView:
     @classmethod
@@ -107,9 +120,10 @@ class ServiceAddressView:
             else:
                 service_address = ServiceAddress.objects.all()
 
-        return render(request, 'service_address/home.html', {
-            "services_address": service_address,
-        })
+            return render(request, 'service_address/home.html', {
+                "services_address": service_address,
+            })
+        return redirect('login')
 
 
     @classmethod
@@ -130,6 +144,7 @@ class ServiceAddressView:
                 'form': form,
                 'user_id': user
             })
+        return redirect('login')
                 
     @classmethod
     def update_service_address(cls, request, service_address_id):
@@ -151,17 +166,18 @@ class ServiceAddressView:
                 'post': service_address,
                 'service_address': service_address
             })
+        return redirect('login')
 
     @classmethod
     def delete_service_address(cls, request):
         if request.user.is_authenticated:
-            user = request.user
             if request.method == 'POST':
                 service_address_id = request.POST['service_address_id']
                 service_address = get_object_or_404(ServiceAddress, id=service_address_id)
 
                 service_address.delete()
                 return redirect('list_service_address')
+        return redirect('login')
 
 
 class DeliveryTimeView:
@@ -177,6 +193,7 @@ class DeliveryTimeView:
                 "delivery_times": delivery_time,
                 'service_address_id': service_address_id,
             })
+        return redirect('login')
 
     @classmethod
     def create_delivery_time(cls, request, service_address_id):
@@ -197,6 +214,7 @@ class DeliveryTimeView:
                 'form': form,
                 'service_address_id': service_address_id
             })
+        return redirect('login')
 
     @classmethod
     def update_delivery_time(cls, request, delivery_time_id):
@@ -220,6 +238,7 @@ class DeliveryTimeView:
                 'post': delivery_time,
                 'delivery_time': delivery_time
             })
+        return redirect('login')
 
     @classmethod
     def delete_delivery_time(cls, request):
@@ -233,3 +252,4 @@ class DeliveryTimeView:
                 delivery_time.delete()
 
             return redirect('list_delivery_time', service_address_id=service_address_id)
+        return redirect('login')
