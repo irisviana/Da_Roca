@@ -73,7 +73,7 @@ def admin_home(request):
 
 def list_admin(request):
     if request.user.is_authenticated:
-        admins = User.objects.all()
+        admins = User.objects.filter(is_admin=0)
 
         return render(request, 'admin/manage_admin.html', {
             "admins": admins,
@@ -82,7 +82,7 @@ def list_admin(request):
     
 def add_admin( request):
     if request.user.is_authenticated:    
-        users = User.objects.all()
+        users = User.objects.filter(is_admin=1)
 
         return render(request, 'admin/add_admin.html', {
                 "users": users ,
@@ -132,7 +132,6 @@ def refuse_seller_request(request):
     return HttpResponseRedirect(reverse('seller_manage'))
 
 def approve_seller_request(request):
-    service_address_id = None
     if request.method == 'POST':
         user_id = request.POST['user_id']
         user = User.objects.get(pk= user_id)
@@ -140,6 +139,25 @@ def approve_seller_request(request):
         user.save()
 
     return HttpResponseRedirect(reverse('seller_manage'))
+
+def make_admin(request):
+    if request.method == 'POST':
+        user_id = request.POST['user_id']
+        user = User.objects.get(pk= user_id)
+        user.is_admin = 0
+        user.save()
+
+    return HttpResponseRedirect(reverse('manage_admin'))
+
+def remove_admin(request):
+    if request.method == 'POST':
+        print('aqui')
+        admin_id= request.POST['admin_id']
+        user = User.objects.get(pk= admin_id)
+        user.is_admin = 1
+        user.save()
+
+    return HttpResponseRedirect(reverse('manage_admin'))
 
 class ServiceAddressView:
     @classmethod

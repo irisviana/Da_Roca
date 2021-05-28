@@ -38,10 +38,10 @@
                 <tr>
                     <td>
                         <div class="actions">
-                            <form action="" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="admin_email" value="{{admin.email }}">
-                                <input class="btn btn-primary" type="submit" value="Remover">
+                            <form action="{% url 'admin_remove' %}" method="post">
+                              {% csrf_token %}
+                              <input type="hidden" name="admin_id" value="{{ admin.id }}">
+                              <input class="btn btn-primary" type="submit" value="Remover">
                             </form>
                     
                         </div>

@@ -35,10 +35,10 @@
                 <tr>
                     <td>
                         <div class="actions">
-                            <form action="" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="admin_email" value="{{admin.email }}">
-                                <input class="btn btn-primary" type="submit" value="Tornar admin">
+                            <form action="{% url 'admin_make' %}" method="post">
+                              {% csrf_token %}
+                              <input type="hidden" name="user_id" value="{{ user.id }}">
+                              <input class="btn btn-primary" type="submit" value="Tornar admin">
                             </form>
                     
                         </div>
