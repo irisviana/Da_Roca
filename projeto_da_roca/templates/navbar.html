@@ -18,6 +18,8 @@
 				<li class="nav-item">
 					<a class="btn btn-secondary btn-nav" href="{% url 'home_seller' %}">Vender</a>
 				</li>
+				{% endif %}
+				{% if user.is_admin == 0 %}
 				<li class="nav-item">
 					<a class="btn btn-secondary btn-nav" href="{% url 'home_admin' %}">Administrar</a>
 				</li>
