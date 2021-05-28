@@ -1,0 +1,10 @@
+language: python
+python:
+  – "3.9" #versão do python
+env:
+  – SECRET_KEY=TopSecretKey DEBUG=True ALLOWED_HOSTS=127.0.0.1 #Configuração das variáveis de ambiente
+install:
+  – pip install -r requirements.txt
+script: #comandos a serem executados para realizar o teste
+  – python manage.py check 
+  – python manage.py test
