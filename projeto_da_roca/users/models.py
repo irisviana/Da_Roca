@@ -78,7 +78,7 @@ class DeliveryTime(models.Model):
         ('saturday', 'Sábado'),
         ('sunday', 'Domingo'),
     )
-    service_address = models.ForeignKey(ServiceAddress, on_delete=models.CASCADE, null=True, blank=True)
+    service_address = models.ForeignKey(ServiceAddress, on_delete=models.CASCADE, null=False, blank=False)
     time = models.TimeField(null=False, blank=False)
     day = models.CharField(max_length=15, null=False, blank=False, choices=DAYS, default=DAYS[0])
 
