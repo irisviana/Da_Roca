@@ -5,8 +5,8 @@
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
-  background-color:#79CDCD;
-  margin-top:-27px;
+  background-color: #79cdcd;
+  margin-top: -27px;
 }
 
 #sidebar.active {
