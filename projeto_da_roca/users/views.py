@@ -10,7 +10,7 @@ from django.contrib.auth.hashers import make_password
 from .models import ServiceAddress
 from .models import User
 from .models import DeliveryTime
-from .forms import DeliveryTimeForm, UserForm
+from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm
 
 # Create your views here.
 
@@ -83,7 +83,12 @@ def add_admin( request):
 class ServiceAddressView:
     @classmethod
     def list_service_address(cls, request):
-        service_address = ServiceAddress.objects.all()
+        if request.user.is_authenticated:
+            user = request.user
+            if user.id:
+                service_address = ServiceAddress.objects.filter(user=user.id)
+            else:
+                service_address = ServiceAddress.objects.all()
 
         return render(request, 'service_address/home.html', {
             "services_address": service_address,
@@ -92,67 +97,55 @@ class ServiceAddressView:
 
     @classmethod
     def create_service_address(cls, request):
-        message = ''
-        if request.method == 'POST':
-            city = request.POST['cidade']
-            state = request.POST['estado']
-            #userId = request.POST['usuarioId']
+        form = ServiceAddressForm()
+        if request.user.is_authenticated:
+            user = request.user
+            if request.method == 'POST':
+                form = ServiceAddressForm(request.POST or None)            
+                if form.is_valid():
+                    service_address = form.save(commit=False)
+                    service_address.user = user
+                    service_address.save()
 
-            #user = User.objects.get(id = userId)
-            if request.user.is_authenticated:
-                user= request.user
-                service_address = ServiceAddress(
-                    user=user, city=city, state=state)
+                    return redirect('list_service_address')
 
-                service_address.save()
-
-                message = "Endereço de atendimento criado com sucesso."
-                service_address = ServiceAddress.objects.all()
-            return HttpResponseRedirect(reverse('list_service_address'))
-            
-        
-        return render(request, 'service_address/create.html', {
-            'message': message,
-        })
-
+            return render(request, '../templates/service_address/create.html',{
+                'form': form,
+                'user_id': user
+            })
+                
     @classmethod
-    def update_service_address(cls, request):
-        message = ''
-        if request.method == 'POST':
-            service_address_id = request.POST['enderecoEntredaId']
-            city = request.get('cidade')
-            state = request.get('estado')
-            
-            service_address = ServiceAddress.objects.get(id=service_address_id)
-            
-            service_address.update(
-                city=city if city else service_address.city,
-                state=state if state else service_address.state)
+    def update_service_address(cls, request, service_address_id):
+        service_address = get_object_or_404(ServiceAddress, id=service_address_id)
+        if request.user.is_authenticated:
+            form = ServiceAddressForm(instance=service_address)
+            user = request.user
+            if request.method == 'POST':
+                form = ServiceAddressForm(request.POST, instance=service_address)
+                if form.is_valid:
+                    service_address = form.save(commit=False)
+                    service_address.user = user
+                    service_address.save()
 
-            message = "Endereço de atendimento atualizado com sucesso."
-
-        return render(request, 'usuario/service_address/create.html', {
-            'mesage': message,
-        })
+                    return redirect('list_service_address')
+                
+            return render(request, '../templates/service_address/create.html', {
+                'form': form,
+                'post': service_address,
+                'service_address': service_address
+            })
 
     @classmethod
     def delete_service_address(cls, request):
-        message = ''
-        if request.method == 'POST':
-            service_address_id = request.POST['service_address_id']
-            
-            try:
-                service_address = ServiceAddress.objects.get(id=service_address_id)
+        if request.user.is_authenticated:
+            user = request.user
+            if request.method == 'POST':
+                service_address_id = request.POST['service_address_id']
+                service_address = get_object_or_404(ServiceAddress, id=service_address_id)
+
                 service_address.delete()
+                return redirect('list_service_address')
 
-                message = "Endereço de atendimento deletado com sucesso."
-            except ServiceAddress.DoesNotExist as e:
-                print(str(e)) 
-                message = 'Endereço de entrega não existe.'
-
-            services_address = ServiceAddress.objects.all()
-            
-        return HttpResponseRedirect(reverse('list_service_address'))
 
 class DeliveryTimeView:
     @classmethod
