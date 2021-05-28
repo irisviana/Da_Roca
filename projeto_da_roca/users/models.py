@@ -36,9 +36,39 @@ class Address(models.Model):
 
 
 class ServiceAddress(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
-    city = models.CharField(max_length=50, null=False, blank=False) 
-    state = models.CharField(max_length=2, null=False, blank=False)
+    STATES = (
+        ('AC','Acre'),
+        ('AL','Alagoas'),
+        ('AP','Amapá'),
+        ('AM','Amazonas'),
+        ('BA','Bahia'),
+        ('CE','Ceará'),
+        ('DF','Distrito Federal'),
+        ('ES','Espírito Santo'),
+        ('GO','Goiás'),
+        ('MA','Maranhão'),
+        ('MT','Mato Grosso'),
+        ('MS','Mato Grosso do Sul'),
+        ('MG','Minas Gerais'),
+        ('PA','Pará'),
+        ('PB','Paraíba'),
+        ('PR','Paraná'),
+        ('PE','Pernambuco'),
+        ('PI','Piauí'),
+        ('RJ','Rio de Janeiro'),
+        ('RN','Rio Grande do Norte'),
+        ('RS','Rio Grande do Sul'),
+        ('RO','Rondônia'),
+        ('RR','Roraima'),
+        ('SC','Santa Catarina'),
+        ('SP','São Paulo'),
+        ('SE','Sergipe'),
+        ('TO','Tocantins'),
+
+    )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
+    city = models.CharField(max_length=50, blank=False)
+    state = models.CharField(max_length=2, null=False, blank=False, choices=STATES, default=STATES[0])
 
 
 class DeliveryTime(models.Model):
@@ -51,7 +81,7 @@ class DeliveryTime(models.Model):
         ('saturday', 'Sábado'),
         ('sunday', 'Domingo'),
     )
-    service_address = models.ForeignKey(ServiceAddress, on_delete=models.CASCADE, null=True, blank=True)
+    service_address = models.ForeignKey(ServiceAddress, on_delete=models.CASCADE, null=False, blank=False)
     time = models.TimeField(null=False, blank=False)
     day = models.CharField(max_length=15, null=False, blank=False, choices=DAYS, default=DAYS[0])
 

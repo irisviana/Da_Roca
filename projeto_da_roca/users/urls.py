@@ -1,5 +1,4 @@
 from django.urls import path
-
 from .views import *
 
 urlpatterns = [
@@ -12,10 +11,13 @@ urlpatterns = [
     path('service_address/list', ServiceAddressView.list_service_address, name='list_service_address'),
     path('service_address/create', ServiceAddressView.create_service_address, name='create_service_address'),
     path('service_address/delete', ServiceAddressView.delete_service_address, name='delete_service_address'),
+    path('service_address/update/<int:service_address_id>', ServiceAddressView.update_service_address, name='update_service_address'),
     path('admin/', admin_home, name='home_admin'),
     path('admin/manage_admin', list_admin, name='manage_admin'),
     path('admin/add', add_admin, name='admin_add'),
-    path('seller/', seller_home, name='home_seller'),
+
+    path('customer_home', customer_home, name='customer_home'),
+    path('seller/', request_seller, name='home_seller'),
     path('seller/request', request_seller, name='seller_request'),
     path('seller/manage_seller', manage_seller, name='seller_manage'),
     path('seller/view_seller_request/<int:user_id>', view_seller_request, name='view_request_seller'),

@@ -13,39 +13,35 @@
 	</div>
 	</div>
 	<div class="row justify-content-center">
-	<a class="clickable-card" href="">
-	    <div class="card manage">
-	        <div class="card-body">
-	        	<span class="fa fa-user-circle fa-2x"></span>
-	            <h3 class="card-title">
-	               Administradores
-	            </h3>
-	        </div>
-	        <div class="card-footer">
-	            <a href="" class="btn">
-	                Adicionar
-	            </a>
-	            <a href="{% url 'manage_admin'%}"class="btn">
-	                Gerenciar
-	            </a>
-	        </div>
-	    </div>
-	</a>
-	<a class="clickable-card" href="#">
-	    <div class="card manage">
-	        <div class="card-body">
-	        	<span class="fa fa-newspaper fa-2x"></span>
-	            <h3 class="card-title">
-	                Solicitações de venda
-	            </h3>
-	        </div>
-	        <div class="card-footer">
-	            <a href="" class="btn">
-	                Gerenciar
-	            </a>
-	        </div>   
-	    </div>
-	</a>
+		<div class="card manage">
+			<div class="card-body">
+				<span class="fa fa-user-circle fa-2x"></span>
+				<h3 class="card-title">
+				Administradores
+				</h3>
+			</div>
+			<div class="card-footer">
+				<a href="" class="btn btn-primary">
+					Adicionar
+				</a>
+				<a href="{% url 'manage_admin'%}"class="btn btn-primary">
+					Gerenciar
+				</a>
+			</div>
+		</div>
+		<div class="card manage">
+			<div class="card-body">
+				<span class="fa fa-newspaper fa-2x"></span>
+				<h3 class="card-title">
+					Solicitações de venda
+				</h3>
+			</div>
+			<div class="card-footer">
+				<a href="{% url 'seller_manage'%}" class="btn btn-primary">
+					Gerenciar
+				</a>
+			</div>   
+		</div>
 	</div>
 
 {% endblock %}

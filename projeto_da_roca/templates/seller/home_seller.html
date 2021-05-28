@@ -38,15 +38,14 @@
                 <p> Sua solicitação está sendo analisada</p>
             </div>
         {% else %}
-            <div class="row justify-content-center">
-                <p> Você ainda não é um vendedor, caso queira torna-se um, solicite permisão abaixo!</p>
-            </div>
             <form method="POST" action="{% url 'seller_request' %}">
+
                     {% csrf_token %}
                     <div class="d-flex flex-column align-items-center">
                         {% for message in messages %}
                             <p id="messages">{{message}}</p>
                         {% endfor %}
+                        <label for="sale-description">Você ainda não é um vendedor, caso queira torna-se um, solicite permisão abaixo</label>
                         <textarea name="sale_description" rows="4" cols="50" placeholder="Descreva o seu negocio" ></textarea>
                         <button class="mt-4 btn-primary" type="submit">Solicitar</button>
                     </div>   
