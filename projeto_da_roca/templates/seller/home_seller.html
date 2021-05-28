@@ -12,7 +12,7 @@
             <h4>Vender</h4>
         </div>
     </div>
-    {% if 'DaRoça.seller' in user.perms %}
+    {% if user.is_seller == 0 %}
         <div class="row justify-content-center">
             <a class="clickable-card" href="{% url 'list_service_address'%}">
                 <div class="card manage">
@@ -33,11 +33,10 @@
                 </div>
             </a>
         </div>
-        {% if 'seller_request' in user.perms %}
+        {% elif user.is_seller == 2 %}
             <div class="row justify-content-center">
                 <p> Sua solicitação está sendo analisada</p>
             </div>
-        {% endif %}
         {% else %}
             <div class="row justify-content-center">
                 <p> Você ainda não é um vendedor, caso queira torna-se um, solicite permisão abaixo!</p>
@@ -45,6 +44,9 @@
             <form method="POST" action="{% url 'seller_request' %}">
                     {% csrf_token %}
                     <div class="d-flex flex-column align-items-center">
+                        {% for message in messages %}
+                            <p id="messages">{{message}}</p>
+                        {% endfor %}
                         <textarea name="sale_description" rows="4" cols="50" placeholder="Descreva o seu negocio" ></textarea>
                         <button class="mt-4 btn-primary" type="submit">Solicitar</button>
                     </div>   

@@ -6,6 +6,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import get_object_or_404,render, redirect,reverse
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 
 from .models import ServiceAddress
 from .models import User
@@ -81,18 +82,24 @@ def seller_home(request):
     return render(request, 'seller/home_seller.html')
     
 def request_seller(request):
-    '''
-    if request.user.is_authenticated:
-        user= request.user
-        permission = Permission.objects.get(name='seller_request')
-        user.user_permissions.add(permission)
-        message = ''
-    '''
     if request.method == 'POST':
         sale_description = request.POST['sale_description']
-        print(sale_description)
-        
+        if(sale_description is None):
+            messages.error(request, 'A descrição é o obrigatoria!')
+        else:
+            if request.user.is_authenticated:
+                user = request.user
+                user.is_seller = 2 #request permision
+                user.sale_description = sale_description
+                user.save()
+                
     return render(request, 'seller/home_seller.html')
+
+def manage_seller(request):
+    sellers = User.objects.filter(is_seller=2)
+    return render(request, 'seller/manage_request_seller.html', {
+            "sellers": sellers ,
+    })
 
 class ServiceAddressView:
     @classmethod
