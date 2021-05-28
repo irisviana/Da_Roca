@@ -32,12 +32,15 @@
                 <tr>
                     <td>
                         <div class="actions">
+                            <!--
                             <form action="" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="admin_email" value="{{admin.email }}">
-                                <input class="btn btn-primary" type="submit" value="Remover">
+                                <input class="btn btn-primary" type="submit" value="Recusar">
                             </form>
-                    
+                            <a class="btn btn-primary" href="">Aceitar</a>
+                        -->
+                        <a class="btn btn-primary" href="{% url 'view_request_seller' seller.id %}">Ver</a>
                         </div>
                     </td>
                     <td>{{ user.first_name }}</td>

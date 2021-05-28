@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import list_users, create_users, DeliveryTimeView, ServiceAddressView,admin_home,list_admin,add_admin,seller_home,request_seller,manage_seller
+from .views import *
 
 urlpatterns = [
     path('', list_users),
@@ -18,4 +18,7 @@ urlpatterns = [
     path('seller/', seller_home, name='home_seller'),
     path('seller/request', request_seller, name='seller_request'),
     path('seller/manage_seller', manage_seller, name='seller_manage'),
+    path('seller/view_seller_request/<int:user_id>', view_seller_request, name='view_request_seller'),
+    path('seller/refuse_seller_request', refuse_seller_request, name='refuse_request_seller'),
+    path('seller/approve_seller_request', approve_seller_request, name='approve_request_seller'),
 ]

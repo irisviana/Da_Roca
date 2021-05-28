@@ -100,6 +100,32 @@ def manage_seller(request):
     return render(request, 'seller/manage_request_seller.html', {
             "sellers": sellers ,
     })
+def view_seller_request(request,user_id):
+
+    user = User.objects.get(pk= user_id)
+    return render(request, 'seller/view_request_seller.html', {
+            "user": user ,
+    })
+
+def refuse_seller_request(request):
+    service_address_id = None
+    if request.method == 'POST':
+        user_id = request.POST['user_id']
+        user = User.objects.get(pk= user_id)
+        user.is_seller=1
+        user.save()
+
+    return HttpResponseRedirect(reverse('seller_manage'))
+
+def approve_seller_request(request):
+    service_address_id = None
+    if request.method == 'POST':
+        user_id = request.POST['user_id']
+        user = User.objects.get(pk= user_id)
+        user.is_seller=0
+        user.save()
+
+    return HttpResponseRedirect(reverse('seller_manage'))
 
 class ServiceAddressView:
     @classmethod
