@@ -94,10 +94,10 @@ class DeliveryTimeForm(forms.ModelForm):
 class ServiceAddressForm(forms.ModelForm):
     class Meta:
         model = ServiceAddress
-        fields = ('user', 'city', 'state')
+        fields = ('city', 'state')
         labels = {
-            'city' : 'cidade',
-            'state' : 'estado',
+            'city' : 'Cidade',
+            'state' : 'Estado',
         }
 
     def __init__(self, *args, **kwargs):

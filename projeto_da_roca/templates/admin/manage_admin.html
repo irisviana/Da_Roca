@@ -1,0 +1,58 @@
+<!-- templates/delivery_time/create.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>Gerenciar administrador</title>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Administradores</h4>
+        </div>
+    </div>
+    <div class="inner_container mt-4">
+        <a class="btn btn-primary" href="{% url 'admin_add' %}">
+            Adicionar
+        </a>
+        {% if mensagem %}
+            <p>{{ mensagem }}</p>
+        {% endif %}
+        <table class="custom_table mt-5">
+            <thead>
+                <tr>
+                    <th>Ação</th>
+                    <th>Nome</th>
+                    <th>Cpf</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins %}
+                <tr>
+                    <td>
+                        <div class="actions">
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="admin_email" value="{{admin.email }}">
+                                <input class="btn btn-primary" type="submit" value="Remover">
+                            </form>
+                    
+                        </div>
+                    </td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ admin.cpf }}</td>
+                    <td>{{ admin.email }}</td>
+                    <td>{{ admin.phone_number }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

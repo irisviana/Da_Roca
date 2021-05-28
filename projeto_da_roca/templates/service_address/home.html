@@ -43,11 +43,12 @@
                                 <input class="btn btn-primary" type="submit" value="Remover">
                             </form>
                             <a class="btn btn-primary" href="{% url 'list_delivery_time' service_address.id %}">Horários</a>
+                            <a class="btn btn-primary" href="{% url 'update_service_address' service_address.id %}">Editar</a>
                         </div>
                     </td>
+                    <td>{{ service_address.user.id }}</td>
                     <td>{{ service_address.city }}</td>
                     <td>{{ service_address.state }}</td>
-                    <td>{{ service_address.user.id }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -59,73 +59,89 @@ def logout_page(request):
 def home(request):
     return render(request, 'home.html')
 
+def admin_home(request):
+    return render(request, 'admin/home.html')
 
+def list_admin(request):
+        admins = User.objects.all()
+
+        return render(request, 'admin/manage_admin.html', {
+            "admins": admins,
+        })
+def add_admin( request):
+    message = ''
+    
+    users = User.objects.all()
+
+    return render(request, 'admin/add_admin.html', {
+            "users": users ,
+    })
+    
 class ServiceAddressView:
     @classmethod
-    def list_service_address(cls, request, user_id):
-        if user_id:
-            service_address = ServiceAddress.objects.filter(user=user_id)
-        else:
-            service_address = ServiceAddress.objects.all()
+    def list_service_address(cls, request):
+        if request.user.is_authenticated:
+            user = request.user
+            if user.id:
+                service_address = ServiceAddress.objects.filter(user=user.id)
+            else:
+                service_address = ServiceAddress.objects.all()
 
         return render(request, 'service_address/home.html', {
             "services_address": service_address,
-            'user_id': user_id,
         })
 
 
     @classmethod
-    def create_service_address(cls, request, user_id):
-        user = get_object_or_404(User, id=user_id)
+    def create_service_address(cls, request):
         form = ServiceAddressForm()
+        if request.user.is_authenticated:
+            user = request.user
+            if request.method == 'POST':
+                form = ServiceAddressForm(request.POST or None)            
+                if form.is_valid():
+                    service_address = form.save(commit=False)
+                    service_address.user = user
+                    service_address.save()
 
-        if request.method == 'POST':
-            form = ServiceAddressForm(request.POST or None)
-            if form.is_valid():
-                service_address = form.save()
-                service_address.user = user
-                service_address.save()
-
-                return redirect('list_service_address', user_id=user_id)
+                    return redirect('list_service_address')
 
             return render(request, '../templates/service_address/create.html',{
                 'form': form,
-                'user_id': user_id
+                'user_id': user
             })
-
+                
     @classmethod
     def update_service_address(cls, request, service_address_id):
         service_address = get_object_or_404(ServiceAddress, id=service_address_id)
-        user = service_address.user
-        form = ServiceAddressForm(instance=service_address)
+        if request.user.is_authenticated:
+            form = ServiceAddressForm(instance=service_address)
+            user = request.user
+            if request.method == 'POST':
+                form = ServiceAddressForm(request.POST, instance=service_address)
+                if form.is_valid:
+                    service_address = form.save(commit=False)
+                    service_address.user = user
+                    service_address.save()
 
-        if request.method == 'POST':
-            form = ServiceAddressForm(request.POST, instance=service_address)
-            if form.is_valid:
-                service_address = form.save(commit=False)
-                service_address.user = user
-                service_address.save()
-
-                return redirect(
-                    'list_service_address', user_id=service_address.user_id
-                )
-            
-        return render(request, '../templates/service_address/create.html', {
-            'form': form,
-            'post': service_address,
-            'service_address': service_address
-        })
+                    return redirect('list_service_address')
+                
+            return render(request, '../templates/service_address/create.html', {
+                'form': form,
+                'post': service_address,
+                'service_address': service_address
+            })
 
     @classmethod
     def delete_service_address(cls, request):
-        user_id = None
-        if request.method == 'POST':
-           service_address_id = request.POST['service_address_id']
-           service_address = get_object_or_404(ServiceAddress, id=service_address_id)
-           user_id = service_address.user_id
+        if request.user.is_authenticated:
+            user = request.user
+            if request.method == 'POST':
+                service_address_id = request.POST['service_address_id']
+                service_address = get_object_or_404(ServiceAddress, id=service_address_id)
 
-           service_address.delete()
-        return redirect('list_service_address', user_id=user_id)
+                service_address.delete()
+                return redirect('list_service_address')
 
 
 class DeliveryTimeView:
