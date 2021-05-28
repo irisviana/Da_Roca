@@ -63,7 +63,7 @@ class ServiceAddress(models.Model):
 
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
-    city = models.CharField(max_length=50, blank=False) 
+    city = models.CharField(max_length=50, blank=False)
     state = models.CharField(max_length=2, null=False, blank=False, choices=STATES, default=STATES[0])
 
 
