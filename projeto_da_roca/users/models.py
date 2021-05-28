@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import uuid
 
+
 # Create your models here.
 
 
@@ -10,6 +11,8 @@ class User(AbstractUser):
     cpf = models.CharField(max_length=11, null=True, blank=True, unique=True)
     phone_number = models.CharField(max_length=50, null=True, blank=True)
     sale_description = models.TextField(max_length=100, null=True, blank=True)
+    is_admin = models.IntegerField(default=1)
+    is_seller = models.IntegerField(default=1)
 
     def save(self, *args, **kwargs):
         self.username = uuid.uuid4().hex[:30]

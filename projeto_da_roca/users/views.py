@@ -6,6 +6,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import get_object_or_404,render, redirect,reverse
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 
 from .models import ServiceAddress
 from .models import User
@@ -16,9 +17,7 @@ from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm
 
 
 def list_users(request):
-    now = datetime.datetime.now()
-    html = "<html><body>It is now %s.</body></html>" % now
-    return HttpResponse(html)
+    return redirect('login')
 
 
 def create_users(request):
@@ -72,7 +71,7 @@ def admin_home(request):
 
 def list_admin(request):
     if request.user.is_authenticated:
-        admins = User.objects.all()
+        admins = User.objects.filter(is_admin=0)
 
         return render(request, 'admin/manage_admin.html', {
             "admins": admins,
@@ -81,7 +80,7 @@ def list_admin(request):
     
 def add_admin( request):
     if request.user.is_authenticated:    
-        users = User.objects.all()
+        users = User.objects.filter(is_admin=1)
 
         return render(request, 'admin/add_admin.html', {
                 "users": users ,
@@ -94,20 +93,81 @@ def seller_home(request):
     return redirect('login')
     
 def request_seller(request):
-    '''
     if request.user.is_authenticated:
-        user= request.user
-        permission = Permission.objects.get(name='seller_request')
-        user.user_permissions.add(permission)
-        message = ''
-    '''
-    if request.user.is_authenticated:
-    
         if request.method == 'POST':
             sale_description = request.POST['sale_description']
-            print(sale_description)
-            
+            if(sale_description is None):
+                messages.error(request, 'A descrição é o obrigatoria!')
+            else:
+                if request.user.is_authenticated:
+                    user = request.user
+                    user.is_seller = 2 #request permision
+                    user.sale_description = sale_description
+                    user.save()
+                    
         return render(request, 'seller/home_seller.html')
+    return redirect('login')
+
+def manage_seller(request):
+    if request.user.is_authenticated:
+        sellers = User.objects.filter(is_seller=2)
+        return render(request, 'seller/manage_request_seller.html', {
+                "sellers": sellers ,
+        })
+    return redirect('login')
+
+def view_seller_request(request,user_id):
+    if request.user.is_authenticated:
+        user = User.objects.get(pk= user_id)
+        return render(request, 'seller/view_request_seller.html', {
+                "user": user ,
+        })
+    return redirect('login')
+
+def refuse_seller_request(request):
+    if request.user.is_authenticated:
+        service_address_id = None
+        if request.method == 'POST':
+            user_id = request.POST['user_id']
+            user = User.objects.get(pk= user_id)
+            user.is_seller=1
+            user.save()
+
+        return HttpResponseRedirect(reverse('seller_manage'))
+    return redirect('login')
+
+def approve_seller_request(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            user_id = request.POST['user_id']
+            user = User.objects.get(pk= user_id)
+            user.is_seller=0
+            user.save()
+
+        return HttpResponseRedirect(reverse('seller_manage'))
+    return redirect('login')
+
+def make_admin(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            user_id = request.POST['user_id']
+            user = User.objects.get(pk= user_id)
+            user.is_admin = 0
+            user.save()
+
+        return HttpResponseRedirect(reverse('manage_admin'))
+    return redirect('login')
+
+def remove_admin(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            print('aqui')
+            admin_id= request.POST['admin_id']
+            user = User.objects.get(pk= admin_id)
+            user.is_admin = 1
+            user.save()
+
+        return HttpResponseRedirect(reverse('manage_admin'))
     return redirect('login')
 
 class ServiceAddressView:
@@ -204,6 +264,7 @@ class DeliveryTimeView:
             if request.method == 'POST':
                 form = DeliveryTimeForm(request.POST or None)
                 if form.is_valid():
+                    print('aqui')
                     delivery_time = form.save()
                     delivery_time.service_address = service_address
                     delivery_time.save()

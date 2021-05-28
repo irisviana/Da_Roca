@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-<title>Gerenciar administrador</title>
+<title>Gerenciar solicitação para vender</title>
 {% endblock %}
 
 {% block header %}
@@ -13,43 +13,39 @@
 {% block content %}
     <div class="d-flex flex-column align-items-center">
         <div>
-            <h4>Administradores</h4>
+            <h4>Solicitações para ser vendedor</h4>
         </div>
     </div>
     <div class="inner_container mt-4">
-        <a class="btn btn-primary" href="{% url 'admin_add' %}">
-            Adicionar
-        </a>
-        {% if mensagem %}
-            <p>{{ mensagem }}</p>
-        {% endif %}
+        
         <table class="custom_table mt-5">
             <thead>
                 <tr>
                     <th>Ação</th>
                     <th>Nome</th>
-                    <th>Cpf</th>
                     <th>E-mail</th>
                     <th>Telefone</th>
                 </tr>
             </thead>
             <tbody>
-                {% for admin in admins %}
+                {% for seller in sellers %}
                 <tr>
                     <td>
                         <div class="actions">
-                            <form action="{% url 'admin_remove' %}" method="post">
-                              {% csrf_token %}
-                              <input type="hidden" name="admin_id" value="{{ admin.id }}">
-                              <input class="btn btn-primary" type="submit" value="Remover">
+                            <!--
+                            <form action="" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="admin_email" value="{{admin.email }}">
+                                <input class="btn btn-primary" type="submit" value="Recusar">
                             </form>
-                    
+                            <a class="btn btn-primary" href="">Aceitar</a>
+                        -->
+                        <a class="btn btn-primary" href="{% url 'view_request_seller' seller.id %}">Ver</a>
                         </div>
                     </td>
-                    <td>{{ admin.first_name }}</td>
-                    <td>{{ admin.cpf }}</td>
-                    <td>{{ admin.email }}</td>
-                    <td>{{ admin.phone_number }}</td>
+                    <td>{{ user.first_name }}</td>
+                    <td>{{ seller.email }}</td>
+                    <td>{{ seller.phone_number }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
