@@ -28,11 +28,11 @@
     box-shadow: 0px 2px 5px var(--color-dark-shadow);
   }
 
-  .header_container {
+  .header_container, .navbar {
     display: flex;
     align-items: center;
     padding: 0.5em;
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
     color: var(--color-primary);
   }
@@ -41,13 +41,14 @@
     width: 100%;
   }
 
-  header nav ul {
+  header nav ul, .nav-link {
     display: flex;
     justify-content: flex-end;
     align-items: center;
     list-style-type: none;
     width: 100%;
     margin: 0;
+    padding: 0;
   }
   
   header nav ul li {
@@ -64,7 +65,7 @@
   }
   
   header .logo img {
-    width: 4em;
+    width: 6em;
   }
   /* 1- END OF HEADER */
 
@@ -94,7 +95,7 @@
   }
   
   .container .inner_container {
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
   }
 
@@ -161,6 +162,10 @@
     box-shadow: var(--shadow-button);
   }
 
+  .btn + .btn {
+    margin-top: 0.5em;
+  }
+
   .btn-primary, .btn-primary:visited, .btn-primary:link {
     background-color: var(--color-primary);
     border: 1px solid var(--color-primary);
@@ -176,6 +181,11 @@
     background-color: var(--color-white);
     border: 1px solid var(--color-primary);
     color: var(--color-primary);
+  }
+
+  .border-custom {
+    border: 1px solid var(--color-primary);
+    border-radius: 5px;
   }
 
   .text-underline {
@@ -222,4 +232,17 @@
     margin: 0 1em 0 0
   }
   
+  /* 2- ADMIN CARDS */
+  .card.manage {
+    width: 250px;
+    margin: 0 0.5em;
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  /* 2- FIM DE ADMIN CARDS */
  

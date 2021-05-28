@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import list_users, create_users, DeliveryTimeView, ServiceAddressView,admin_home,list_admin,add_admin, costumer_home
+from .views import list_users, create_users, DeliveryTimeView, ServiceAddressView,admin_home,list_admin,add_admin, customer_home
 
 urlpatterns = [
     path('', list_users),
@@ -17,5 +17,5 @@ urlpatterns = [
     path('admin/manage_admin', list_admin, name='manage_admin'),
     path('admin/add', add_admin, name='admin_add'),
 
-    path('costumer-home', costumer_home, name='costumer_home'),
+    path('customer_home', customer_home, name='customer_home'),
 ]
