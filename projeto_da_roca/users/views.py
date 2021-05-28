@@ -311,8 +311,7 @@ class DeliveryTimeView:
             if request.method == 'POST':
                 form = DeliveryTimeForm(request.POST or None)
                 if form.is_valid():
-                    print('aqui')
-                    delivery_time = form.save()
+                    delivery_time = form.save(commit=False)
                     delivery_time.service_address = service_address
                     delivery_time.save()
 

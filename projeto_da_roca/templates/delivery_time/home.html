@@ -46,7 +46,13 @@
                         </div>
                     </td>
                     <td>{{ delivery_time.service_address.id }}</td>
-                    <td>{{ delivery_time.day }}</td>
+                    <td>
+                        {% for d in delivery_time.DAYS %}
+                            {% if d.0 == delivery_time.day %}
+                                {{ d.1 }}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
                     <td>{{ delivery_time.time }}</td>
                 </tr>
                 {% endfor %}
