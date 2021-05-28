@@ -1,9 +1,11 @@
 import datetime
 
 from django.contrib import messages
-from django.contrib.auth import login, authenticate, logout
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render, redirect, reverse
+
+from django.contrib.auth import login, authenticate,logout
+from django.http import HttpResponse,HttpResponseRedirect
+from django.shortcuts import get_object_or_404,render, redirect,reverse
+from django.contrib.auth.hashers import make_password
 
 from .forms import AddressForm
 from .forms import DeliveryTimeForm
@@ -28,9 +30,11 @@ class UserView:
     def create_users(cls, request):
         if request.method == 'POST':
             form = UserForm(request.POST)
-
+            password = request.POST['password']
             if form.is_valid():
                 user = form.save()
+                user.password = make_password(password)
+                user.save()
                 login(request, user)
                 return redirect('home')
         else:
@@ -73,7 +77,7 @@ def login_page(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return render(request, 'users_profile/costumer_home.html')
         else:
             messages.error(request, 'email ou senha estão incorretos')
 
@@ -82,7 +86,10 @@ def login_page(request):
 
 def logout_page(request):
     logout(request)
-    return render(request, 'registration/login.html')
+    return redirect('home')
+
+def costumer_home(request):
+    return render(request, 'users_profile/costumer_home.html')
 
 
 def home(request):

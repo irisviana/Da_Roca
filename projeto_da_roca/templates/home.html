@@ -1,50 +1,11 @@
 <!-- templates/home.html -->
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}<title>Gerenciar perfis</title>{% endblock %}
+{% block title %}<title>Início - DaRoça</title>{% endblock %}
 {% block header %}
     {% include 'header.html' %}
 {% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-  Bem vindo(a),{{ user.first_name }}!
-  <div>
-	  <a href="{% url 'logout' %}">Logout</a>
-	  <div class="d-flex flex-column align-items-center">
-	        <div>
-	            <h4>Cadastrar perfis</h4>
-	        </div>
-	  </div>
-	  <div class="row justify-content-center">
-	    <a class="clickable-card" href="{% url 'list_service_address' %}">
-	        <div class="card manage">
-	            <div class="card-header">
-	                <span class="fa fa-newspaper"></span>
-	            </div>
-	            <div class="card-body">
-	                <h3 class="card-title">
-	                    Produtor
-	                </h3>
-	            </div>
-	        </div>
-	    </a>
-	    <a class="clickable-card" href="#">
-	        <div class="card manage">
-	            <div class="card-header">
-	                <span class="fa fa-user-circle"></span>
-	            </div>
-	            <div class="card-body">
-	                <h3 class="card-title">
-	                    Cliente
-	                </h3>
-	            </div>   
-	        </div>
-	    </a>
-	    </div>
-	{% else %}
-	  <p>Você nã está logado</p>
-	  <a href="{% url 'login' %}">Log In</a>
- </div>
-{% endif %}
+ 	 
 {% endblock %}

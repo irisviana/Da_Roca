@@ -6,10 +6,26 @@
     </div>
     <nav>
         <ul>
-            <li><a href="">Início</a></li>
-            <!--
-            <li><a href="">Favoritos</a></li>
-            <li><a href="">Carrinho</a></li>-->
+            {% if user.is_authenticated %}
+                <li><a href="" title="Configurações de perfil"><i class="fa fa-user-circle fa-2x" aria-hidden="true"></i></a>
+                Bem vindo(a),{{ user.first_name }}!</li>
+            {% else %}
+                <li><a href="{% url 'login' %}"></i>Acesso</a></li>
+            {% endif %}
+            <li><a href="" title="Produtos favoritos"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>
+            <li><a href="" title="Cesta de produtos"><i class="fa fa-shopping-basket fa-2x" aria-hidden="true" ></i></a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}" title="Sair"><i class="fas fa-sign-out-alt fa-2x"></i></a></li>
+            {% endif %}
         </ul>
+       <div class="input-group mb-4 border rounded-pill p-1">
+            <input type="search" placeholder="Qual é o seu desejo?" aria-describedby="button-addon3" class="form-control bg-none border-0">
+            <div class="input-group-append border-0">
+              <button id="button-addon3" type="button" class="btn btn-link text-success"><i class="fa fa-search"></i></button>
+            </div>
+        </div>  
     </nav>
 </div>
+{% block content %}
+    {% include 'navbar.html' %}
+{% endblock %}
