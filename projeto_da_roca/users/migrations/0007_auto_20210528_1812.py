@@ -26,7 +26,6 @@ class Migration(migrations.Migration):
     dependencies = [
         ('users', '0006_auto_20210527_2218'),
     ]
-
     operations = [
         migrations.RunPython(remove_empty_delivery_time),
         migrations.RunPython(remove_empty_address),

@@ -55,7 +55,7 @@ class UserForm(forms.ModelForm):
         password = self.cleaned_data.get('password')
         confirm_password = self.cleaned_data.get('confirm_password')
         name = self.cleaned_data.get('first_name')
-        if name is None:
+        if not name:
             raise ValidationError('O nome precissa ser informado')
         if password != confirm_password:
             raise ValidationError('As senhas precisam ser idênticas')
@@ -87,7 +87,7 @@ class UserUpdateForm(forms.ModelForm):
 
     def clean(self):
         name = self.cleaned_data.get('first_name')
-        if name is None:
+        if not name:
             raise ValidationError('O nome precissa ser informado')
 
         return self.cleaned_data
