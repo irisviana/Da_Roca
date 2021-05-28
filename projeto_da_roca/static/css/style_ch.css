@@ -5,6 +5,8 @@
   -webkit-transition: all 0.3s;
   -o-transition: all 0.3s;
   transition: all 0.3s;
+  background-color:#79CDCD;
+  margin-top:-27px;
 }
 
 #sidebar.active {
@@ -17,7 +19,7 @@
   display: block;
   color: #fff;
   font-weight: 900;
-  padding: 10px 20px;
+  padding: 10px 5px;
   -webkit-transition: 0.3s;
   -o-transition: 0.3s;
   transition: 0.3s;
@@ -59,7 +61,7 @@
 }
 
 #sidebar.active ul li a {
-  padding: 10px 20px;
+  padding: 7px 2px;
   display: block;
   color: white;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
