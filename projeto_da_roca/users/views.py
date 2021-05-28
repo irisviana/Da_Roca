@@ -8,7 +8,7 @@ from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm, AddressForm, 
 from .models import DeliveryTime
 from .models import ServiceAddress
 from .models import User
-
+from .models import Address
 
 # Create your views here.
 
@@ -57,7 +57,15 @@ class AddressView:
                 address = form.save()
                 address.user = user
                 address.save()
+                return redirect('list_customer_address', user.username)
         return render(request, '../templates/address/create_address.html', {'form': form})
+
+    @classmethod
+    def list_address(cls, request, username):
+        user = get_object_or_404(User, username=username)
+        addresses = Address.objects.filter(user=user)
+
+        return render(request, '../templates/address/list_address.html', {'addresses': addresses})
 
 
 def login_page(request):

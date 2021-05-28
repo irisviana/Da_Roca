@@ -23,7 +23,7 @@
                         <a href="#"><span class="fas fa-user"></span> Cadastro</a>
                     </li>
                     <li>
-                        <a href="#"><span class="fas fa-map-marked-alt"></span> Endereços</a>
+                        <a href="{% url 'list_customer_address' request.user.username %}"><span class="fas fa-map-marked-alt"></span> Endereços</a>
                     </li>
                     <li>
                         <a href="#"><span class="far fa-credit-card"></span> Cartões</a>

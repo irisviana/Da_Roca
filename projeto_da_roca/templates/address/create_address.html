@@ -1,22 +1,14 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'users_profile/customer_home_base.html' %}
 {% load crispy_forms_tags %}
-
-{% block head %}
-    <script href="{% static 'js/scripts.js' %}"></script>
-{% endblock %}
 
 {% block title %}
     <title>Cadastro</title>
 {% endblock %}
 
-{% block content %}
+{% block page %}
     <div class="d-flex justify-content-center h-100">
         <div class="user_card w-100">
             <div class="d-flex flex-column align-items-center">
-                <div class="mb-6" class="login_logo">
-                    <img src="{% static 'images/logo.svg' %}" alt="Logo do DaRoça">
-                </div>
                 <div>
                     <h4 id="form-title">Cadastro de endereço</h4>
                 </div>

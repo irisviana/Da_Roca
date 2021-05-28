@@ -131,6 +131,17 @@ class AddressForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(AddressForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_show_labels = False
+        self.helper.layout = Layout(
+            Field('zip_code', placeholder='CEP'),
+            Field('state', placeholder='Estado'),
+            Field('city', placeholder='Cidade'),
+            Field('district', placeholder='Bairro'),
+            Field('street', placeholder='Rua'),
+            Field('house_number', placeholder='Número'),
+            Submit('save', 'Cadastrar'),
+        )
 
 
 class DeliveryTimeForm(forms.ModelForm):
