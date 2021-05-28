@@ -7,15 +7,6 @@
 
 {% block header %}
     {% include 'header.html' %}
-
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-
-    <script src="https://kit.fontawesome.com/864268d66d.js" crossorigin="anonymous"></script>
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
     <link rel="stylesheet" href="{% static 'css/style_ch.css' %}">
 {% endblock %}
 
@@ -27,29 +18,19 @@
     <div class="wrapper d-flex align-items-stretch">
 
       <nav id="sidebar" class="active bg-success">
-
-        <h5>
-            <a href="{% url 'costumer_home' %}" class="logo">Minha Conta</a>
-        </h5>
-
         <ul class="list-unstyled components ">
-
             <li class="active">
               <a href="#"><span class="fas fa-box-open"></span> Pedidos</a>
             </li>
-
             <li>
                 <a href="#"><span class="fas fa-user"></span> Cadastro</a>
             </li>
-
             <li>
               <a href="#"><span class="fas fa-map-marked-alt"></span> Endereços</a>
             </li>
-
             <li>
               <a href="#"><span class="far fa-credit-card"></span> Cartões</a>
             </li>
-
             <li>
               <a href="#"><span class="fas fa-star"></span> Avaliações</a>
             </li>
@@ -58,9 +39,6 @@
 
       </nav>
     </div>
-
-
-
 
     <script src="{% static 'js/main.js' %}"></script>
 

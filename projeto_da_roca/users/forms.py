@@ -2,10 +2,12 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field
 from django import forms
 from django.core.exceptions import ValidationError
+from django.forms import widgets
 
 from .models import Address
 from .models import DeliveryTime
 from .models import User
+from .models import ServiceAddress
 from .utils import validate_cpf
 
 
@@ -59,8 +61,6 @@ class UserForm(forms.ModelForm):
             raise ValidationError('As senhas precisam ser idênticas')
         if User.objects.filter(email=email).exists():
             raise ValidationError('O e-mail já está cadastrado')
-        if User.objects.filter(cpf=cpf).exists():
-            raise ValidationError('O CPF já está cadastrado')
 
         return self.cleaned_data
 
@@ -128,5 +128,25 @@ class DeliveryTimeForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('time', type='time', placeholder='Hora'),
             Field('day', placeholder='Dia'),
+            Submit('save', 'Cadastrar'),
+        )
+
+
+class ServiceAddressForm(forms.ModelForm):
+    class Meta:
+        model = ServiceAddress
+        fields = ('city', 'state')
+        labels = {
+            'city' : 'Cidade',
+            'state' : 'Estado',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(ServiceAddressForm, self).__init__(*args, **kwargs)
+
+        self.helper = FormHelper(self)
+        self.helper.layout = Layout(
+            Field('city', type='text', placeholder="Cidade"),
+            Field('state', placeholder="Estado"),
             Submit('save', 'Cadastrar'),
         )
