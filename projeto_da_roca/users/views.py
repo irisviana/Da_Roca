@@ -5,7 +5,7 @@ from django.contrib.auth import login, authenticate,logout
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import get_object_or_404,render, redirect,reverse
 from django.contrib.auth.hashers import make_password
-
+from django.contrib.auth.models import Permission
 
 from .models import ServiceAddress
 from .models import User
@@ -76,7 +76,24 @@ def add_admin( request):
     return render(request, 'admin/add_admin.html', {
             "users": users ,
     })
+
+def seller_home(request):
+    return render(request, 'seller/home_seller.html')
     
+def request_seller(request):
+    '''
+    if request.user.is_authenticated:
+        user= request.user
+        permission = Permission.objects.get(name='seller_request')
+        user.user_permissions.add(permission)
+        message = ''
+    '''
+    if request.method == 'POST':
+        sale_description = request.POST['sale_description']
+        print(sale_description)
+        
+    return render(request, 'seller/home_seller.html')
+
 class ServiceAddressView:
     @classmethod
     def list_service_address(cls, request):
