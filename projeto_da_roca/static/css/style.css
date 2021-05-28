@@ -225,11 +225,12 @@
   .actions {
     display: flex;
     justify-content: center;
+    align-items: center;
   }
 
   .actions > * {
     flex: 0 1 80px;
-    margin: 0 1em 0 0
+    margin: 0 1em 0 0;
   }
   
   /* 2- ADMIN CARDS */

@@ -5,7 +5,7 @@ from django.contrib.auth import login, authenticate,logout
 from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import get_object_or_404,render, redirect,reverse
 from django.contrib.auth.hashers import make_password
-
+from django.contrib.auth.models import Permission
 
 from .models import ServiceAddress
 from .models import User
@@ -33,7 +33,7 @@ def create_users(request):
             return redirect('home')
     else:
         form = UserForm()
-    return render(request, '../templates/registration/create_costumer.html', {'form': form})
+    return render(request, '../templates/registration/create_customer.html', {'form': form})
 
 
 def login_page(request):
@@ -79,7 +79,24 @@ def add_admin( request):
     return render(request, 'admin/add_admin.html', {
             "users": users ,
     })
+
+def seller_home(request):
+    return render(request, 'seller/home_seller.html')
     
+def request_seller(request):
+    '''
+    if request.user.is_authenticated:
+        user= request.user
+        permission = Permission.objects.get(name='seller_request')
+        user.user_permissions.add(permission)
+        message = ''
+    '''
+    if request.method == 'POST':
+        sale_description = request.POST['sale_description']
+        print(sale_description)
+        
+    return render(request, 'seller/home_seller.html')
+
 class ServiceAddressView:
     @classmethod
     def list_service_address(cls, request):
@@ -122,7 +139,7 @@ class ServiceAddressView:
             user = request.user
             if request.method == 'POST':
                 form = ServiceAddressForm(request.POST, instance=service_address)
-                if form.is_valid:
+                if form.is_valid():
                     service_address = form.save(commit=False)
                     service_address.user = user
                     service_address.save()
@@ -150,66 +167,69 @@ class ServiceAddressView:
 class DeliveryTimeView:
     @classmethod
     def list_delivery_time(cls, request, service_address_id):
-        
-        if service_address_id:
-            delivery_time = DeliveryTime.objects.filter(service_address=service_address_id)
-        else:
-            delivery_time = DeliveryTime.objects.all()
+        if request.user.is_authenticated:
+            if service_address_id:
+                delivery_time = DeliveryTime.objects.filter(service_address=service_address_id)
+            else:
+                delivery_time = DeliveryTime.objects.all()
 
-        return render(request, '../templates/delivery_time/home.html', {
-            "delivery_times": delivery_time,
-            'service_address_id': service_address_id,
-        })
+            return render(request, '../templates/delivery_time/home.html', {
+                "delivery_times": delivery_time,
+                'service_address_id': service_address_id,
+            })
 
     @classmethod
     def create_delivery_time(cls, request, service_address_id):
-        service_address = get_object_or_404(ServiceAddress, id=service_address_id)
-        form = DeliveryTimeForm()
+        if request.user.is_authenticated:
+            service_address = get_object_or_404(ServiceAddress, id=service_address_id)
+            form = DeliveryTimeForm()
 
-        if request.method == 'POST':
-            form = DeliveryTimeForm(request.POST or None)
-            if form.is_valid():
-                delivery_time = form.save()
-                delivery_time.service_address = service_address
-                delivery_time.save()
+            if request.method == 'POST':
+                form = DeliveryTimeForm(request.POST or None)
+                if form.is_valid():
+                    delivery_time = form.save()
+                    delivery_time.service_address = service_address
+                    delivery_time.save()
 
-                return redirect('list_delivery_time', service_address_id=service_address_id)
+                    return redirect('list_delivery_time', service_address_id=service_address_id)
 
-        return render(request, '../templates/delivery_time/create.html', {
-            'form': form,
-            'service_address_id': service_address_id
-        })
+            return render(request, '../templates/delivery_time/create.html', {
+                'form': form,
+                'service_address_id': service_address_id
+            })
 
     @classmethod
     def update_delivery_time(cls, request, delivery_time_id):
-        delivery_time = get_object_or_404(DeliveryTime, id=delivery_time_id)
-        service_address = delivery_time.service_address
-        form = DeliveryTimeForm(instance=delivery_time)
+        if request.user.is_authenticated:
+            delivery_time = get_object_or_404(DeliveryTime, id=delivery_time_id)
+            service_address = delivery_time.service_address
+            form = DeliveryTimeForm(instance=delivery_time)
 
-        if request.method == 'POST':
-            form = DeliveryTimeForm(request.POST, instance=delivery_time)
-            if form.is_valid():
-                delivery_time = form.save(commit=False)
-                delivery_time.service_address = service_address
-                delivery_time.save()
+            if request.method == 'POST':
+                form = DeliveryTimeForm(request.POST, instance=delivery_time)
+                if form.is_valid():
+                    delivery_time = form.save(commit=False)
+                    delivery_time.service_address = service_address
+                    delivery_time.save()
 
-                return redirect(
-                    'list_delivery_time', service_address_id=delivery_time.service_address.id)        
+                    return redirect(
+                        'list_delivery_time', service_address_id=delivery_time.service_address.id)        
 
-        return render(request, '../templates/delivery_time/create.html', {
-            'form': form,
-            'post': delivery_time,
-            'delivery_time': delivery_time
-        })
+            return render(request, '../templates/delivery_time/create.html', {
+                'form': form,
+                'post': delivery_time,
+                'delivery_time': delivery_time
+            })
 
     @classmethod
     def delete_delivery_time(cls, request):
-        service_address_id = None
-        if request.method == 'POST':
-            delivery_time_id = request.POST['delivery_time_id']
-            delivery_time = get_object_or_404(DeliveryTime, id=delivery_time_id)
-            service_address_id = delivery_time.service_address.id
+        if request.user.is_authenticated:
+            service_address_id = None
+            if request.method == 'POST':
+                delivery_time_id = request.POST['delivery_time_id']
+                delivery_time = get_object_or_404(DeliveryTime, id=delivery_time_id)
+                service_address_id = delivery_time.service_address.id
 
-            delivery_time.delete()
+                delivery_time.delete()
 
-        return redirect('list_delivery_time', service_address_id=service_address_id)
+            return redirect('list_delivery_time', service_address_id=service_address_id)
