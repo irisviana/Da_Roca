@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <script href="{% static 'js/' %}"></script>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+    <link rel="stylesheet" href="{% static 'css/style_ch.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="wrapper d-flex align-items-stretch col-2">
+
+            <nav id="sidebar" class="active bg-success">
+                <ul class="list-unstyled components">
+                    <li class="active">
+                        <a href="#"><span class="fas fa-box-open"></span> Pedidos</a>
+                    </li>
+                    <li>
+                        <a href="#"><span class="fas fa-user"></span> Cadastro</a>
+                    </li>
+                    <li>
+                        <a href="#"><span class="fas fa-map-marked-alt"></span> Endereços</a>
+                    </li>
+                    <li>
+                        <a href="#"><span class="far fa-credit-card"></span> Cartões</a>
+                    </li>
+                    <li>
+                        <a href="#"><span class="fas fa-star"></span> Avaliações</a>
+                    </li>
+
+                </ul>
+
+            </nav>
+        </div>
+        <div class="col-10">
+            {% block page %}
+            
+            {% endblock %}
+        </div>
+    </div>
+    <script src="{% static 'js/main.js' %}"></script>
+
+{% endblock %}

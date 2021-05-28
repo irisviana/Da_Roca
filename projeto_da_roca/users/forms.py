@@ -65,6 +65,34 @@ class UserForm(forms.ModelForm):
         return self.cleaned_data
 
 
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'phone_number')
+
+    def __init__(self, *args, **kwargs):
+        super(UserUpdateForm, self).__init__(*args, **kwargs)
+
+        # If you pass FormHelper constructor a form instance
+        # It builds a default layout with all its fields
+        self.helper = FormHelper(self)
+        self.helper.form_show_labels = False
+        self.helper.layout = Layout(
+            Field('first_name', placeholder='Nome'),
+            Field('last_name', placeholder='Sobrenome'),
+            Field('phone_number', placeholder='Número de telefone'),
+            Submit('save', 'Atualizar'),
+
+        )
+
+    def clean(self):
+        name = self.cleaned_data.get('first_name')
+        if name is None:
+            raise ValidationError('O nome precissa ser informado')
+
+        return self.cleaned_data
+
+
 class AddressForm(forms.ModelForm):
     STATE_CHOICES = (
         ('', 'Estado'),

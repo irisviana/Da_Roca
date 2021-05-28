@@ -87,6 +87,9 @@
     border-radius: 5px;
 
   }
+  .user_card.update {
+    margin-right: 100px;
+  }
 
   .form_container {
     margin-top: 20px;

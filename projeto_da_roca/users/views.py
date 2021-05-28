@@ -1,16 +1,13 @@
 from django.contrib import messages
-
-from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.hashers import make_password
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 
+from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm, AddressForm, UserUpdateForm
+from .models import DeliveryTime
 from .models import ServiceAddress
 from .models import User
-from .models import DeliveryTime
-from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm, AddressForm
-
 
 
 # Create your views here.
@@ -34,20 +31,19 @@ class UserView:
                 return redirect('home')
         else:
             form = UserForm()
-        return render(request, '../templates/registration/create_costumer.html', {'form': form})
+        return render(request, 'registration/create_customer.html', {'form': form})
 
     @classmethod
     def update_users(cls, request, username):
         user = get_object_or_404(User, username=username)
-        form = UserForm(request.POST or None, instance=user)
+        form = UserUpdateForm(request.POST or None, instance=user)
 
         if request.method == 'POST':
             if form.is_valid():
                 user = form.save()
-                login(request, user)
-                return redirect('home')
+                return redirect('update_customer', user.username)
 
-        return render(request, '../templates/registration/update_costumer.html', {'form': form})
+        return render(request, '../templates/registration/update_custumer.html', {'form': form})
 
 
 class AddressView:
@@ -88,7 +84,7 @@ def logout_page(request):
 
 def customer_home(request):
     if request.user.is_authenticated:
-        return render(request, 'users_profile/customer_home.html')
+        return redirect('update_customer', request.user.username)
     return redirect('login')
 
 
@@ -270,7 +266,6 @@ class ServiceAddressView:
                 'service_address': service_address
             })
         return redirect('login')
-
 
     @classmethod
     def delete_service_address(cls, request):
