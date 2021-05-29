@@ -1,5 +1,5 @@
 ![Cabeçalho do Da Roça](https://github.com/irisviana/Da_Roca/blob/main/artefatos/wiki-header.png)
-Uma plataforma fácil e intuitiva de usar até para os mais leigos, onde os produtores poderão co-
+Uma plataforma fácil e intuitiva de usar até para os mais leigos, onde os produtores poderão co
 mercializar seus produtos, recebendo pedidos de clientes da região e realizando a entrega deles.
 Já os clientes dos produtos poderão acessar a vitrine de produtos disponíveis, pesquisar por
 produtos, realizar a compra e aguardar receber sem sair de casa.
