@@ -19,7 +19,7 @@ tecnologias instaladas na máquina:
 - Python3
 - pgSQL (Opcional)
 
-Após instalar as tecnologias acima e clonar o projeto para a sua máquina, siga os passos abaixo pa-
+Após instalar as tecnologias acima e clonar o projeto para a sua máquina, siga os passos abaixo pa
 ra configurar o projeto no seu ambiente:
 1- A partir do diretório do projeto, abra o terminal na pasta e navegue até a pasta `projeto_da_roca`:
 ```sh
