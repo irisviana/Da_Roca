@@ -40,19 +40,19 @@ class UsersTest(TestCase):
 
     def test_add_admin_permission(self):
         #user inst admin
-        self.assertEqual(self.user_rodrigo.is_admin,1)
-        self.user_rodrigo.is_admin=0
+        self.assertEqual(self.user_rodrigo.is_admin,False)
+        self.user_rodrigo.is_admin=True
         self.user_rodrigo.save()
         #user is admin
-        self.assertEqual(self.user_rodrigo.is_admin,0)
+        self.assertEqual(self.user_rodrigo.is_admin,True)
 
     def test_add_seller_permission(self):
         #user inst seller
-        self.assertEqual(self.user_rodrigo.is_seller,1)
-        self.user_rodrigo.is_seller=0
+        self.assertEqual(self.user_rodrigo.is_seller,False)
+        self.user_rodrigo.is_seller=True
         self.user_rodrigo.save()
         #user is seller
-        self.assertEqual(self.user_rodrigo.is_seller,0)
+        self.assertEqual(self.user_rodrigo.is_seller,True)
 '''
     def test_delete_existent_client(self):
         user_vini = models.User.objects.create(

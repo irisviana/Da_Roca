@@ -12,7 +12,7 @@
             <h4>Vender</h4>
         </div>
     </div>
-    {% if user.is_seller == 0 %}
+    {% if request.user.is_seller %}
         <div class="row justify-content-center">
             <div class="card manage">
                 <div class="card-body">
@@ -31,11 +31,11 @@
                 </div>
             </div>
         </div>
-        {% elif user.is_seller == 2 %}
+        {% elif request.user.seller_status == 'P' %}
             <div class="row justify-content-center">
                 <p> Sua solicitação está sendo analisada</p>
             </div>
-        {% else %}
+        {% elif not request.user.is_seller %}
             <form method="POST" action="{% url 'seller_request' %}">
                     {% csrf_token %}
                     <div class="d-flex justify-content-center form_container">

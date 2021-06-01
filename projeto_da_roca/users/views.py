@@ -108,7 +108,7 @@ def admin_home(request):
 
 def list_admin(request):
     if request.user.is_authenticated:
-        admins = User.objects.filter(is_admin=0)
+        admins = User.objects.filter(is_admin=True)
 
         return render(request, 'admin/manage_admin.html', {
             "admins": admins,
@@ -118,7 +118,7 @@ def list_admin(request):
 
 def add_admin(request):
     if request.user.is_authenticated:
-        users = User.objects.filter(is_admin=1)
+        users = User.objects.filter(is_admin=False)
 
         return render(request, 'admin/add_admin.html', {
             "users": users,
@@ -141,7 +141,7 @@ def request_seller(request):
             else:
                 if request.user.is_authenticated:
                     user = request.user
-                    user.is_seller = 2  # request permision
+                    user.seller_status = 'P'  # request permision
                     user.sale_description = sale_description
                     user.save()
 
@@ -151,7 +151,7 @@ def request_seller(request):
 
 def manage_seller(request):
     if request.user.is_authenticated:
-        sellers = User.objects.filter(is_seller=2)
+        sellers = User.objects.filter(seller_status='P')
         return render(request, 'seller/manage_request_seller.html', {
             "sellers": sellers,
         })
@@ -173,7 +173,8 @@ def refuse_seller_request(request):
         if request.method == 'POST':
             user_id = request.POST['user_id']
             user = User.objects.get(pk=user_id)
-            user.is_seller = 1
+            user.is_seller = False
+            user.seller_status = 'R'
             user.save()
 
         return HttpResponseRedirect(reverse('seller_manage'))
@@ -185,7 +186,8 @@ def approve_seller_request(request):
         if request.method == 'POST':
             user_id = request.POST['user_id']
             user = User.objects.get(pk=user_id)
-            user.is_seller = 0
+            user.is_seller = True
+            user.seller_status = 'A'
             user.save()
 
         return HttpResponseRedirect(reverse('seller_manage'))
@@ -197,7 +199,7 @@ def make_admin(request):
         if request.method == 'POST':
             user_id = request.POST['user_id']
             user = User.objects.get(pk=user_id)
-            user.is_admin = 0
+            user.is_admin = True
             user.save()
 
         return HttpResponseRedirect(reverse('manage_admin'))
@@ -207,10 +209,9 @@ def make_admin(request):
 def remove_admin(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
-            print('aqui')
             admin_id = request.POST['admin_id']
             user = User.objects.get(pk=admin_id)
-            user.is_admin = 1
+            user.is_admin = False
             user.save()
 
         return HttpResponseRedirect(reverse('manage_admin'))
