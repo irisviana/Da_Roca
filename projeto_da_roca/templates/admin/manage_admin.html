@@ -41,15 +41,17 @@
                             <form action="{% url 'admin_remove' %}" method="post">
                               {% csrf_token %}
                               <input type="hidden" name="admin_id" value="{{ admin.id }}">
-                              <input class="btn btn-primary" type="submit" value="Remover">
+                              <button type="submit" class="btn btn-primary">
+                                <span class="fas fa-trash"></span>
+                              </button>
                             </form>
                     
                         </div>
                     </td>
                     <td>{{ admin.first_name }}</td>
-                    <td>{{ admin.cpf }}</td>
+                    <td>{% firstof admin.cpf 'Nenhum' %}</td>
                     <td>{{ admin.email }}</td>
-                    <td>{{ admin.phone_number }}</td>
+                    <td>{% firstof admin.phone_number 'Nenhum' %}</td>
                 </tr>
                 {% endfor %}
             </tbody>

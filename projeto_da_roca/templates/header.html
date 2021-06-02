@@ -15,11 +15,11 @@
             <li><a class="btn btn-secondary btn-thin" href="" title="Produtos favoritos"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>
             <li><a class="btn btn-secondary btn-thin" href="" title="Cesta de produtos"><i class="fa fa-shopping-basket fa-2x" aria-hidden="true" ></i></a></li>
 
-            {% if user.is_authenticated %}
+            {% if request.user.is_authenticated %}
                 <li>
                     <a class="btn btn-secondary btn-nav" href="{% url 'customer_home' %}" title="Configurações de perfil">
                         <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>
-                        {{ user.first_name }}
+                        {{ request.user.first_name }}
                     </a>
                 </li>
                 <li><a class="btn btn-secondary btn-thin" href="{% url 'logout' %}" title="Sair"><i class="fas fa-sign-out-alt fa-2x"></i></a></li>
