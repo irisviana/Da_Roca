@@ -1,0 +1,25 @@
+{% extends 'users_profile/customer_home_base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+    <title>Cadastro</title>
+{% endblock %}
+
+{% block page %}
+    <div class="d-flex justify-content-center h-100">
+        <div class="user_card w-100">
+            <div class="d-flex flex-column align-items-center">
+                <div>
+                    <h4 id="form-title">Cadastro de endereço</h4>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center form_container">
+                {% crispy form %}
+
+            </div>
+        </div>
+    </div>
+    <script>
+        $("#id_zip_code").mask("00.000-000");
+    </script>
+{% endblock %}

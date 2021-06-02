@@ -1,0 +1,76 @@
+{% extends 'users_profile/customer_home_base.html' %}
+
+
+{% block page %}
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Endereços</h4>
+        </div>
+    </div>
+    <div class="inner_container mt-4">
+        <a class="btn btn-primary" href="{% url 'create_customer_address' request.user.username %}">
+            Adicionar
+        </a>
+        <table class="custom_table mt-5">
+            <thead>
+            <tr>
+                <th>AÇÕES</th>
+                <th>CEP</th>
+                <th>ESTADO</th>
+                <th>CIDADE</th>
+                <th>BAIRRO</th>
+                <th>RUA</th>
+                <th>NÚMERO</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% for address in addresses %}
+                <tr>
+                    <td>
+                        <div class="actions">
+                            <form action="{% url 'delete_address' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="address_id" value="{{ address.id }}">
+                                <input class="btn btn-primary" type="submit" value="Remover">
+                            </form>
+                            <a class="btn btn-primary" href="{% url 'update_address' address.id %}">Editar</a>
+                        </div>
+                    </td>
+                    <td>
+                        {% if address.zip_code %}
+                            {{ address.zip_code }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if address.state %}
+                            {{ address.state }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if address.city %}
+                            {{ address.city }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if address.district %}
+                            {{ address.district }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if address.street %}
+                            {{ address.street }}
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if address.house_number %}
+                            {{ address.house_number }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

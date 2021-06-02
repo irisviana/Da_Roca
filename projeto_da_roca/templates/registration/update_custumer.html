@@ -1,0 +1,31 @@
+{% extends 'users_profile/customer_home_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block head %}
+    <script href="{% static 'js/scripts.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+    <title>Cadastro</title>
+{% endblock %}
+
+{% block page %}
+    <div class="d-flex h-100">
+        <div class="user_card update w-100">
+            <div class="d-flex flex-column align-items-center">
+                <div>
+                    <h4 id="form-title">Atualizar informações pessoais</h4>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center form_container">
+                {% crispy form %}
+
+            </div>
+        </div>
+    </div>
+    <script>
+        $("#id_cpf").mask("000.000.000-00");
+        $("#id_phone_number").mask("(00)00000-0000");
+    </script>
+{% endblock %}

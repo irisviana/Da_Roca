@@ -1,6 +1,8 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser
 import uuid
+
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
 
 # Create your models here.
 
@@ -9,6 +11,9 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     cpf = models.CharField(max_length=11, null=True, blank=True, unique=True)
     phone_number = models.CharField(max_length=50, null=True, blank=True)
+    sale_description = models.TextField(max_length=100, null=True, blank=True)
+    is_admin = models.IntegerField(default=1)
+    is_seller = models.IntegerField(default=1)
 
     def save(self, *args, **kwargs):
         self.username = uuid.uuid4().hex[:30]
@@ -22,44 +27,43 @@ class Address(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     address_type = models.CharField(max_length=5, default='user', choices=ADDRESS_TYPE_CHOICES)
-    zip_code = models.CharField(max_length=20, null=True, blank=True)
-    state = models.CharField(max_length=2, null=True, blank=True)
-    city = models.CharField(max_length=100, null=True, blank=True)
-    district = models.CharField(max_length=100, null=True, blank=True)
-    street = models.CharField(max_length=100, null=True, blank=True)
-    house_number = models.CharField(max_length=10, null=True, blank=True)
-
+    zip_code = models.CharField(max_length=20)
+    state = models.CharField(max_length=2)
+    city = models.CharField(max_length=100)
+    district = models.CharField(max_length=100)
+    street = models.CharField(max_length=100)
+    house_number = models.IntegerField()
 
 
 class ServiceAddress(models.Model):
     STATES = (
-        ('AC','Acre'),
-        ('AL','Alagoas'),
-        ('AP','Amapá'),
-        ('AM','Amazonas'),
-        ('BA','Bahia'),
-        ('CE','Ceará'),
-        ('DF','Distrito Federal'),
-        ('ES','Espírito Santo'),
-        ('GO','Goiás'),
-        ('MA','Maranhão'),
-        ('MT','Mato Grosso'),
-        ('MS','Mato Grosso do Sul'),
-        ('MG','Minas Gerais'),
-        ('PA','Pará'),
-        ('PB','Paraíba'),
-        ('PR','Paraná'),
-        ('PE','Pernambuco'),
-        ('PI','Piauí'),
-        ('RJ','Rio de Janeiro'),
-        ('RN','Rio Grande do Norte'),
-        ('RS','Rio Grande do Sul'),
-        ('RO','Rondônia'),
-        ('RR','Roraima'),
-        ('SC','Santa Catarina'),
-        ('SP','São Paulo'),
-        ('SE','Sergipe'),
-        ('TO','Tocantins'),
+        ('AC', 'Acre'),
+        ('AL', 'Alagoas'),
+        ('AP', 'Amapá'),
+        ('AM', 'Amazonas'),
+        ('BA', 'Bahia'),
+        ('CE', 'Ceará'),
+        ('DF', 'Distrito Federal'),
+        ('ES', 'Espírito Santo'),
+        ('GO', 'Goiás'),
+        ('MA', 'Maranhão'),
+        ('MT', 'Mato Grosso'),
+        ('MS', 'Mato Grosso do Sul'),
+        ('MG', 'Minas Gerais'),
+        ('PA', 'Pará'),
+        ('PB', 'Paraíba'),
+        ('PR', 'Paraná'),
+        ('PE', 'Pernambuco'),
+        ('PI', 'Piauí'),
+        ('RJ', 'Rio de Janeiro'),
+        ('RN', 'Rio Grande do Norte'),
+        ('RS', 'Rio Grande do Sul'),
+        ('RO', 'Rondônia'),
+        ('RR', 'Roraima'),
+        ('SC', 'Santa Catarina'),
+        ('SP', 'São Paulo'),
+        ('SE', 'Sergipe'),
+        ('TO', 'Tocantins'),
 
     )
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
