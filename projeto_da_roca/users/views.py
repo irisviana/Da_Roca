@@ -14,7 +14,6 @@ from .models import Address
 
 
 class UserView:
-    
     @classmethod
     def list_users(cls, request, user_type='all'):
         if request.user.is_authenticated:
@@ -217,7 +216,6 @@ class UserView:
             return HttpResponseRedirect(reverse('manage_user'))
         return redirect('login')
 class AddressView:
-
     @classmethod
     def create_address(cls, request, username):
         user = get_object_or_404(User, username=username)
