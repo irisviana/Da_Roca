@@ -14,8 +14,23 @@ from .models import Address
 
 
 class UserView:
+    
     @classmethod
-    def list_users(cls, request):
+    def list_users(cls, request, user_type='all'):
+        if request.user.is_authenticated:
+            users = User.objects.filter(is_active=True)
+            if request.method == 'GET':
+                if user_type == 'admin':
+                    users = users.filter(is_admin=True)
+                elif user_type == 'client':
+                    users = users.filter(is_admin=False, is_seller=False)
+                elif user_type == 'producer':
+                    users = users.filter(is_seller=True)
+
+            return render(request, 'user/manage_users.html', {
+                "users": users,
+                "user_type": user_type
+            })
         return redirect('login')
 
     @classmethod
@@ -44,6 +59,49 @@ class UserView:
                 return redirect('update_customer', user.username)
 
         return render(request, '../templates/registration/update_custumer.html', {'form': form})
+
+    @classmethod
+    def delete_user(cls, request):
+        if request.user.is_authenticated:
+            user_type = 'all'
+            if request.method == 'GET':
+                user_type = request.GET.get('user_type', 'all')
+                user_id = request.GET.get('user_id')
+                user = User.objects.get(pk=user_id)
+                user.is_active = False
+                user.save()
+
+            return redirect('manage_user', user_type=user_type)
+        return redirect('login')
+
+    @classmethod
+    def remove_admin(cls, request):
+        if request.user.is_authenticated:
+            user_type = 'all'
+            if request.method == 'GET':
+                user_type = request.GET.get('user_type', 'all')
+                admin_id = request.GET.get('admin_id')
+                user = User.objects.get(pk=admin_id)
+                user.is_admin = False
+                user.save()
+
+            return redirect('manage_user', user_type=user_type)
+        return redirect('login')
+
+    @classmethod
+    def refuse_seller_request(cls, request):
+        if request.user.is_authenticated:
+            user_type = 'all'
+            if request.method == 'GET':
+                user_type = request.GET.get('user_type', 'all')
+                user_id = request.GET.get('user_id')
+                user = User.objects.get(pk=user_id)
+                user.is_seller = False
+                user.seller_status = 'R'
+                user.save()
+
+            return redirect('manage_user', user_type=user_type)
+        return redirect('login')
 
 
 class AddressView:
@@ -102,17 +160,7 @@ def home(request):
 
 def admin_home(request):
     if request.user.is_authenticated:
-        return render(request, 'admin/home.html')
-    return redirect('login')
-
-
-def list_admin(request):
-    if request.user.is_authenticated:
-        admins = User.objects.filter(is_admin=True)
-
-        return render(request, 'admin/manage_admin.html', {
-            "admins": admins,
-        })
+        return render(request, 'user/home.html')
     return redirect('login')
 
 
@@ -120,7 +168,7 @@ def add_admin(request):
     if request.user.is_authenticated:
         users = User.objects.filter(is_admin=False)
 
-        return render(request, 'admin/add_admin.html', {
+        return render(request, 'user/add_admin.html', {
             "users": users,
         })
     return redirect('login')
@@ -166,21 +214,6 @@ def view_seller_request(request, user_id):
         })
     return redirect('login')
 
-
-def refuse_seller_request(request):
-    if request.user.is_authenticated:
-        service_address_id = None
-        if request.method == 'POST':
-            user_id = request.POST['user_id']
-            user = User.objects.get(pk=user_id)
-            user.is_seller = False
-            user.seller_status = 'R'
-            user.save()
-
-        return HttpResponseRedirect(reverse('seller_manage'))
-    return redirect('login')
-
-
 def approve_seller_request(request):
     if request.user.is_authenticated:
         if request.method == 'POST':
@@ -202,22 +235,8 @@ def make_admin(request):
             user.is_admin = True
             user.save()
 
-        return HttpResponseRedirect(reverse('manage_admin'))
+        return HttpResponseRedirect(reverse('manage_user'))
     return redirect('login')
-
-
-def remove_admin(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            admin_id = request.POST['admin_id']
-            user = User.objects.get(pk=admin_id)
-            user.is_admin = False
-            user.save()
-
-        return HttpResponseRedirect(reverse('manage_admin'))
-    return redirect('login')
-
-
 class ServiceAddressView:
     @classmethod
     def list_service_address(cls, request):
