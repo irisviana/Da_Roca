@@ -18,6 +18,7 @@ from django.urls import path, include
 
 from users import urls as user_urls
 from users.views import login_page, home, logout_page
+from products import urls as product_urls
 
 urlpatterns = [
     path('', home, name='home'),
@@ -25,5 +26,6 @@ urlpatterns = [
     path('login/', login_page, name='login'),
     path('logout/', logout_page, name='logout'),
     path('admin/', admin.site.urls),
+    path('product/', include(product_urls)),
 
 ]
