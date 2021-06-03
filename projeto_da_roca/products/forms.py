@@ -3,7 +3,7 @@ from crispy_forms.layout import Layout, Submit, Field
 from django import forms
 #from django.core.exceptions import ValidationError
 from .models import Product
-from users.models import User
+
 
 class ProductForm(forms.ModelForm):
     class Meta:

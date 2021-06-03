@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import User
 
 # Create your models here.
 class Product(models.Model):
@@ -8,5 +9,3 @@ class Product(models.Model):
     expiration_days = models.IntegerField(null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
     stock_amount = models.IntegerField(null=True, blank=True)
-    
-
