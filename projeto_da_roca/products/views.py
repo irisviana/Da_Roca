@@ -56,7 +56,7 @@ class ProductView:
 
                     return redirect('list_products')
 
-            return render(request, 'product/create.html', {
+            return render(request, 'product/update.html', {
                 'form': form,
                 'post': product,
                 'products': product

@@ -23,6 +23,8 @@ class ProductForm(forms.ModelForm):
             Field('expiration_days', placeholder='Dias de validade'),
             Field('price', placeholder='Preço por unidade'),
             Field('stock_amount', placeholder='Quantidade em estoque'),
-            Submit('save', 'Cadastrar'),
+            Submit('save', 'Salvar'),
         )
+
+        
         
