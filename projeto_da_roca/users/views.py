@@ -103,7 +103,119 @@ class UserView:
             return redirect('manage_user', user_type=user_type)
         return redirect('login')
 
+    @classmethod
+    def login_page(cls, request):
+        if request.method == 'POST':
+            username = request.POST['username']
+            password = request.POST['password']
+            user = authenticate(request, username=username, password=password)
 
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            else:
+                messages.error(request, 'email ou senha estão incorretos')
+
+        return render(request, 'registration/login.html')
+
+    @classmethod
+    def logout_page(cls, request):
+        if request.user.is_authenticated:
+            logout(request)
+            return redirect('home')
+        return redirect('login')
+
+    @classmethod
+    def customer_home(cls, request):
+        if request.user.is_authenticated:
+            return redirect('update_customer', request.user.username)
+        return redirect('login')
+
+    @classmethod
+    def home(cls, request):
+        return render(request, 'home.html')
+
+    @classmethod
+    def admin_home(cls, request):
+        if request.user.is_authenticated:
+            return render(request, 'user/home.html')
+        return redirect('login')
+
+    @classmethod
+    def add_admin(cls, request):
+        if request.user.is_authenticated:
+            users = User.objects.filter(is_admin=False)
+
+            return render(request, 'user/add_admin.html', {
+                "users": users,
+            })
+        return redirect('login')
+
+    @classmethod
+    def seller_home(cls, request):
+        if request.user.is_authenticated:
+            return render(request, 'seller/home_seller.html')
+        return redirect('login')
+
+    @classmethod
+    def request_seller(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                sale_description = request.POST['sale_description']
+                if (sale_description is None):
+                    messages.error(request, 'A descrição é o obrigatoria!')
+                else:
+                    if request.user.is_authenticated:
+                        user = request.user
+                        user.seller_status = 'P'  # request permision
+                        user.sale_description = sale_description
+                        user.save()
+
+            return render(request, 'seller/home_seller.html')
+        return redirect('login')
+
+    @classmethod
+    def manage_seller(cls, request):
+        if request.user.is_authenticated:
+            sellers = User.objects.filter(seller_status='P')
+            return render(request, 'seller/manage_request_seller.html', {
+                "sellers": sellers,
+            })
+        return redirect('login')
+
+    @classmethod
+    def view_seller_request(cls, request, user_id):
+        if request.user.is_authenticated:
+            user = User.objects.get(pk=user_id)
+            return render(request, 'seller/view_request_seller.html', {
+                "user": user,
+            })
+        return redirect('login')
+
+    @classmethod
+    def approve_seller_request(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                user_id = request.POST['user_id']
+                user = User.objects.get(pk=user_id)
+                user.is_seller = True
+                user.seller_status = 'A'
+                user.save()
+
+            return HttpResponseRedirect(reverse('seller_manage'))
+        return redirect('login')
+
+    @classmethod
+    def make_admin(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                user_id = request.POST['user_id']
+                user = User.objects.get(pk=user_id)
+                user.is_admin = True
+                user.save()
+
+            return HttpResponseRedirect(reverse('manage_user'))
+        return redirect('login')
 class AddressView:
 
     @classmethod
@@ -124,119 +236,6 @@ class AddressView:
         addresses = Address.objects.filter(user=user)
 
         return render(request, '../templates/address/list_address.html', {'addresses': addresses})
-
-
-def login_page(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            return redirect('home')
-        else:
-            messages.error(request, 'email ou senha estão incorretos')
-
-    return render(request, 'registration/login.html')
-
-
-def logout_page(request):
-    if request.user.is_authenticated:
-        logout(request)
-        return redirect('home')
-    return redirect('login')
-
-
-def customer_home(request):
-    if request.user.is_authenticated:
-        return redirect('update_customer', request.user.username)
-    return redirect('login')
-
-
-def home(request):
-    return render(request, 'home.html')
-
-
-def admin_home(request):
-    if request.user.is_authenticated:
-        return render(request, 'user/home.html')
-    return redirect('login')
-
-
-def add_admin(request):
-    if request.user.is_authenticated:
-        users = User.objects.filter(is_admin=False)
-
-        return render(request, 'user/add_admin.html', {
-            "users": users,
-        })
-    return redirect('login')
-
-
-def seller_home(request):
-    if request.user.is_authenticated:
-        return render(request, 'seller/home_seller.html')
-    return redirect('login')
-
-
-def request_seller(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            sale_description = request.POST['sale_description']
-            if (sale_description is None):
-                messages.error(request, 'A descrição é o obrigatoria!')
-            else:
-                if request.user.is_authenticated:
-                    user = request.user
-                    user.seller_status = 'P'  # request permision
-                    user.sale_description = sale_description
-                    user.save()
-
-        return render(request, 'seller/home_seller.html')
-    return redirect('login')
-
-
-def manage_seller(request):
-    if request.user.is_authenticated:
-        sellers = User.objects.filter(seller_status='P')
-        return render(request, 'seller/manage_request_seller.html', {
-            "sellers": sellers,
-        })
-    return redirect('login')
-
-
-def view_seller_request(request, user_id):
-    if request.user.is_authenticated:
-        user = User.objects.get(pk=user_id)
-        return render(request, 'seller/view_request_seller.html', {
-            "user": user,
-        })
-    return redirect('login')
-
-def approve_seller_request(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            user_id = request.POST['user_id']
-            user = User.objects.get(pk=user_id)
-            user.is_seller = True
-            user.seller_status = 'A'
-            user.save()
-
-        return HttpResponseRedirect(reverse('seller_manage'))
-    return redirect('login')
-
-
-def make_admin(request):
-    if request.user.is_authenticated:
-        if request.method == 'POST':
-            user_id = request.POST['user_id']
-            user = User.objects.get(pk=user_id)
-            user.is_admin = True
-            user.save()
-
-        return HttpResponseRedirect(reverse('manage_user'))
-    return redirect('login')
 class ServiceAddressView:
     @classmethod
     def list_service_address(cls, request):
