@@ -1,8 +1,5 @@
-from django.shortcuts import get_object_or_404, render, redirect, reverse
-from django.contrib import messages
-from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import Product
-from users.models import User
 from .forms import ProductForm
 
 # Create your views here.

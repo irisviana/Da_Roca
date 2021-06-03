@@ -1,9 +1,7 @@
 from django.db import models
-from users.models import User
 
 # Create your models here.
 class Product(models.Model):
-    
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
     name = models.CharField(max_length=200, null=False, blank=False)
     variety = models.CharField(max_length=200, null=True, blank=True)
