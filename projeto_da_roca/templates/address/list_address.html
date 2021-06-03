@@ -14,6 +14,7 @@
         <table class="custom_table mt-5">
             <thead>
             <tr>
+                <th>AÇÕES</th>
                 <th>CEP</th>
                 <th>ESTADO</th>
                 <th>CIDADE</th>
@@ -26,6 +27,16 @@
             <tbody>
             {% for address in addresses %}
                 <tr>
+                    <td>
+                        <div class="actions">
+                            <form action="{% url 'delete_address' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="address_id" value="{{ address.id }}">
+                                <input class="btn btn-primary" type="submit" value="Remover">
+                            </form>
+                            <a class="btn btn-primary" href="{% url 'update_address' address.id %}">Editar</a>
+                        </div>
+                    </td>
                     <td>
                         {% if address.zip_code %}
                             {{ address.zip_code }}

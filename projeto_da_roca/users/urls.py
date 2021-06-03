@@ -8,6 +8,9 @@ urlpatterns = [
     path('<str:username>/update', UserView.update_users, name='update_customer'),
     path('<str:username>/address/create', AddressView.create_address, name='create_customer_address'),
     path('<str:username>/address/list', AddressView.list_address, name='list_customer_address'),
+    path('address/delete', AddressView.delete_address, name='delete_address'),
+    path('address/update/<int:address_id>', AddressView.update_address,
+         name='update_address'),
     path('delivery_time/list/<int:service_address_id>', DeliveryTimeView.list_delivery_time, name='list_delivery_time'),
     path('delivery_time/create/<int:service_address_id>', DeliveryTimeView.create_delivery_time,
          name='create_delivery_time'),
@@ -23,6 +26,7 @@ urlpatterns = [
     path('admin/manage_admin', list_admin, name='manage_admin'),
     path('admin/add', add_admin, name='admin_add'),
 
+    path('customer_home_first', customer_home_first, name='customer_home_first'),
     path('customer_home', customer_home, name='customer_home'),
     path('seller/', request_seller, name='home_seller'),
     path('seller/request', request_seller, name='seller_request'),
