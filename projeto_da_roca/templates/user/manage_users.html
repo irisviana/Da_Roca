@@ -1,0 +1,125 @@
+<!-- templates/delivery_time/create.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>
+    {% if user_type == 'admin' %}
+        Gerenciar administradores
+    {% elif user_type == 'seller' %}
+        Gerenciar produtores
+    {% elif user_type == 'client' %}
+        Gerenciar clientes
+    {% else %}
+        Gerenciar usuários
+    {% endif %}
+</title>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Gerenciar usuários</h4>
+        </div>
+        <div class="inner_container d-flex flex-row justify-content-between align-items-center w-100 position-relative">
+            <div cass="filter-info">
+                <p>
+                    {% if user_type == 'admin' %}
+                        Filtrando administradores (<a href="{% url 'manage_user' 'all' %}">Remover filtro</a>)
+                    {% elif user_type == 'producer' %}
+                        Filtrando produtores (<a href="{% url 'manage_user' 'all' %}">Remover filtro</a>)
+                    {% elif user_type == 'client' %}
+                        Filtrando clientes (<a href="{% url 'manage_user' 'all' %}">Remover filtro</a>)
+                    {% endif %}
+                </p>
+            </div>
+            <div class="actions">
+                <button id="filter" class="btn btn-primary">Filtrar por <span class="fas fa-caret-down"></span></button>
+                <div id="filter-popup" class="filter-popup disabled">
+                    <a href="{% url 'manage_user' 'all' %}" class="mb-3 btn {% if user_type == 'all' %} btn-primary {% else %} btn-secondary {% endif %}">
+                        Todos
+                    </a>
+                    <a href="{% url 'manage_user' 'admin' %}" class="mb-3 btn {% if user_type == 'admin' %} btn-primary {% else %} btn-secondary {% endif %}">
+                        Administradores
+                    </a>
+                    <a href="{% url 'manage_user' 'producer' %}" class="mb-3 btn {% if user_type == 'producer' %} btn-primary {% else %} btn-secondary {% endif %}">
+                        Produtores
+                    </a>
+                    <a href="{% url 'manage_user' 'client' %}" class="btn {% if user_type == 'client' %} btn-primary {% else %} btn-secondary {% endif %}">
+                        Clientes
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="inner_container mt-4">
+        {% if user_type == 'admin' %}
+            <a class="btn btn-primary" href="{% url 'admin_add' %}">
+                Adicionar
+            </a>
+        {% endif %}
+        {% if mensagem %}
+            <p>{{ mensagem }}</p>
+        {% endif %}
+        <table class="custom_table {% if user_type == 'admin' %} mt-5 {% endif %}">
+            <thead>
+                <tr>
+                    <th>Ações</th>
+                    <th>Permissões</th>
+                    <th>Nome</th>
+                    <th>Cpf</th>
+                    <th>E-mail</th>
+                    <th>Telefone</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if users|length > 0 %}
+                    {% for user in users %}
+                    <tr>
+                        <td>
+                            <div class="actions">
+                                {% if user_type == 'admin' %}
+                                <a href="{% url 'admin_remove' %}?admin_id={{ user.id }}&user_type={{ user_type }}" class="btn btn-primary" title="Tirar privilégios de administrador">
+                                    <span class="fas fa-times"></span>
+                                </a>
+                                {% elif user_type == 'producer' %}
+                                <a href="{% url 'refuse_request_seller' %}?user_id={{ user.id }}&user_type={{ user_type }}" class="btn btn-primary" title="Tirar privilégios de vendedor">
+                                    <span class="fas fa-times"></span>
+                                </a>
+                                {% elif user_type == 'client' %}
+                                {% endif %}
+                                <a href="{% url 'delete_user' %}?user_id={{ user.id }}&user_type={{ user_type }}" type="submit" class="btn btn-danger"
+                                    title="Remover usuário permanentemente">
+                                    <span class="fas fa-trash"></span>
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="fas fa-user" title="Cliente"></span> 
+                            {% if user.is_seller %} <span class="fas fa-user-tag" title="Produtor"></span> {% endif %} 
+                            {% if user.is_admin %} <span class="fas fa-user-shield" title="Administrador"></span> {% endif %} 
+                        </td>
+                        <td>{{ user.first_name }}</td>
+                        <td>{% firstof user.cpf 'Nenhum' %}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{% firstof user.phone_number 'Nenhum' %}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="6">Nenhum registro encontrado</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        document.getElementById('filter').addEventListener('click', function(event) {
+            document.getElementById('filter-popup').classList.toggle('disabled');
+        });
+    </script>
+{% endblock %}
