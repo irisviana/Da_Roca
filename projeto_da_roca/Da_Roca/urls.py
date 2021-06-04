@@ -17,13 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 
 from users import urls as user_urls
-from users.views import login_page, home, logout_page
+from users.views import UserView
+from products import urls as product_urls
 
 urlpatterns = [
-    path('', home, name='home'),
+    path('', UserView.home, name='home'),
     path('user/', include(user_urls)),
-    path('login/', login_page, name='login'),
-    path('logout/', logout_page, name='logout'),
+    path('login/', UserView.login_page, name='login'),
+    path('logout/', UserView.logout_page, name='logout'),
     path('admin/', admin.site.urls),
+    path('product/', include(product_urls)),
 
 ]

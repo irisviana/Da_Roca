@@ -1,0 +1,23 @@
+<!-- templates/product/update.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} 
+<title>Atualizar produto</title>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Atualize seu produto</h4>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center form_container">
+        {% crispy form %}
+    </div>
+{% endblock %}
