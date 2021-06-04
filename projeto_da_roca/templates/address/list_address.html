@@ -1,5 +1,8 @@
 {% extends 'users_profile/customer_home_base.html' %}
 
+{% block title %}
+<title>Endereços</title>
+{% endblock %}
 
 {% block page %}
     <div class="d-flex flex-column align-items-center">
@@ -14,13 +17,13 @@
         <table class="custom_table mt-5">
             <thead>
             <tr>
-                <th>AÇÕES</th>
+                <th>Ações</th>
                 <th>CEP</th>
-                <th>ESTADO</th>
-                <th>CIDADE</th>
-                <th>BAIRRO</th>
-                <th>RUA</th>
-                <th>NÚMERO</th>
+                <th>Estado</th>
+                <th>Cidade</th>
+                <th>Bairro</th>
+                <th>Logradouro</th>
+                <th>Número</th>
 
             </tr>
             </thead>
@@ -32,9 +35,13 @@
                             <form action="{% url 'delete_address' %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="address_id" value="{{ address.id }}">
-                                <input class="btn btn-primary" type="submit" value="Remover">
+                                <button class="btn btn-primary" type="submit" value="Remover">
+                                    <span class="fas fa-trash"></span>
+                                </button>
                             </form>
-                            <a class="btn btn-primary" href="{% url 'update_address' address.id %}">Editar</a>
+                            <a class="btn btn-primary" href="{% url 'update_address' address.id %}">
+                                <span class="fas fa-edit"></span>
+                            </a>
                         </div>
                     </td>
                     <td>
