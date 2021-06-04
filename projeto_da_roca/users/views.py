@@ -55,7 +55,7 @@ class UserView:
         if request.method == 'POST':
             if form.is_valid():
                 user = form.save()
-                return redirect('update_customer', user.username)
+                return redirect('customer_home')
 
         return render(request, '../templates/registration/update_custumer.html', {'form': form})
 
@@ -124,10 +124,14 @@ class UserView:
             return redirect('home')
         return redirect('login')
 
-    @classmethod
-    def customer_home(cls, request):
+    def customer_home_first(request):
         if request.user.is_authenticated:
             return redirect('update_customer', request.user.username)
+        return redirect('login')
+
+    def customer_home(request):
+        if request.user.is_authenticated:
+            return render(request, 'users_profile/customer_home_base.html')
         return redirect('login')
 
     @classmethod
@@ -234,6 +238,42 @@ class AddressView:
         addresses = Address.objects.filter(user=user)
 
         return render(request, '../templates/address/list_address.html', {'addresses': addresses})
+
+    @classmethod
+    def update_address(cls, request, address_id):
+        address = get_object_or_404(Address, id=address_id)
+
+        if request.user.is_authenticated:
+            form = AddressForm(instance=address)
+            user = request.user
+            if request.method == 'POST':
+                form = AddressForm(request.POST, instance=address)
+                if form.is_valid():
+                    address = form.save(commit=False)
+                    address.user = user
+                    address.save()
+
+                    return redirect('list_customer_address', user.username)
+
+            return render(request, '../templates/address/create_address.html', {
+                'form': form,
+                'post': address,
+                'service_address': address
+            })
+        return redirect('login')
+
+    @classmethod
+    def delete_address(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                address_id = request.POST['address_id']
+                address = get_object_or_404(Address, id=address_id)
+                user = get_object_or_404(User, username=address.user.username)
+
+                address.delete()
+                return redirect('list_customer_address', user.username)
+        return redirect('login')
+
 class ServiceAddressView:
     @classmethod
     def list_service_address(cls, request):
