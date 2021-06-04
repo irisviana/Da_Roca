@@ -9,3 +9,8 @@ class Product(models.Model):
     expiration_days = models.IntegerField(null=True, blank=True)
     price = models.FloatField(null=True, blank=True)
     stock_amount = models.IntegerField(null=True, blank=True)
+
+# Create your models here.
+
+class Category(models.Model):
+    name = models.CharField(max_Length=30, null=False, blank=False)
