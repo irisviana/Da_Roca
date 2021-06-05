@@ -37,12 +37,16 @@
                 <tr>
                     <td>
                         <div class="actions">
+                            <a class="btn btn-primary" href="{% url 'update_delivery_time' delivery_time.id %}">
+                                <span class="fas fa-edit"></span>
+                            </a>
                             <form action="{% url 'delete_delivery_time' %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="delivery_time_id" value="{{ delivery_time.id }}">
-                                <input class="btn btn-primary" type="submit" value="Remover">
+                                <button class="btn btn-danger" type="submit">
+                                    <span class="fas fa-trash"></span>
+                                </button>
                             </form>
-                            <a class="btn btn-primary" href="{% url 'update_delivery_time' delivery_time.id %}">Editar</a>
                         </div>
                     </td>
                     <td>{{ delivery_time.service_address.id }}</td>
