@@ -10,13 +10,19 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-dismiss="modal">{{ cancel }}</button>
-        <a href="{{ action_url }}" class="btn btn-danger">{{ confirm }}</a>
+        <a href="{{ action_url }}" class="btn btn-danger btn-confirm">{{ confirm }}</a>
       </div>
     </div>
   </div>
 </div>
 <script>
-    $('#myModal').on('shown.bs.modal', function () {
-        $('#myInput').trigger('focus')
+    $('#includedModal').on('shown.bs.modal', function (event) {
+        var modal = $(this);
+        var button = $(event.relatedTarget) // Button that triggered the modal
+        var query = button.data('query')
+        
+        if (query) {
+            modal.find('.btn-confirm').attr('href', "{{ action_url }}" + `${query}`);
+        }
     })
 </script>

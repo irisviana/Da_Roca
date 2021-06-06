@@ -92,10 +92,14 @@
                                 </a>
                                 {% elif user_type == 'client' %}
                                 {% endif %}
-                                <a href="{% url 'delete_user' %}?user_id={{ user.id }}&user_type={{ user_type }}" type="submit" class="btn btn-danger"
+                                <button type="button"
+                                    class="btn btn-danger"
+                                    data-toggle="modal"
+                                    data-target="#includedModal"
+                                    data-query="?user_id={{ user.id }}&user_type={{ user_type }}"
                                     title="Remover usuário permanentemente">
                                     <span class="fas fa-trash"></span>
-                                </a>
+                                </button>
                             </div>
                         </td>
                         <td>
@@ -117,6 +121,8 @@
             </tbody>
         </table>
     </div>
+    {% url 'delete_user' as action_url %}
+    {% include 'modal.html' with header="Você tem certeza?" message='O usuário não poderá mais acessar o sistema, tem certeza que deseja proceder?' confirm="Sim, remover permanentemente" cancel="Cancelar" %}
     <script>
         document.getElementById('filter').addEventListener('click', function(event) {
             document.getElementById('filter-popup').classList.toggle('disabled');

@@ -426,8 +426,8 @@ class DeliveryTimeView:
     def delete_delivery_time(cls, request):
         if request.user.is_authenticated:
             service_address_id = None
-            if request.method == 'POST':
-                delivery_time_id = request.POST['delivery_time_id']
+            if request.method == 'GET':
+                delivery_time_id = request.GET.get('delivery_time_id')
                 delivery_time = get_object_or_404(DeliveryTime, id=delivery_time_id)
                 service_address_id = delivery_time.service_address.id
 
