@@ -50,14 +50,32 @@ class UserView:
     @classmethod
     def update_users(cls, request, username):
         user = get_object_or_404(User, username=username)
-        form = UserUpdateForm(request.POST or None, instance=user)
 
-        if request.method == 'POST':
-            if form.is_valid():
-                user = form.save()
-                return redirect('customer_home')
+        if request.user.is_authenticated:
+            form = UserUpdateForm(instance=user)
 
-        return render(request, '../templates/registration/update_custumer.html', {'form': form})
+            if request.method == 'POST':
+                form = UserUpdateForm(request.POST, instace=user)
+                if form.is_valid():
+                    user = form.save()
+                    return render(request, '../templates/registration/update_customer.html', {
+                        'form': form
+                    })
+
+        return render(request, '../templates/registration/update_customer.html', {'form': form})
+
+    @classmethod
+    def self_delete(cls, request, username):
+        if request.user.is_authenticated:
+            auth_user = request.user
+            if auth_user.username == username:
+                user = User.objects.get(username=username)
+                user.is_active = False
+                user.save()
+                return redirect('logout')
+            return redirect('home')
+
+        return render('login')
 
     @classmethod
     def delete_user(cls, request):

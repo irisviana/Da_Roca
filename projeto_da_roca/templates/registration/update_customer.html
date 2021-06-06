@@ -22,8 +22,15 @@
                 {% crispy form %}
 
             </div>
+            <div class="d-flex justify-content-center form_container mx-auto">
+                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#includedModal">
+                    Excluir minha conta
+                </button>
+            </div>
         </div>
     </div>
+    {% url 'self_delete' request.user.username as action_url %}
+    {% include 'modal.html' with header="Você tem certeza?" message='Ao confirmar você excluirá sua conta e não poderá mais acessá-la. Tem certeza que deseja proceder?' confirm="Sim, excluir conta" cancel="Cancelar" %}
     <script>
         $("#id_cpf").mask("000.000.000-00");
         $("#id_phone_number").mask("(00)00000-0000");

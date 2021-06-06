@@ -88,7 +88,7 @@ class UserUpdateForm(forms.ModelForm):
     def clean(self):
         name = self.cleaned_data.get('first_name')
         if name is None:
-            raise ValidationError('O nome precissa ser informado')
+            raise ValidationError('O nome precisa ser informado')
 
         return self.cleaned_data
 
