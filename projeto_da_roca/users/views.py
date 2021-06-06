@@ -75,7 +75,7 @@ class UserView:
                 return redirect('logout')
             return redirect('home')
 
-        return render('login')
+        return redirect('login')
 
     @classmethod
     def delete_user(cls, request):
