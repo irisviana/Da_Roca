@@ -65,7 +65,13 @@
         {% if mensagem %}
             <p>{{ mensagem }}</p>
         {% endif %}
-        <table class="custom_table {% if user_type == 'admin' %} mt-5 {% endif %}">
+        <div class="input-group mb-4 border-custom rounded-pill mt-5 p-1">
+            <input id="custom_table-search" type="search" placeholder="Procure por nome do usuário" aria-describedby="button-addon3" class="form-control bg-white border-0">
+            <div class="input-group-append border-0">
+              <button disabled type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+        <table class="custom_table {% if user_type == 'admin' %} mt-2 {% endif %}">
             <thead>
                 <tr>
                     <th>Ações</th>
@@ -128,4 +134,5 @@
             document.getElementById('filter-popup').classList.toggle('disabled');
         });
     </script>
+    <script src="{% static 'js/custom-paginated-table.js' %}"></script>
 {% endblock %}
