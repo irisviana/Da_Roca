@@ -1,4 +1,10 @@
 $(function() {
+    const rowsPerPage = 5;
+    const rows = $(".custom_table tbody tr");
+    const rowsCount = rows.length;
+    const pageCount = Math.ceil(rowsCount / rowsPerPage); // avoid decimals
+    const numbers = $("#numbers");
+    
     // Function that displays rows for a specific page.
     function displayRows(index) {
         var start = (index - 1) * rowsPerPage;
@@ -10,12 +16,6 @@ $(function() {
         // Show the proper rows for this page.
         rows.slice(start, end).show();
     }
-
-    const rowsPerPage = 5;
-    const rows = $(".custom_table tbody tr");
-    const rowsCount = rows.length;
-    const pageCount = Math.ceil(rowsCount / rowsPerPage); // avoid decimals
-    const numbers = $("#numbers");
     
     // Generate the pagination.
     for (var i = 0; i < pageCount; i++) {
