@@ -65,7 +65,13 @@
         {% if mensagem %}
             <p>{{ mensagem }}</p>
         {% endif %}
-        <table class="custom_table {% if user_type == 'admin' %} mt-5 {% endif %}">
+        <div class="input-group mb-4 border-custom rounded-pill mt-5 p-1">
+            <input id="custom_table-search" type="search" placeholder="Procure por nome do usuário" aria-describedby="button-addon3" class="form-control bg-white border-0">
+            <div class="input-group-append border-0">
+              <button disabled type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+        <table class="custom_table {% if user_type == 'admin' %} mt-2 {% endif %}">
             <thead>
                 <tr>
                     <th>Ações</th>
@@ -92,10 +98,20 @@
                                 </a>
                                 {% elif user_type == 'client' %}
                                 {% endif %}
-                                <a href="{% url 'delete_user' %}?user_id={{ user.id }}&user_type={{ user_type }}" type="submit" class="btn btn-danger"
-                                    title="Remover usuário permanentemente">
-                                    <span class="fas fa-trash"></span>
-                                </a>
+                                {% if user.username != request.user.username %}
+                                    <button type="button"
+                                        class="btn btn-danger"
+                                        data-toggle="modal"
+                                        data-target="#includedModal"
+                                        data-query="?user_id={{ user.id }}&user_type={{ user_type }}"
+                                        title="Remover usuário permanentemente">
+                                        <span class="fas fa-trash"></span>
+                                    </button>
+                                {% else %}
+                                    <a class="btn btn-primary" href="{% url 'customer_home' %}" title="Minha conta">
+                                        <i class="fa fa-user" aria-hidden="true"></i>
+                                    </a>
+                                {% endif %}
                             </div>
                         </td>
                         <td>
@@ -117,9 +133,12 @@
             </tbody>
         </table>
     </div>
+    {% url 'delete_user' as action_url %}
+    {% include 'modal.html' with header="Você tem certeza?" message='O usuário não poderá mais acessar o sistema, tem certeza que deseja proceder?' confirm="Sim, remover permanentemente" cancel="Cancelar" %}
     <script>
         document.getElementById('filter').addEventListener('click', function(event) {
             document.getElementById('filter-popup').classList.toggle('disabled');
         });
     </script>
+    <script src="{% static 'js/custom-paginated-table.js' %}"></script>
 {% endblock %}

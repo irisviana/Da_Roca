@@ -43,10 +43,6 @@
     color: var(--color-primary);
   }
 
-  header nav {
-    width: 100%;
-  }
-
   header nav ul, .nav-link {
     display: flex;
     justify-content: flex-end;
@@ -92,10 +88,6 @@
     border-radius: 5px;
 
   }
-  .user_card.update {
-    margin-left: 10px;
-    margin-right: 100px;
-  }
 
   .form_container {
     margin-top: 20px;
@@ -107,36 +99,12 @@
   
   .container {
     display: block;
+    max-width: 900px;
   }
   
   .container .inner_container {
     max-width: 900px;
     margin: 0 auto;
-  }
-
-  .custom_table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border: 1px solid var(--color-primary);
-    border-radius: 5px;
-    text-align: center;
-    max-width: 900px;
-    margin: 1em auto;
-  }
-  
-  .custom_table th {
-    border-bottom: 1px solid var(--color-primary);
-    padding: 0.5em;
-    margin: 0px;
-  }
-
-  .custom_table td {
-    padding: 0.5em;
-  }
-
-  .custom_table tr + tr > td {
-    border-top: 1px solid var(--color-primary);
   }
 
   .custom-list-group {
@@ -181,6 +149,10 @@
 
   .login_logo {
     width: 5em;  
+  }
+
+  .search-bar.input-group {
+    flex: 1 1 450px;
   }
 
   .input-group-text {
@@ -242,6 +214,18 @@
     border: 1px solid var(--color-primary);
     color: var(--color-primary) !important;
     box-shadow: var(--shadow-button);
+  }
+
+  .btn.btn-primary:disabled {
+    background-color: var(--color-white);
+    color: var(--color-primary);
+    border: none;
+    box-shadow: none;
+  }
+
+  .btn.btn-primary:hover:disabled {
+    background-color: var(--color-white) !important;
+    color: var(--color-primary) !important;
   }
 
   .border-custom {
@@ -334,4 +318,86 @@
   }
   /* 3- FIM FILTER POPUP */
 
- 
+  /* 4- USER-MENU */
+  .user-menu li {
+    padding: 1em 1.5em 1em 0;
+  }
+
+  .user-menu a {
+    color: var(--color-primary);
+  }
+  /* 4- FIM USER-MENU */
+
+  /* 5- CUSTOM TABLE */
+  .custom_table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--color-primary);
+    border-radius: 5px;
+    text-align: center;
+    max-width: 900px;
+    margin: 1em auto;
+    overflow-x: auto;
+  }
+  
+  .custom_table th {
+    border-bottom: 1px solid var(--color-primary);
+    padding: 0.5em;
+    margin: 0px;
+  }
+
+  .custom_table td {
+    padding: 0.5em;
+  }
+
+  .custom_table tr + tr > td {
+    border-top: 1px solid var(--color-primary);
+  }
+
+  .custom_table-pagination {
+    display: block;
+  }
+  
+  .custom_table-pagination ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .custom_table-pagination ul li:first-child a {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+  }
+  
+  .custom_table-pagination ul li:last-child a {
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  
+  .custom_table-pagination ul li a {
+    padding: 0.75em;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border: 1px solid var(--color-primary);
+    text-decoration: none;
+  }
+
+  .custom_table-pagination ul li a:active, .custom_table-pagination ul li a:hover {
+    color: var(--color-primary);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-primary);
+    text-decoration: none;
+  }
+
+  .custom_table-pagination ul li a.active {
+    color: var(--color-primary);
+    background-color: var(--color-white);
+    border: 1px solid var(--color-primary);
+    text-decoration: none;
+  }
+  /* 5- FIM DE CUSTOM TABLE */

@@ -23,40 +23,63 @@
         {% if mensagem %}
             <p>{{ mensagem }}</p>
         {% endif %}
-        <table class="custom_table mt-5">
+        <div class="input-group mb-4 border-custom rounded-pill mt-5 p-1">
+            <input id="custom_table-search" type="search" placeholder="Procure por dias e horas" aria-describedby="button-addon3" class="form-control bg-white border-0">
+            <div class="input-group-append border-0">
+              <button disabled type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            </div>
+        </div> 
+        <table class="custom_table mt-2">
             <thead>
                 <tr>
                     <th>Ações</th>
-                    <th>Id</th>
                     <th>Dia</th>
                     <th>Hora</th>
                 </tr>
             </thead>
             <tbody>
-                {% for delivery_time in delivery_times %}
-                <tr>
-                    <td>
-                        <div class="actions">
-                            <form action="{% url 'delete_delivery_time' %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="delivery_time_id" value="{{ delivery_time.id }}">
-                                <input class="btn btn-primary" type="submit" value="Remover">
-                            </form>
-                            <a class="btn btn-primary" href="{% url 'update_delivery_time' delivery_time.id %}">Editar</a>
-                        </div>
-                    </td>
-                    <td>{{ delivery_time.service_address.id }}</td>
-                    <td>
-                        {% for d in delivery_time.DAYS %}
-                            {% if d.0 == delivery_time.day %}
-                                {{ d.1 }}
-                            {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>{{ delivery_time.time }}</td>
-                </tr>
-                {% endfor %}
+                {% if delivery_times|length > 0%}
+                    {% for delivery_time in delivery_times %}
+                    <tr>
+                        <td>
+                            <div class="actions">
+                                <a class="btn btn-primary"
+                                    href="{% url 'update_delivery_time' delivery_time.id %}"
+                                    tittle="Editar horário de entrega">
+                                    <span class="fas fa-edit"></span>
+                                </a>
+                                <button type="button"
+                                    class="btn btn-danger"
+                                    data-toggle="modal"
+                                    data-target="#includedModal"
+                                    data-query="?delivery_time_id={{ delivery_time.id }}"
+                                    tittle="Deletar horário de entrega">
+                                    <span class="fas fa-trash"></span>
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            {% for d in delivery_time.DAYS %}
+                                {% if d.0 == delivery_time.day %}
+                                    {{ d.1 }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                        <td>{{ delivery_time.time }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="3">Nenhum registro encontrado</td>
+                    </tr>
+                {% endif %}
             </tbody>
         </table>
+        <div class="custom_table-pagination">
+            <ul id="numbers"></ul>
+        </div>
     </div>
+    {% url 'delete_delivery_time' as action_url %}
+    {% include 'modal.html' with header="Excluir horário entrega?" message='Tem certeza que deseja excluir o horário de entrega?' confirm="Sim" cancel="Cancelar" %}
+    <script src="{% static 'js/custom-paginated-table.js' %}"></script>
 {% endblock %}
