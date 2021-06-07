@@ -9,5 +9,4 @@ urlpatterns = [
          name='update_product'),
     path('products/delete', ProductView.delete_product,
          name='delete_product'),
-
 ]

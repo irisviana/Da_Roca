@@ -64,9 +64,12 @@ class ProductView:
     @classmethod
     def delete_product(cls, request):
         if request.user.is_authenticated:
-            if request.method == 'POST':
-                product_id = request.POST['product_id']
+            if request.method == 'GET':
+                product_id = request.GET['product_id']
                 product = get_object_or_404(Product, id=product_id)
                 product.delete()
                 return redirect('list_products')
         return redirect('login')
+
+
+    
