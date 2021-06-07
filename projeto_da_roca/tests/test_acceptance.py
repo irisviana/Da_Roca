@@ -1,4 +1,3 @@
-import time
 import environ
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -72,7 +71,7 @@ class UsersTest(StaticLiveServerTestCase):
         search_input = driver.find_element_by_id('custom_table-search')
         search_input.send_keys(user.first_name)
         assert user.first_name in driver.page_source
-    
+
     def test_admin_search_user_with_error(self):
         driver = self.selenium
         self.test_login()
@@ -93,7 +92,7 @@ class UsersTest(StaticLiveServerTestCase):
         self.test_login()
         driver.get('%s%s' % (self.live_server_url, '/user/admin/users/all'))
         driver.find_element_by_xpath(f"//button[@data-query=\"?user_id={user.id}&user_type=all\"]").click()
-        driver.find_element_by_xpath(f"//a[@class=\"btn btn-danger btn-confirm\"]").click()
+        driver.find_element_by_xpath("//a[@class=\"btn btn-danger btn-confirm\"]").click()
         assert user.first_name not in driver.page_source
 
     def test_admin_self_remove(self):
@@ -108,8 +107,8 @@ class UsersTest(StaticLiveServerTestCase):
         self.test_login(user)
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, f"/user/{user.username}/update"))
-        driver.find_element_by_xpath(f"//button[@class=\"btn btn-danger\"]").click()
-        driver.find_element_by_xpath(f"//a[@class=\"btn btn-danger btn-confirm\"]").click()
+        driver.find_element_by_xpath("//button[@class=\"btn btn-danger\"]").click()
+        driver.find_element_by_xpath("//a[@class=\"btn btn-danger btn-confirm\"]").click()
         assert 'Acesso' not in driver.page_source
 
 class DeliveryTimeTest(StaticLiveServerTestCase):
@@ -169,7 +168,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         time_input = driver.find_element_by_name("time")
         time_input.send_keys('13:00')
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Quinta-feira']").click()
-        driver.find_element_by_xpath(f"//input[@type=\"submit\"]").click()
+        driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         search_input = driver.find_element_by_id('custom_table-search')
         search_input.send_keys('quinta')
         assert '13:00' in driver.page_source and 'Quinta-feira' in driver.page_source
@@ -194,7 +193,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         driver.get('%s%s' % (self.live_server_url, f"/user/delivery_time/list/{service_address.id}"))
         driver.find_element_by_xpath(f"//a[@href=\"/user/delivery_time/create/{service_address.id}\"]").click()
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Quinta-feira']").click()
-        driver.find_element_by_xpath(f"//input[@type=\"submit\"]").click()
+        driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         
         assert 'Novo horário de entrega' == driver.title
 
@@ -232,7 +231,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         
         # Update fields
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Sexta-feira']").click()
-        driver.find_element_by_xpath(f"//input[@type=\"submit\"]").click()
+        driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         
         assert '13:00' in driver.page_source and 'Sexta-feira' in driver.page_source
 
@@ -272,7 +271,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         time_input = driver.find_element_by_name("time")
         time_input.send_keys('')
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Sexta-feira']").click()
-        driver.find_element_by_xpath(f"//input[@type=\"submit\"]").click()
+        driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         
         assert 'Novo horário de entrega' == driver.title
 
@@ -306,7 +305,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         search_input.send_keys('quinta')
 
         driver.find_element_by_xpath(f"//button[@data-query=\"?delivery_time_id={delivery_time.id}\"]").click()
-        driver.find_element_by_xpath(f"//a[@class=\"btn btn-danger btn-confirm\"]").click()
+        driver.find_element_by_xpath("//a[@class=\"btn btn-danger btn-confirm\"]").click()
 
         search_input = driver.find_element_by_id('custom_table-search')
         search_input.send_keys('quinta')
