@@ -1,0 +1,68 @@
+<!-- templates/admin/home.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}<title>Administração</title>{% endblock %}
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+{% block content %}
+	
+	<div class="d-flex flex-column align-items-center">
+	<div class="mt-5 mb-4">
+	    <h1>Administração</h1>
+	</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="list-group d-flex flex-row justify-content-center align-items-start flex-wrap custom-list-group">
+			<div class="list-group-item list-group-item-action custom-list-item">
+				<span class="fa fa-user fa-2x"></span>
+				<h5>Clientes</h5>
+				<div class="list-item-actions">
+					<a class="btn btn-primary" href="{% url 'manage_user' 'client' %}" title="Gerenciar clientes">
+						<span class="fas fa-cog"></span>
+					</a>
+				</div>
+			</div>
+			<div class="list-group-item list-group-item-action custom-list-item">
+				<span class="fa fa-user-tag fa-2x"></span>
+				<h5>Produtores</h5>
+				<div class="list-item-actions">
+					<a class="btn btn-primary" href="{% url 'manage_user' 'producer' %}" title="Gerenciar produtores">
+						<span class="fas fa-cog"></span>
+					</a>
+				</div>
+			</div>
+			<div class="list-group-item list-group-item-action custom-list-item">
+				<span class="fa fa-user-shield fa-2x"></span>
+				<h5>Administradores</h5>
+				<div class="list-item-actions">
+					<a href="{% url 'admin_add'%}" class="btn btn-primary" title="Adicionar administrador">
+						<span class="fas fa-plus"></span>
+					</a>
+					<a class="btn btn-primary" href="{% url 'manage_user' 'admin' %}" title="Gerenciar administradores">
+						<span class="fas fa-cog"></span>
+					</a>
+				</div>
+			</div>
+			<div class="list-group-item list-group-item-action custom-list-item">
+				<span class="fa fa-users fa-2x"></span>
+				<h5>Todos os usuários</h5>
+				<div class="list-item-actions">
+					<a href="{% url 'manage_user' 'all' %}"class="btn btn-primary" title="Gerenciar usuários">
+						<span class="fas fa-cog"></span>
+					</a>
+				</div>
+			</div>
+			<div class="list-group-item list-group-item-action custom-list-item">
+				<span class="fa fa-newspaper fa-2x"></span>
+				<h5>Solicitações de venda</h5>
+				<div class="list-item-actions">
+					<a href="{% url 'seller_manage'%}" class="btn btn-primary" title="Gerenciar solicitações de venda">
+						<span class="fas fa-cog"></span>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+
+{% endblock %}
