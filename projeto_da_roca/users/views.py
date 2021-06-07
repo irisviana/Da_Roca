@@ -253,15 +253,16 @@ class ServiceAddressView:
             })
         return redirect('login')
 
-
     @classmethod
     def update_service_address(cls, request, service_address_id):
-        service_address = get_object_or_404(ServiceAddress, id=service_address_id)
+        service_address = get_object_or_404(
+            ServiceAddress, id=service_address_id)
         if request.user.is_authenticated:
             form = ServiceAddressForm(instance=service_address)
             user = request.user
             if request.method == 'POST':
-                form = ServiceAddressForm(request.POST, instance=service_address)
+                form = ServiceAddressForm(
+                    request.POST, instance=service_address)
                 if form.is_valid():
                     service_address = form.save(commit=False)
                     service_address.user = user
@@ -281,7 +282,8 @@ class ServiceAddressView:
         if request.user.is_authenticated:
             if request.method == 'POST':
                 service_address_id = request.POST['service_address_id']
-                service_address = get_object_or_404(ServiceAddress, id=service_address_id)
+                service_address = get_object_or_404(
+                    ServiceAddress, id=service_address_id)
 
                 service_address.delete()
                 return redirect('list_service_address')
@@ -293,7 +295,8 @@ class DeliveryTimeView:
     def list_delivery_time(cls, request, service_address_id):
         if request.user.is_authenticated:
             if service_address_id:
-                delivery_time = DeliveryTime.objects.filter(service_address=service_address_id)
+                delivery_time = DeliveryTime.objects.filter(
+                    service_address=service_address_id)
             else:
                 delivery_time = DeliveryTime.objects.all()
 
@@ -306,7 +309,8 @@ class DeliveryTimeView:
     @classmethod
     def create_delivery_time(cls, request, service_address_id):
         if request.user.is_authenticated:
-            service_address = get_object_or_404(ServiceAddress, id=service_address_id)
+            service_address = get_object_or_404(
+                ServiceAddress, id=service_address_id)
             form = DeliveryTimeForm()
 
             if request.method == 'POST':
@@ -327,7 +331,8 @@ class DeliveryTimeView:
     @classmethod
     def update_delivery_time(cls, request, delivery_time_id):
         if request.user.is_authenticated:
-            delivery_time = get_object_or_404(DeliveryTime, id=delivery_time_id)
+            delivery_time = get_object_or_404(
+                DeliveryTime, id=delivery_time_id)
             service_address = delivery_time.service_address
             form = DeliveryTimeForm(instance=delivery_time)
 
@@ -354,7 +359,8 @@ class DeliveryTimeView:
             service_address_id = None
             if request.method == 'POST':
                 delivery_time_id = request.POST['delivery_time_id']
-                delivery_time = get_object_or_404(DeliveryTime, id=delivery_time_id)
+                delivery_time = get_object_or_404(
+                    DeliveryTime, id=delivery_time_id)
                 service_address_id = delivery_time.service_address.id
 
                 delivery_time.delete()

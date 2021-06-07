@@ -20,7 +20,8 @@ class User(AbstractUser):
     sale_description = models.TextField(max_length=100, null=True, blank=True)
     is_admin = models.BooleanField(default=False, null=True, blank=True)
     is_seller = models.BooleanField(default=False, null=True, blank=True)
-    seller_status = models.CharField(max_length=1, null=True, blank=True, choices=SELLER_STATUS)
+    seller_status = models.CharField(
+        max_length=1, null=True, blank=True, choices=SELLER_STATUS)
 
     def save(self, *args, **kwargs):
         self.username = uuid.uuid4().hex[:30]
@@ -32,8 +33,10 @@ class Address(models.Model):
         ('user', 'Usuário'),
         ('order', 'Pedido'),
     )
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    address_type = models.CharField(max_length=5, default='user', choices=ADDRESS_TYPE_CHOICES)
+    user = models.ForeignKey(
+        User, on_delete=models.SET_NULL, null=True, blank=True)
+    address_type = models.CharField(
+        max_length=5, default='user', choices=ADDRESS_TYPE_CHOICES)
     zip_code = models.CharField(max_length=20)
     state = models.CharField(max_length=2)
     city = models.CharField(max_length=100)
@@ -73,9 +76,11 @@ class ServiceAddress(models.Model):
         ('TO', 'Tocantins'),
 
     )
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=False)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=False)
     city = models.CharField(max_length=50, blank=False)
-    state = models.CharField(max_length=2, null=False, blank=False, choices=STATES, default=STATES[0])
+    state = models.CharField(max_length=2, null=False,
+                             blank=False, choices=STATES, default=STATES[0])
 
 
 class DeliveryTime(models.Model):
@@ -88,7 +93,8 @@ class DeliveryTime(models.Model):
         ('saturday', 'Sábado'),
         ('sunday', 'Domingo'),
     )
-    service_address = models.ForeignKey(ServiceAddress, on_delete=models.CASCADE, null=True, blank=True)
+    service_address = models.ForeignKey(
+        ServiceAddress, on_delete=models.CASCADE, null=True, blank=True)
     time = models.TimeField(null=False, blank=False)
-    day = models.CharField(max_length=15, null=False, blank=False, choices=DAYS, default=DAYS[0])
-
+    day = models.CharField(max_length=15, null=False,
+                           blank=False, choices=DAYS, default=DAYS[0])
