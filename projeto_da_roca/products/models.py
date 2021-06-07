@@ -13,4 +13,4 @@ class Product(models.Model):
 # Create your models here.
 
 class Category(models.Model):
-    name = models.CharField(max_Length=30, null=False, blank=False)
+    name = models.CharField(max_length=30, null=False, blank=False)
