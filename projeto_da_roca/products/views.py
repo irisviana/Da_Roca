@@ -102,7 +102,7 @@ class CategoryView:
                 'form': form
             })
         return redirect('login')
-    
+
     @classmethod
     def update_category(cls, request, category_id):
         category = get_object_or_404(Category, id = category_id)
