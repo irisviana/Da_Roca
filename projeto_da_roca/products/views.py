@@ -84,7 +84,7 @@ class CategoryView:
                 "categories": categories,
             })
         return redirect('login')
-    
+
     @classmethod
     def create_category(cls, request):
         form = CategoryForm()
