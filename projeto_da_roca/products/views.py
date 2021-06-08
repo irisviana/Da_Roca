@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Product
+from .models import Product, Category
 from .forms import ProductForm, CategoryForm
 
 # Create your views here.
@@ -76,9 +76,9 @@ class CategoryView:
         if request.user.is_authenticated:
             user = request.user
             if user.id:
-                categories = Category.objects.filter(user=user.id)
+                categories = Category.objects.filter()
             else:
-                categories = Category.objetcs.all()
+                categories = Category.objects.all()
         
             return render(request, 'category/home.html', {
                 "categories": categories,
@@ -105,7 +105,7 @@ class CategoryView:
     
     @classmethod
     def update_category(cls, request, category_id):
-        category = get_object_or_404(Category, id = product_id)
+        category = get_object_or_404(Category, id = category_id)
         if request.user.is_authenticated:
             form = CategoryForm(instance=category)
             user = request.user
@@ -131,5 +131,5 @@ class CategoryView:
                 category_id = request.POST['category_id']
                 category = get_object_or_404(Category, id=category_id)
                 category.delete()
-                return redirect('list_products')
+                return redirect('list_categories')
         return redirect('login')

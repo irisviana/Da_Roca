@@ -30,14 +30,14 @@ class ProductForm(forms.ModelForm):
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
-        fields = ('name')
+        fields = ('name',)
     
     def __init__(self, *args, **kwargs):
         super(CategoryForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
         self.helper.form_show_labels = False
-        self.help.layout = Layout(
-            Field('name', placeholder='Nome'),
-            Submit('save', 'Salvar'),
+        self.helper.layout = Layout(
+            Field('name', type='text', placeholder='Nome'),
+            Submit('save', 'Cadastrar'),
         )
         

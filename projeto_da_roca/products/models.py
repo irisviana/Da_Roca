@@ -13,4 +13,5 @@ class Product(models.Model):
 # Create your models here.
 
 class Category(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
     name = models.CharField(max_length=30, null=False, blank=False)
