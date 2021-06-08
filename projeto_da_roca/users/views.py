@@ -68,12 +68,14 @@ class UserView:
     def self_delete(cls, request, username):
         if request.user.is_authenticated:
             auth_user = request.user
-            if auth_user.username == username:
-                user = User.objects.get(username=username)
-                user.is_active = False
-                user.save()
-                return redirect('logout')
-            return redirect('home')
+            if request.method == 'POST':
+                if auth_user.username == username:
+                    user = User.objects.get(username=username)
+                    user.is_active = False
+                    user.save()
+                    return redirect('logout')
+                return redirect('home')
+            return redirect('update_customer', username=username)
 
         return redirect('login')
 
@@ -81,9 +83,9 @@ class UserView:
     def delete_user(cls, request):
         if request.user.is_authenticated:
             user_type = 'all'
-            if request.method == 'GET':
-                user_type = request.GET.get('user_type', 'all')
-                user_id = request.GET.get('user_id')
+            if request.method == 'POST':
+                user_type = request.POST.get('user_type', 'all')
+                user_id = request.POST.get('user_id')
                 user = User.objects.get(pk=user_id)
                 user.is_active = False
                 user.save()
@@ -426,8 +428,8 @@ class DeliveryTimeView:
     def delete_delivery_time(cls, request):
         if request.user.is_authenticated:
             service_address_id = None
-            if request.method == 'GET':
-                delivery_time_id = request.GET.get('delivery_time_id')
+            if request.method == 'POST':
+                delivery_time_id = request.POST.get('delivery_time_id')
                 delivery_time = get_object_or_404(DeliveryTime, id=delivery_time_id)
                 service_address_id = delivery_time.service_address.id
 
