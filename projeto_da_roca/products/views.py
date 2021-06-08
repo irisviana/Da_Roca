@@ -79,7 +79,7 @@ class CategoryView:
                 categories = Category.objects.filter()
             else:
                 categories = Category.objects.all()
-        
+
             return render(request, 'category/home.html', {
                 "categories": categories,
             })
@@ -112,9 +112,9 @@ class CategoryView:
             if request.method == 'POST':
                 form = CategoryForm(request.POST, instance=category)
                 if form.is_valid():
-                    category = form.save(commit=False) 
+                    category = form.save(commit=False)
                     category.user = user
-                    category.save()  
+                    category.save()
 
                     return redirect('list_categories')
             return render(request, 'category/update.html', {
