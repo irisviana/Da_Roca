@@ -7,14 +7,20 @@ from users.models import User, DeliveryTime, ServiceAddress
 
 env = environ.Env()
 
+TEST_ON_CHROME = True if env('TEST_ON_CHROME') == 'on' else False
+TEST_ON_FIREFOX = True if env('TEST_ON_FIREFOX') == 'on' else False
+
 class UsersTest(StaticLiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # cls.selenium = WebDriver()
-        # cls.selenium.implicitly_wait(10)
-        cls.selenium = webdriver.Firefox(executable_path = env('GECKODRIVER_PATH'))
+        
+        cls.selenium = None
+        if TEST_ON_CHROME:
+            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+        elif TEST_ON_FIREFOX:
+            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
@@ -91,8 +97,8 @@ class UsersTest(StaticLiveServerTestCase):
         driver = self.selenium
         self.test_login()
         driver.get('%s%s' % (self.live_server_url, '/user/admin/users/all'))
-        driver.find_element_by_xpath(f"//button[@data-query=\"?user_id={user.id}&user_type=all\"]").click()
-        driver.find_element_by_xpath("//a[@class=\"btn btn-danger btn-confirm\"]").click()
+        driver.find_element_by_xpath(f"//button[@data-query=\"user_id={user.id},user_type=all\"]").click()
+        driver.find_element_by_xpath("//button[@class=\"btn btn-danger btn-confirm\"]").click()
         assert user.first_name not in driver.page_source
 
     def test_admin_self_remove(self):
@@ -116,9 +122,12 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # cls.selenium = WebDriver()
-        # cls.selenium.implicitly_wait(10)
-        cls.selenium = webdriver.Firefox(executable_path = env('GECKODRIVER_PATH'))
+
+        cls.selenium = None
+        if TEST_ON_CHROME:
+            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+        elif TEST_ON_FIREFOX:
+            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
@@ -304,8 +313,8 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         search_input = driver.find_element_by_id('custom_table-search')
         search_input.send_keys('quinta')
 
-        driver.find_element_by_xpath(f"//button[@data-query=\"?delivery_time_id={delivery_time.id}\"]").click()
-        driver.find_element_by_xpath("//a[@class=\"btn btn-danger btn-confirm\"]").click()
+        driver.find_element_by_xpath(f"//button[@data-query=\"delivery_time_id={delivery_time.id}\"]").click()
+        driver.find_element_by_xpath("//button[@class=\"btn btn-danger btn-confirm\"]").click()
 
         search_input = driver.find_element_by_id('custom_table-search')
         search_input.send_keys('quinta')
