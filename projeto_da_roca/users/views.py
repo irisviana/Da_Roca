@@ -50,14 +50,32 @@ class UserView:
     @classmethod
     def update_users(cls, request, username):
         user = get_object_or_404(User, username=username)
-        form = UserUpdateForm(request.POST or None, instance=user)
 
-        if request.method == 'POST':
-            if form.is_valid():
-                user = form.save()
-                return redirect('customer_home')
+        if request.user.is_authenticated:
+            form = UserUpdateForm(instance=user)
 
-        return render(request, '../templates/registration/update_custumer.html', {'form': form})
+            if request.method == 'POST':
+                form = UserUpdateForm(request.POST, instace=user)
+                if form.is_valid():
+                    user = form.save()
+                    return render(request, '../templates/registration/update_customer.html', {
+                        'form': form
+                    })
+
+        return render(request, '../templates/registration/update_customer.html', {'form': form})
+
+    @classmethod
+    def self_delete(cls, request, username):
+        if request.user.is_authenticated:
+            auth_user = request.user
+            if auth_user.username == username:
+                user = User.objects.get(username=username)
+                user.is_active = False
+                user.save()
+                return redirect('logout')
+            return redirect('home')
+
+        return redirect('login')
 
     @classmethod
     def delete_user(cls, request):
@@ -408,8 +426,8 @@ class DeliveryTimeView:
     def delete_delivery_time(cls, request):
         if request.user.is_authenticated:
             service_address_id = None
-            if request.method == 'POST':
-                delivery_time_id = request.POST['delivery_time_id']
+            if request.method == 'GET':
+                delivery_time_id = request.GET.get('delivery_time_id')
                 delivery_time = get_object_or_404(DeliveryTime, id=delivery_time_id)
                 service_address_id = delivery_time.service_address.id
 
