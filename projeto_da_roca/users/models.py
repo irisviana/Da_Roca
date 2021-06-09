@@ -14,6 +14,10 @@ class User(AbstractUser):
         ('P', 'Pendente'),
         ('I', 'Inativo'),
     )
+    STORE_STATUS = (
+        ('A', 'Aberto'),
+        ('F', 'Fechado'),
+    )
     email = models.EmailField(unique=True)
     cpf = models.CharField(max_length=11, null=True, blank=True, unique=True)
     phone_number = models.CharField(max_length=50, null=True, blank=True)
@@ -21,6 +25,7 @@ class User(AbstractUser):
     is_admin = models.BooleanField(default=False, null=True, blank=True)
     is_seller = models.BooleanField(default=False, null=True, blank=True)
     seller_status = models.CharField(max_length=1, null=True, blank=True, choices=SELLER_STATUS)
+    store_status = models.CharField(max_length=1, null=True, blank=True, choices=STORE_STATUS)
 
     def save(self, *args, **kwargs):
         self.username = uuid.uuid4().hex[:30]
