@@ -4,7 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 
-from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm, AddressForm, UserUpdateForm
+from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm, AddressForm, UserUpdateForm, UserStoreStatusUpdateForm
 from .models import DeliveryTime
 from .models import ServiceAddress
 from .models import User
@@ -237,6 +237,21 @@ class UserView:
 
             return HttpResponseRedirect(reverse('manage_user'))
         return redirect('login')
+
+    @classmethod
+    def update_users_store_status(cls, request):
+        user = get_object_or_404(User, username=request.user.username)
+
+        if request.user.is_authenticated:
+            form = UserStoreStatusUpdateForm(instance=user)
+
+            if request.method == 'POST':
+                form = UserStoreStatusUpdateForm(request.POST, instace=user)
+                if form.is_valid():
+                    user = form.save()
+                    return redirect('home_seller', user.username)
+
+        return render(request, '../templates/seller/home_seller.html', {'form': form})
 class AddressView:
     @classmethod
     def create_address(cls, request, username):
