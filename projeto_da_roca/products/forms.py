@@ -1,15 +1,18 @@
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Submit, Field
 from django import forms
-#from django.core.exceptions import ValidationError
 from .models import Product, Category
 
 
-
 class ProductForm(forms.ModelForm):
+
+    category = forms.ModelChoiceField(
+        queryset=Category.objects.all(), empty_label="Selecione uma categoria")
+
     class Meta:
         model = Product
-        fields = ('name', 'variety', 'expiration_days', 'price', 'stock_amount')
+        fields = ('category', 'name', 'variety',
+                  'expiration_days', 'price', 'stock_amount')
 
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
@@ -19,6 +22,7 @@ class ProductForm(forms.ModelForm):
         self.fields['stock_amount'].widget.attrs['min'] = 0
         self.fields['expiration_days'].widget.attrs['min'] = 0
         self.helper.layout = Layout(
+            Field('category', placeholder='Categoria'),
             Field('name', placeholder='Nome'),
             Field('variety', placeholder='Variedade'),
             Field('expiration_days', placeholder='Dias de validade'),
@@ -27,11 +31,12 @@ class ProductForm(forms.ModelForm):
             Submit('save', 'Salvar'),
         )
 
+
 class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = ('name',)
-    
+
     def __init__(self, *args, **kwargs):
         super(CategoryForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
@@ -40,4 +45,3 @@ class CategoryForm(forms.ModelForm):
             Field('name', type='text', placeholder='Nome'),
             Submit('save', 'Cadastrar'),
         )
-        
