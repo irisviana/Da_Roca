@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.db.utils import DataError, IntegrityError
 from users.models import User, ServiceAddress, DeliveryTime
-
+from products.models import Product, Category
 # Create your tests here.
 
 class UsersTest(TestCase):
