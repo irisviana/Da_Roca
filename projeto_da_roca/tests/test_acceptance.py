@@ -1,4 +1,4 @@
-'''
+
 import environ
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
@@ -321,4 +321,3 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         search_input.send_keys('quinta')
         assert '13:00' not in driver.page_source and 'Quinta-feira' not in driver.page_source
 
-'''

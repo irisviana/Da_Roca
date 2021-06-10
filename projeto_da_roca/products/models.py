@@ -13,7 +13,6 @@ class Category(models.Model):
         return self.name
 
 
-# Create your models here.
 class Product(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=False, blank=False)

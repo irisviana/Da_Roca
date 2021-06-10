@@ -2,7 +2,6 @@
 from django.test import TestCase
 from django.db.utils import IntegrityError
 from users.models import User
-from products.models import Product, Category
 # Create your tests here.
 
 
@@ -49,7 +48,6 @@ class ProductTest(TestCase):
         self.assertEqual(self.orange.stock_amount, 100)
 
     def test_edit_product_with_empty_fields(self):
-
         try:
             self.orange = Product.objects.filter(pk=self.orange.id).update(user=self.producer_rodrigo,
                                                                            name=None, variety=None,
@@ -70,18 +68,13 @@ class ProductTest(TestCase):
             self.assertEqual(self.orange.name, "orange")
 
     def test_edit_product_and_dont_save(self):
-        
         self.orange.price = 4.0
         product_orange = Product.objects.get(pk=self.orange.id)
         self.assertNotEqual(product_orange.price, 4.0)
-        
-
 
     def test_delete_product(self):
         try:
             self.orange = self.orange.delete()
-            
+
         except IntegrityError:
             self.assertEqual(self.orange.name, "orange")
-        
-

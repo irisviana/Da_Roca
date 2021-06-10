@@ -192,14 +192,12 @@ class ServiceAddressForm(forms.ModelForm):
             Field('state', placeholder="Estado"),
             Submit('save', 'Cadastrar'),
         )
-<<<<<<< HEAD
-=======
 
 
 class UserStoreStatusUpdateForm(forms.ModelForm):
     STORE_STATUS = (
-        ('A','Aberto'),
-        ('F','Fechado'),
+        ('A', 'Aberto'),
+        ('F', 'Fechado'),
     )
     status = forms.ChoiceField(choices=STORE_STATUS, required=True)
 
@@ -220,4 +218,3 @@ class UserStoreStatusUpdateForm(forms.ModelForm):
             Field('store_status', placeholder='Status da Loja'),
             Submit('save', 'Atualizar'),
         )
->>>>>>> 95067ec4cf3e183cc6db6365d52c917da396a5ea
