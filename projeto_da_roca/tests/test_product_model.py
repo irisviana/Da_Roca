@@ -2,6 +2,8 @@
 from django.test import TestCase
 from django.db.utils import IntegrityError
 from users.models import User
+from products.models import Product, Category
+
 # Create your tests here.
 
 
