@@ -189,29 +189,3 @@ class ServiceAddressForm(forms.ModelForm):
             Field('state', placeholder="Estado"),
             Submit('save', 'Cadastrar'),
         )
-
-
-class UserStoreStatusUpdateForm(forms.ModelForm):
-    STORE_STATUS = (
-        ('A','Aberto'),
-        ('F','Fechado'),
-    )
-    status = forms.ChoiceField(choices=STORE_STATUS, required=True)
-
-    class Meta:
-        model = User
-        fields = ('store_status',)
-        labels = {
-            'store_status': 'Status da Loja',
-        }
-
-    def __init__(self, *args, **kwargs):
-        super(UserStoreStatusUpdateForm, self).__init__(*args, **kwargs)
-
-        # If you pass FormHelper constructor a form instance
-        # It builds a default layout with all its fields
-        self.helper = FormHelper(self)
-        self.helper.layout = Layout(
-            Field('store_status', placeholder='Status da Loja'),
-            Submit('save', 'Atualizar'),
-        )
