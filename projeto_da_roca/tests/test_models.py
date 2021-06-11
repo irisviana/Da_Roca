@@ -171,3 +171,13 @@ class DeliveryTimeTest(TestCase):
         except IntegrityError:
             self.assertEqual(old_delivery_time_day, self.delivery_time.day)
 
+    def test_delete_delivery_time(self):
+        id = self.delivery_time.id
+        self.delivery_time.delete()
+        
+        search_delivery_time = None
+        try:
+            search_delivery_time = DeliveryTime.objects.get(id=id)
+        except DeliveryTime.DoesNotExist:
+            self.assertFalse(search_delivery_time)
+

@@ -55,11 +55,14 @@ class UserView:
             form = UserUpdateForm(instance=user)
 
             if request.method == 'POST':
-                form = UserUpdateForm(request.POST, instace=user)
+                form = UserUpdateForm(request.POST, instance=user)
                 if form.is_valid():
                     user = form.save()
+
+                    message = 'Atualizado com sucesso.'
                     return render(request, '../templates/registration/update_customer.html', {
-                        'form': form
+                        'form': form,
+                        'message': message
                     })
 
         return render(request, '../templates/registration/update_customer.html', {'form': form})

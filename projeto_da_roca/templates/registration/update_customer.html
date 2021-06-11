@@ -18,6 +18,14 @@
                     <h4 id="form-title">Atualizar informações pessoais</h4>
                 </div>
             </div>
+            {% if message %}
+            <div class="alert alert-success">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
             <div class="d-flex justify-content-center form_container">
                 {% crispy form %}
 
