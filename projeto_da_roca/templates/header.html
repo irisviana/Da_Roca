@@ -1,23 +1,23 @@
 <!-- templates/header.html -->
 {% load static %}
-<div class="header_container">
+<div class="header_container flex-wrap">
     <div class="logo">
         <img src="{% static 'images/logo.svg' %}" alt="Logo do DaRoça">
     </div>
-    <div class="input-group border-custom rounded-pill p-1">
+    <div class="search-bar input-group border-custom rounded-pill p-1">
         <input type="search" placeholder="O que você procura?" aria-describedby="button-addon3" class="form-control bg-none border-0">
         <div class="input-group-append border-0">
             <button id="button-addon3" type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
         </div>
     </div>
-    <nav>
+    <nav class="ml-auto mr-auto mr-md-0">
         <ul>
             <li><a class="btn btn-secondary btn-thin" href="" title="Produtos favoritos"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>
             <li><a class="btn btn-secondary btn-thin" href="" title="Cesta de produtos"><i class="fa fa-shopping-basket fa-2x" aria-hidden="true" ></i></a></li>
 
             {% if request.user.is_authenticated %}
                 <li>
-                    <a class="btn btn-secondary btn-nav" href="{% url 'customer_home' %}" title="Configurações de perfil">
+                    <a class="btn btn-secondary btn-nav" href="{% url 'customer_home' %}" title="Minha conta">
                         <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>
                         {{ request.user.first_name }}
                     </a>

@@ -1,9 +1,9 @@
-<!-- templates/service_address/create.html -->
+<!-- templates/home/create.html -->
 {% extends 'base.html' %}
 {% load static %}
 
 {% block title %} 
-<title>Novo endereço de atendimento</title>
+<title>Produtos</title>
 {% endblock %}
 
 {% block header %}
@@ -13,11 +13,11 @@
 {% block content %}
     <div class="d-flex flex-column align-items-center">
         <div>
-            <h4>Endereços de atendimento</h4>
+            <h4>Produtos</h4>
         </div>
     </div>
     <div class="inner_container mt-4">
-        <a class="btn btn-primary" href="{% url 'create_service_address' %}">
+        <a class="btn btn-primary" href="{% url 'create_product' %}">
             Novo
         </a>
         {% if mensagem %}
@@ -27,26 +27,30 @@
             <thead>
                 <tr>
                     <th>Ações</th>
-                    <th>Cidade</th>
-                    <th>Estado</th>
+                    <th>Nome</th>
+                    <th>Dias de validade</th>
+                    <th>Preço(UN)</th>
+                    <th>Quantidade em estoque</th>
                 </tr>
             </thead>
             <tbody>
-                {% for service_address in services_address %}
+                {% for product in products %}
                 <tr>
                     <td>
                         <div class="actions">
-                            <form action="{% url 'delete_service_address' %}" method="post">
+                            <form action="{% url 'delete_product' %}" method="post">
                                 {% csrf_token %}
-                                <input type="hidden" name="service_address_id" value="{{ service_address.id }}">
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
                                 <input class="btn btn-primary" type="submit" value="Remover">
                             </form>
-                            <a class="btn btn-primary" href="{% url 'list_delivery_time' service_address.id %}">Horários</a>
-                            <a class="btn btn-primary" href="{% url 'update_service_address' service_address.id %}">Editar</a>
+                            
+                            <a class="btn btn-primary" href="{% url 'update_product' product.id %}">Editar</a>
                         </div>
                     </td>
-                    <td>{{ service_address.city }}</td>
-                    <td>{{ service_address.state }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.expiration_days }}</td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.stock_amount }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

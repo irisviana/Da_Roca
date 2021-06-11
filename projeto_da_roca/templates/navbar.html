@@ -5,7 +5,7 @@
 		<a title="Voltar" href="#" class="btn btn-secondary btn-thin" type="button" onclick="history.back()">
 			<span class="fas fa-chevron-left"></span>
 		</a>
-	  	<a class="btn btn-secondary btn-nav" href="{% url 'home' %}" style="color:darkgreen;">Início <span class="sr-only">(current)</span></a>
+	  	<a class="btn btn-secondary btn-nav" href="{% url 'customer_home' %}" style="color:darkgreen;">Início <span class="sr-only">(current)</span></a>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -19,7 +19,7 @@
 					<a class="btn btn-secondary btn-nav" href="{% url 'home_seller' %}">Vender</a>
 				</li>
 				{% endif %}
-				{% if request.user.is_admin == 0 %}
+				{% if request.user.is_admin %}
 				<li class="nav-item">
 					<a class="btn btn-secondary btn-nav" href="{% url 'home_admin' %}">Administrar</a>
 				</li>

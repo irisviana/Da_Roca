@@ -8,12 +8,21 @@ from django.db import models
 
 
 class User(AbstractUser):
+    SELLER_STATUS = (
+        ('A', 'Aprovado'),
+        ('R', 'Reprovado'),
+        ('P', 'Pendente'),
+        ('I', 'Inativo'),
+    )
+
     email = models.EmailField(unique=True)
     cpf = models.CharField(max_length=11, null=True, blank=True, unique=True)
     phone_number = models.CharField(max_length=50, null=True, blank=True)
     sale_description = models.TextField(max_length=100, null=True, blank=True)
-    is_admin = models.IntegerField(default=1)
-    is_seller = models.IntegerField(default=1)
+    is_admin = models.BooleanField(default=False, null=True, blank=True)
+    is_seller = models.BooleanField(default=False, null=True, blank=True)
+    seller_status = models.CharField(max_length=1, null=True, blank=True, choices=SELLER_STATUS)
+    store_status = models.CharField(default='Fechado', max_length=8, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.username = uuid.uuid4().hex[:30]

@@ -17,37 +17,35 @@
         </div>
     </div>
     <div class="inner_container mt-4">
-        
+
         <table class="custom_table mt-5">
             <thead>
-                <tr>
-                    <th>Ação</th>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>Telefone</th>
-                </tr>
+            <tr>
+                <th>Ação</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+            </tr>
             </thead>
             <tbody>
+            {% if sellers|length > 0 %}
                 {% for seller in sellers %}
-                <tr>
-                    <td>
-                        <div class="actions">
-                            <!--
-                            <form action="" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="admin_email" value="{{admin.email }}">
-                                <input class="btn btn-primary" type="submit" value="Recusar">
-                            </form>
-                            <a class="btn btn-primary" href="">Aceitar</a>
-                        -->
-                        <a class="btn btn-primary" href="{% url 'view_request_seller' seller.id %}">Ver</a>
-                        </div>
-                    </td>
-                    <td>{{ seller.first_name }}</td>
-                    <td>{{ seller.email }}</td>
-                    <td>{{ seller.phone_number }}</td>
-                </tr>
+                    <tr>
+                        <td>
+                            <div class="actions">
+                                <a class="btn btn-primary" href="{% url 'view_request_seller' seller.id %}">Ver</a>
+                            </div>
+                        </td>
+                        <td>{{ seller.first_name }}</td>
+                        <td>{{ seller.email }}</td>
+                        <td>{% firstof seller.phone_number 'Nenhum' %}</td>
+                    </tr>
                 {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">Nenhuma nova solicitação</td>
+                </tr>
+            {% endif %}
             </tbody>
         </table>
     </div>

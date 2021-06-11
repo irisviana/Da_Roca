@@ -1,0 +1,57 @@
+<!-- templates/home/create.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} 
+<title>Categorias</title>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Categorias</h4>
+        </div>
+    </div>
+    <div class="inner_container mt-4">
+        <a class="btn btn-primary" href="{% url 'create_category' %}">
+            Novo
+        </a>
+        {% if mensagem %}
+            <p>{{ mensagem }}</p>
+        {% endif %}
+        <table class="custom_table mt-5">
+            <thead>
+                <tr>
+                    <th>Ações</th>
+                    <th>Nome</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for category in categories %}
+                <tr>
+                    <td>
+                        <div class="actions">
+                            <form action="{% url 'delete_category' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="category_id" value="{{ category.id }}">
+                                <button class="btn btn-danger" type="submit" value="Remover">
+                                    <span class="fas fa-trash"></span>
+                                </button>
+                            </form>
+                            
+                            <a class="btn btn-primary" href="{% url 'update_category' category.id %}">
+                                <span class="fas fa-edit"></span>
+                            </a>
+                        </div>
+                    </td>
+                    <td>{{ category.name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

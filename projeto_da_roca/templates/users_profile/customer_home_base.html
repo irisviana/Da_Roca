@@ -12,31 +12,38 @@
 
 {% block content %}
     <div class="row">
-        <div class="wrapper d-flex align-items-stretch col-2">
-
-            <nav id="sidebar" class="active bg-success">
-                <ul class="list-unstyled components">
+        <div class="col-sm-12 col-lg-2 text-left p-0">
+            <nav class="user-menu active">
+                <ul class="list-unstyled d-flex flex-wrap justify-content-center">
                     <li class="active">
-                        <a href="#"><span class="fas fa-box-open"></span> Pedidos</a>
+                        <a href="#" class="btn btn-secondary"><i class="fas fa-box-open"></i>
+                            Pedidos
+                        </a>
                     </li>
                     <li>
-                        <a href="#"><span class="fas fa-user"></span> Cadastro</a>
+                        <a href="{% url 'update_customer' request.user.username %}" class="btn btn-secondary"><i class="fas fa-user"></i>
+                            Cadastro
+                        </a>
                     </li>
                     <li>
-                        <a href="{% url 'list_customer_address' request.user.username %}"><span class="fas fa-map-marked-alt"></span> Endereços</a>
+                        <a href="{% url 'list_customer_address' request.user.username %}" class="btn btn-secondary"><i class="fas fa-map-marked-alt"></i>
+                            Endereços
+                        </a>
                     </li>
                     <li>
-                        <a href="#"><span class="far fa-credit-card"></span> Cartões</a>
+                        <a href="#" class="btn btn-secondary"><i class="far fa-credit-card"></i>
+                            Cartões
+                        </a>
                     </li>
                     <li>
-                        <a href="#"><span class="fas fa-star"></span> Avaliações</a>
+                        <a href="#" class="btn btn-secondary"><i class="fas fa-star"></i>
+                            Avaliações
+                        </a>
                     </li>
-
                 </ul>
-
             </nav>
         </div>
-        <div class="col-10">
+        <div class="col-sm-12 col-lg-9">
             {% block page %}
             
             {% endblock %}
