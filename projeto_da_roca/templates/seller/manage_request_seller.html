@@ -17,19 +17,19 @@
         </div>
     </div>
     <div class="inner_container mt-4">
-        
+
         <table class="custom_table mt-5">
             <thead>
-                <tr>
-                    <th>Ação</th>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>Telefone</th>
-                </tr>
+            <tr>
+                <th>Ação</th>
+                <th>Nome</th>
+                <th>E-mail</th>
+                <th>Telefone</th>
+            </tr>
             </thead>
             <tbody>
-                {% if sellers|length > 0 %}
-                    {% for seller in sellers %}
+            {% if sellers|length > 0 %}
+                {% for seller in sellers %}
                     <tr>
                         <td>
                             <div class="actions">
@@ -40,12 +40,12 @@
                         <td>{{ seller.email }}</td>
                         <td>{% firstof seller.phone_number 'Nenhum' %}</td>
                     </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td colspan="4">Nenhuma nova solicitação</td>
-                    </tr>
-                {% endif %}
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="4">Nenhuma nova solicitação</td>
+                </tr>
+            {% endif %}
             </tbody>
         </table>
     </div>

@@ -5,6 +5,9 @@ from .views import UserView, AddressView, DeliveryTimeView, ServiceAddressView
 urlpatterns = [
     path('create', UserView.create_users, name='create_customer'),
     path('update', UserView.update_users, name='update_customer'),
+    path('update/email', UserView.update_email_user, name='update_email_customer'),
+    path('update/password', UserView.update_password_user, name='update_password_customer'),
+
     path('delete', UserView.self_delete, name='self_delete'),
     path('address/create', AddressView.create_address, name='create_customer_address'),
     path('address/list', AddressView.list_address, name='list_customer_address'),

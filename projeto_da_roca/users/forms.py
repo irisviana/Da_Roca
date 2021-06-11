@@ -57,7 +57,7 @@ class UserForm(forms.ModelForm):
         password = self.cleaned_data.get('password')
         confirm_password = self.cleaned_data.get('confirm_password')
         name = self.cleaned_data.get('first_name')
-        if name is None:
+        if not name:
             raise ValidationError('O nome precissa ser informado')
         if password != confirm_password:
             raise ValidationError('As senhas precisam ser idênticas')
@@ -89,8 +89,96 @@ class UserUpdateForm(forms.ModelForm):
 
     def clean(self):
         name = self.cleaned_data.get('first_name')
-        if name is None:
-            raise ValidationError('O nome precisa ser informado')
+        if not name:
+            raise ValidationError('O nome precissa ser informado')
+
+        return self.cleaned_data
+
+
+class UserUpdateEmailForm(forms.ModelForm):
+    email = forms.EmailField(required=True)
+    confirm_email = forms.EmailField(required=True)
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput, min_length=6, max_length=20)
+
+    class Meta:
+        model = User
+        fields = ('email', 'confirm_email', 'confirm_password')
+
+    def __init__(self, *args, **kwargs):
+        super(UserUpdateEmailForm, self).__init__(*args, **kwargs)
+
+        # If you pass FormHelper constructor a form instance
+        # It builds a default layout with all its fields
+        self.helper = FormHelper(self)
+        self.helper.form_show_labels = False
+        self.helper.layout = Layout(
+            Field('email', placeholder='Novo e-mail'),
+            Field('confirm_email', placeholder='Confirme o novo e-mail'),
+            Field('confirm_password', placeholder='Confirme sua senha'),
+        )
+
+    def clean(self):
+        email = self.cleaned_data.get('email')
+        confirm_email = self.cleaned_data.get('confirm_email')
+        confirm_password = self.cleaned_data.get('confirm_password')
+        user = self.instance
+
+        if not user.check_password(confirm_password):
+            raise ValidationError('A senha informada não é valida')
+        if not email:
+            raise ValidationError('O nome precissa ser informado')
+        if not confirm_email:
+            raise ValidationError('Os e-mails precisam ser iguais')
+        if email != confirm_email:
+            raise ValidationError('Os e-mails precisam ser iguais')
+
+        if User.objects.filter(email=email).exists():
+            raise ValidationError('O e-mail já está sendo usado')
+
+        return self.cleaned_data
+
+
+class UserUpdatePasswordForm(forms.ModelForm):
+    old_password = forms.CharField(
+        widget=forms.PasswordInput, min_length=6, max_length=20)
+    new_password = forms.CharField(
+        widget=forms.PasswordInput, min_length=6, max_length=20)
+    confirm_new_password = forms.CharField(
+        widget=forms.PasswordInput, min_length=6, max_length=20)
+
+    class Meta:
+        model = User
+        fields = ('old_password', 'new_password', 'confirm_new_password')
+
+    def __init__(self, *args, **kwargs):
+        super(UserUpdatePasswordForm, self).__init__(*args, **kwargs)
+
+        # If you pass FormHelper constructor a form instance
+        # It builds a default layout with all its fields
+        self.helper = FormHelper(self)
+        self.helper.form_show_labels = False
+        self.helper.layout = Layout(
+            Field('old_password', placeholder='Senha atual'),
+            Field('new_password', placeholder='Nova senha'),
+            Field('confirm_new_password', placeholder='Confirme a nova senha'),
+
+        )
+
+    def clean(self):
+        old_password = self.cleaned_data.get('old_password')
+        new_password = self.cleaned_data.get('new_password')
+        confirm_password = self.cleaned_data.get('confirm_new_password')
+        user = self.instance
+
+        if not user.check_password(old_password):
+            raise ValidationError('A senha informada não é valida')
+        if not new_password:
+            raise ValidationError('A nova senha precisa ser informada')
+        if not confirm_password:
+            raise ValidationError('Confirme a nova senha')
+        if new_password != confirm_password:
+            raise ValidationError('As senhas precisam ser iguais')
 
         return self.cleaned_data
 

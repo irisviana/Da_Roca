@@ -1,17 +1,16 @@
-
 import environ
-
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+
 from selenium import webdriver
 
-from users.models import User, DeliveryTime, ServiceAddress
 from products.models import Category
-
+from users.models import User, DeliveryTime, ServiceAddress
 
 env = environ.Env()
 
 TEST_ON_CHROME = True if env('TEST_ON_CHROME') == 'on' else False
 TEST_ON_FIREFOX = True if env('TEST_ON_FIREFOX') == 'on' else False
+
 
 class UsersTest(StaticLiveServerTestCase):
 
@@ -21,9 +20,9 @@ class UsersTest(StaticLiveServerTestCase):
         
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            cls.selenium = webdriver.Chrome(executable_path=env('CHROMEDRIVER_PATH'))
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path=env('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
@@ -38,7 +37,7 @@ class UsersTest(StaticLiveServerTestCase):
             first_name = 'User',
             email = 'user@gmail.com',
             cpf = '11111111111',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_admin = True
         ) if not user else user
 
@@ -47,7 +46,7 @@ class UsersTest(StaticLiveServerTestCase):
         username_input = driver.find_element_by_name("username")
         username_input.send_keys(user.email)
         password_input = driver.find_element_by_name("password")
-        password_input.send_keys('1234')
+        password_input.send_keys('abcde123456')
         driver.find_element_by_xpath('//input[@value="Entrar"]').click()
         assert 'email ou senha estão incorretos' not in driver.page_source
 
@@ -56,7 +55,7 @@ class UsersTest(StaticLiveServerTestCase):
             first_name = 'Iris Viana',
             email = 'iris@gmail.com',
             cpf = '22222222222',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
         )
 
         driver = self.selenium
@@ -71,7 +70,7 @@ class UsersTest(StaticLiveServerTestCase):
             first_name = 'Iris Viana',
             email = 'iris@gmail.com',
             cpf = '22222222222',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
         )
 
         driver = self.selenium
@@ -94,7 +93,7 @@ class UsersTest(StaticLiveServerTestCase):
             first_name = 'Iris Viana',
             email = 'iris@gmail.com',
             cpf = '22222222222',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
         )
 
         driver = self.selenium
@@ -109,7 +108,7 @@ class UsersTest(StaticLiveServerTestCase):
             first_name = 'Iris Viana',
             email = 'iris@gmail.com',
             cpf = '22222222222',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
         )
 
         driver = self.selenium
@@ -125,7 +124,7 @@ class UsersTest(StaticLiveServerTestCase):
             first_name = 'Iris Viana',
             email = 'iris@gmail.com',
             cpf = '22222222222',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
         )
         driver = self.selenium
         self.test_login(user)
@@ -142,7 +141,7 @@ class UsersTest(StaticLiveServerTestCase):
             first_name='Iris Viana',
             email='iris@gmail.com',
             cpf='22222222222',
-            password='pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_seller=True
         )
 
@@ -159,7 +158,7 @@ class UsersTest(StaticLiveServerTestCase):
             first_name = 'Iris Viana',
             email = 'iris@gmail.com',
             cpf = '22222222222',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
         )
 
         driver = self.selenium
@@ -171,6 +170,86 @@ class UsersTest(StaticLiveServerTestCase):
         last_name_input.send_keys('Viana')
         driver.find_element_by_xpath("//input[@name=\"save\"]").click()
         assert 'Atualizado com sucesso.' not in driver.page_source
+
+    def test_request_reset_password(self):
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/reset_password"))
+        email_input = driver.find_element_by_id("id_email")
+        email_input.send_keys('email@dominio.com')
+        driver.find_element_by_xpath("//input[@value=\"Recuperar\"]").click()
+        assert 'Confirmação de redefinição de senha' in driver.page_source
+
+    def test_update_exists_user_email(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+        )
+        User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, "/user/update"))
+        driver.find_element_by_id('update-email-button').click()
+        new_email_input = driver.find_element_by_id("id_email")
+        new_email_input.send_keys('user@gmail.com')
+        confirm_new_email_input = driver.find_element_by_id("id_confirm_email")
+        confirm_new_email_input.send_keys('user@gmail.com')
+        password_confirm_input = driver.find_element_by_id("id_confirm_password")
+        password_confirm_input.send_keys('abcde123456')
+        driver.find_element_by_id("update-email-modal-button").click()
+
+        assert 'O e-mail já está sendo usado' in driver.page_source
+
+    def test_update_user_password(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+        )
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, "/user/update"))
+        driver.find_element_by_id('update-password-button').click()
+        old_password_input = driver.find_element_by_id("id_old_password")
+        old_password_input.send_keys('abcde123456')
+        new_password_input = driver.find_element_by_id("id_new_password")
+        new_password_input.send_keys('123456abcde')
+        password_confirm_input = driver.find_element_by_id("id_confirm_new_password")
+        password_confirm_input.send_keys('123456abcde')
+        driver.find_element_by_id("update-password-modal-button").click()
+
+        assert 'Entrar' in driver.page_source
+
+    def test_update_user_incorrect_confirm_password(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+        )
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, "/user/update"))
+        driver.find_element_by_id('update-password-button').click()
+        old_password_input = driver.find_element_by_id("id_old_password")
+        old_password_input.send_keys('abcde123456')
+        new_password_input = driver.find_element_by_id("id_new_password")
+        new_password_input.send_keys('123456abcde574')
+        password_confirm_input = driver.find_element_by_id("id_confirm_new_password")
+        password_confirm_input.send_keys('123456abcde')
+        driver.find_element_by_id("update-password-modal-button").click()
+
+        assert 'As senhas precisam ser iguais' in driver.page_source
+
+
 class DeliveryTimeTest(StaticLiveServerTestCase):
 
     @classmethod
@@ -196,7 +275,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
             first_name = 'User',
             email = 'user@gmail.com',
             cpf = '11111111111',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_admin = True
         ) if not user else user
 
@@ -205,7 +284,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         username_input = driver.find_element_by_name("username")
         username_input.send_keys(user.email)
         password_input = driver.find_element_by_name("password")
-        password_input.send_keys('1234')
+        password_input.send_keys('abcde123456')
         driver.find_element_by_xpath('//input[@value="Entrar"]').click()
         assert 'email ou senha estão incorretos' not in driver.page_source
 
@@ -214,7 +293,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
             first_name = 'Iris Viana',
             email = 'iris@gmail.com',
             cpf = '22222222222',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_seller = True
         )
         self.test_login(user)
@@ -241,7 +320,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
             first_name = 'Iris Viana',
             email = 'iris@gmail.com',
             cpf = '22222222222',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_seller = True
         )
         self.test_login(user)
@@ -266,7 +345,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
             first_name = 'Iris Viana',
             email = 'iris@gmail.com',
             cpf = '22222222222',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_seller = True
         )
         self.test_login(user)
@@ -304,7 +383,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
             first_name = 'Iris Viana',
             email = 'iris@gmail.com',
             cpf = '22222222222',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_seller = True
         )
         self.test_login(user)
@@ -344,7 +423,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
             first_name = 'Iris Viana',
             email = 'iris@gmail.com',
             cpf = '22222222222',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_seller = True
         )
         self.test_login(user)
@@ -374,6 +453,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         search_input.send_keys('quinta')
         assert '13:00' not in driver.page_source and 'Quinta-feira' not in driver.page_source
 
+
 class CategoryTest(StaticLiveServerTestCase):
 
     @classmethod
@@ -399,7 +479,7 @@ class CategoryTest(StaticLiveServerTestCase):
             first_name = 'Usuario',
             email = 'usuario@gmail.com',
             cpf = '44455544455',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_admin = True
         ) if not user else user
 
@@ -408,7 +488,7 @@ class CategoryTest(StaticLiveServerTestCase):
         username_input = driver.find_element_by_name("username")
         username_input.send_keys(user.email)
         password_input = driver.find_element_by_name("password")
-        password_input.send_keys('1234')
+        password_input.send_keys('abcde123456')
         driver.find_element_by_xpath('//input[@value="Entrar"]').click()
         assert 'email ou senha estão incorretos' not in driver.page_source
 
@@ -417,7 +497,7 @@ class CategoryTest(StaticLiveServerTestCase):
             first_name = 'Raquel Vieira',
             email = 'raquel@gmail.com',
             cpf = '99999999999',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_seller = True
         )
         self.test_login(user)
@@ -435,7 +515,7 @@ class CategoryTest(StaticLiveServerTestCase):
             first_name = 'Raquel Vieira',
             email = 'raquel@gmail.com',
             cpf = '99999999999',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_seller = True
         )
         self.test_login(user)
@@ -452,13 +532,12 @@ class CategoryTest(StaticLiveServerTestCase):
         search_input.send_keys('Frutas')
         assert 'Cadastre sua categoria' in driver.page_source
 
-
     def test_create_category_empty(self):
         user = User.objects.create(
             first_name = 'Raquel Vieira',
             email = 'raquel@gmail.com',
             cpf = '99999999999',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_seller = True
         )
         self.test_login(user)
@@ -476,7 +555,7 @@ class CategoryTest(StaticLiveServerTestCase):
             first_name = 'Raquel Vieira',
             email = 'raquel@gmail.com',
             cpf = '99999999999',
-            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_seller = True
         )
         self.test_login(user)

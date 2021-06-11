@@ -4,11 +4,13 @@ from django.contrib.auth.hashers import make_password
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect, reverse
 
-from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm, AddressForm, UserUpdateForm
+from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm, AddressForm, UserUpdateForm, UserUpdateEmailForm, \
+    UserUpdatePasswordForm
+from .models import Address
 from .models import DeliveryTime
 from .models import ServiceAddress
 from .models import User
-from .models import Address
+
 
 # Create your views here.
 
@@ -49,9 +51,18 @@ class UserView:
 
     @classmethod
     def update_users(cls, request):
+        user = request.user
+        form = UserUpdateForm(instance=user)
+        update_email_form = UserUpdateEmailForm()
+        update_password_form = UserUpdatePasswordForm()
+        message = False
+        try:
+            error_message = request.session["update_user_error_message"]
+            del request.session["update_user_error_message"]
+        except Exception:
+            error_message = False
+
         if request.user.is_authenticated:
-            user = request.user
-            form = UserUpdateForm(instance=user)
 
             if request.method == 'POST':
                 form = UserUpdateForm(request.POST, instance=user)
@@ -59,12 +70,46 @@ class UserView:
                     user = form.save()
 
                     message = 'Atualizado com sucesso.'
-                    return render(request, '../templates/registration/update_customer.html', {
-                        'form': form,
-                        'message': message
-                    })
 
-        return render(request, '../templates/registration/update_customer.html', {'form': form})
+            return render(request, '../templates/registration/update_customer.html', {
+                'form': form, 'update_email_form': update_email_form, 'error_message': error_message,
+                'update_password_form': update_password_form, 'message': message
+            })
+
+        return redirect('login')
+
+    @classmethod
+    def update_email_user(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                form = UserUpdateEmailForm(request.POST, instance=request.user)
+                if form.is_valid():
+                    form.save()
+
+                    return redirect('logout')
+                else:
+                    request.session["update_user_error_message"] = form.errors['__all__']
+
+            return redirect('update_customer')
+
+        return redirect('login')
+
+    @classmethod
+    def update_password_user(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                form = UserUpdatePasswordForm(request.POST, instance=request.user)
+                if form.is_valid():
+                    user = form.save(commit=False)
+                    user.password = make_password(form.cleaned_data.get('new_password'))
+                    user.save()
+                    return redirect('logout')
+                else:
+                    request.session["update_user_error_message"] = form.errors['__all__']
+
+            return redirect('update_customer')
+
+        return redirect('login')
 
     @classmethod
     def self_delete(cls, request):
@@ -255,6 +300,8 @@ class UserView:
                 redirect('home_seller')
 
         return redirect('home_seller')
+
+
 class AddressView:
     @classmethod
     def create_address(cls, request):
