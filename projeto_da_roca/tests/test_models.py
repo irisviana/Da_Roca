@@ -173,12 +173,12 @@ class DeliveryTimeTest(TestCase):
             self.assertEqual(old_delivery_time_day, self.delivery_time.day)
 
     def test_delete_delivery_time(self):
-        id = self.delivery_time.id
+        old_id = self.delivery_time.pk
         self.delivery_time.delete()
-        
+
         search_delivery_time = None
         try:
-            search_delivery_time = DeliveryTime.objects.get(id=id)
+            search_delivery_time = DeliveryTime.objects.get(pk=old_id)
         except DeliveryTime.DoesNotExist:
             self.assertFalse(search_delivery_time)
 
@@ -220,10 +220,10 @@ class CategoryTest(TestCase):
             self.assertFalse(category)
     
     def test_delete_category(self):
-        id = self.category.id
+        old_id = self.category.pk
         self.category.delete()
         search_category = None
         try:
-            search_category = Category.objects.get(id=id)
+            search_category = Category.objects.get(pk=old_id)
         except Category.DoesNotExist:
             self.assertFalse(search_category)
