@@ -37,7 +37,7 @@ class Address(models.Model):
     )
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
     address_type = models.CharField(max_length=5, default='user', choices=ADDRESS_TYPE_CHOICES)
-    zip_code = models.CharField(max_length=20)
+    zip_code = models.CharField(max_length=20, null=False, blank=False)
     state = models.CharField(max_length=2)
     city = models.CharField(max_length=100)
     district = models.CharField(max_length=100)
