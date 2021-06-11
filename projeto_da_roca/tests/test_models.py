@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.db.utils import DataError, IntegrityError
 from users.models import User, ServiceAddress, DeliveryTime
+from products.models import Category
 
 # Create your tests here.
 
@@ -171,3 +172,58 @@ class DeliveryTimeTest(TestCase):
         except IntegrityError:
             self.assertEqual(old_delivery_time_day, self.delivery_time.day)
 
+    def test_delete_delivery_time(self):
+        old_id = self.delivery_time.pk
+        self.delivery_time.delete()
+
+        search_delivery_time = None
+        try:
+            search_delivery_time = DeliveryTime.objects.get(pk=old_id)
+        except DeliveryTime.DoesNotExist:
+            self.assertFalse(search_delivery_time)
+
+class CategoryTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            first_name = "Raquel", email = "raquel@gmail.com",
+            cpf="70550481419", password="teste"
+        )
+
+        self.category = Category.objects.create(
+            name = 'Frutas'
+        )
+
+    def test_create_category_successfully(self):
+        category = Category.objects.create(
+            name = 'Verduras'
+        )
+
+        self.assertTrue(category)
+
+    def test_create_category_with_error_name(self):
+        name = 'Frutas'
+        category = None
+        try:
+            category = Category.objects.create(
+                name = name
+            )
+        except IntegrityError:
+            self.assertFalse(category)
+
+    def test_create_category_with_error_empty(self):
+        category = None
+        try:
+            category = Category.objects.create(
+                name = ""
+            )
+        except IntegrityError:
+            self.assertFalse(category)
+
+    def test_delete_category(self):
+        old_id = self.category.pk
+        self.category.delete()
+        search_category = None
+        try:
+            search_category = Category.objects.get(pk=old_id)
+        except Category.DoesNotExist:
+            self.assertFalse(search_category)

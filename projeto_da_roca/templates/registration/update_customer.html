@@ -18,6 +18,14 @@
                     <h4 id="form-title">Atualizar informações pessoais</h4>
                 </div>
             </div>
+            {% if message %}
+            <div class="alert alert-success">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endif %}
             <div class="d-flex justify-content-center form_container">
                 {% crispy form %}
 
@@ -32,7 +40,7 @@
             </div>
         </div>
     </div>
-    {% url 'self_delete' request.user.username as action_url %}
+    {% url 'self_delete' as action_url %}
     {% include 'modal.html' with header="Você tem certeza?" message='Ao confirmar você excluirá sua conta e não poderá mais acessá-la. Tem certeza que deseja proceder?' confirm="Sim, excluir conta" cancel="Cancelar" %}
     <script>
         $("#id_cpf").mask("000.000.000-00");

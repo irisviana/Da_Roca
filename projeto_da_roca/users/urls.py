@@ -4,10 +4,10 @@ from .views import UserView, AddressView, DeliveryTimeView, ServiceAddressView
 
 urlpatterns = [
     path('create', UserView.create_users, name='create_customer'),
-    path('<str:username>/update', UserView.update_users, name='update_customer'),
-    path('<str:username>/delete', UserView.self_delete, name='self_delete'),
-    path('<str:username>/address/create', AddressView.create_address, name='create_customer_address'),
-    path('<str:username>/address/list', AddressView.list_address, name='list_customer_address'),
+    path('update', UserView.update_users, name='update_customer'),
+    path('delete', UserView.self_delete, name='self_delete'),
+    path('address/create', AddressView.create_address, name='create_customer_address'),
+    path('address/list', AddressView.list_address, name='list_customer_address'),
 
     path('address/delete', AddressView.delete_address, name='delete_address'),
     path('address/update/<int:address_id>', AddressView.update_address,

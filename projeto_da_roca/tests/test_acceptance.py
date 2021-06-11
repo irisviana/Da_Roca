@@ -4,6 +4,8 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 
 from users.models import User, DeliveryTime, ServiceAddress
+from products.models import Category
+
 
 env = environ.Env()
 
@@ -114,8 +116,44 @@ class UsersTest(StaticLiveServerTestCase):
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, f"/user/{user.username}/update"))
         driver.find_element_by_xpath("//button[@class=\"btn btn-danger\"]").click()
-        driver.find_element_by_xpath("//a[@class=\"btn btn-danger btn-confirm\"]").click()
+        driver.find_element_by_xpath("//button[@class=\"btn btn-danger btn-confirm\"]").click()
         assert 'Acesso' not in driver.page_source
+
+    def test_user_self_edit(self):
+        user = User.objects.create(
+            first_name = 'Iris Viana',
+            email = 'iris@gmail.com',
+            cpf = '22222222222',
+            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+        )
+
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, f"/user/{user.username}/update"))
+        first_name_input = driver.find_element_by_name("first_name")
+        first_name_input.send_keys('Iris')
+        last_name_input = driver.find_element_by_name("last_name")
+        last_name_input.send_keys('Viana')
+        driver.find_element_by_xpath("//input[@name=\"save\"]").click()
+        assert 'Atualizado com sucesso.' in driver.page_source
+
+    def test_user_self_edit_without_name(self):
+        user = User.objects.create(
+            first_name = 'Iris Viana',
+            email = 'iris@gmail.com',
+            cpf = '22222222222',
+            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+        )
+
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, f"/user/{user.username}/update"))
+        first_name_input = driver.find_element_by_name("first_name")
+        first_name_input.clear()
+        last_name_input = driver.find_element_by_name("last_name")
+        last_name_input.send_keys('Viana')
+        driver.find_element_by_xpath("//input[@name=\"save\"]").click()
+        assert 'Atualizado com sucesso.' not in driver.page_source
 
 class DeliveryTimeTest(StaticLiveServerTestCase):
 
@@ -320,3 +358,121 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         search_input.send_keys('quinta')
         assert '13:00' not in driver.page_source and 'Quinta-feira' not in driver.page_source
 
+class CategoryTest(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.selenium = None
+
+        if TEST_ON_CHROME:
+            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+        elif TEST_ON_FIREFOX:
+            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+
+        cls.selenium.get('http://127.0.0.1:8000')
+    
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+
+    def test_login(self, user=False):
+        user = User.objects.create(
+            first_name = 'Usuario',
+            email = 'usuario@gmail.com',
+            cpf = '44455544455',
+            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            is_admin = True
+        ) if not user else user
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = driver.find_element_by_name("username")
+        username_input.send_keys(user.email)
+        password_input = driver.find_element_by_name("password")
+        password_input.send_keys('1234')
+        driver.find_element_by_xpath('//input[@value="Entrar"]').click()
+        assert 'email ou senha estão incorretos' not in driver.page_source
+
+    def test_create_category(self):
+        user = User.objects.create(
+            first_name = 'Raquel Vieira',
+            email = 'raquel@gmail.com',
+            cpf = '99999999999',
+            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            is_seller = True
+        )
+        self.test_login(user)
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/user/admin"))
+        driver.find_element_by_xpath("//a[@href=\"/product/categories/create\"]").click()
+        search_input = driver.find_element_by_name('name')
+        search_input.send_keys('Frutas')
+        driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
+        assert 'Frutas' in driver.page_source
+    
+    def test_create_category_with_error_name(self):
+        user = User.objects.create(
+            first_name = 'Raquel Vieira',
+            email = 'raquel@gmail.com',
+            cpf = '99999999999',
+            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            is_seller = True
+        )
+        self.test_login(user)
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/user/admin"))
+        driver.find_element_by_xpath("//a[@href=\"/product/categories/create\"]").click()
+        search_input = driver.find_element_by_name('name')
+        search_input.send_keys('Frutas')
+        driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
+        assert 'Frutas' in driver.page_source
+        driver.find_element_by_xpath("//a[@href=\"/product/categories/create\"]").click()
+        search_input = driver.find_element_by_name('name')
+        search_input.send_keys('Frutas')
+        assert 'Cadastre sua categoria' in driver.page_source
+
+
+    def test_create_category_empty(self):
+        user = User.objects.create(
+            first_name = 'Raquel Vieira',
+            email = 'raquel@gmail.com',
+            cpf = '99999999999',
+            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            is_seller = True
+        )
+        self.test_login(user)
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/user/admin"))
+        driver.find_element_by_xpath("//a[@href=\"/product/categories/create\"]").click()
+        search_input = driver.find_element_by_name('name')
+        search_input.send_keys('')
+        driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
+        assert 'Cadastre sua categoria' in driver.page_source
+
+    def test_delete_category(self):
+        user = User.objects.create(
+            first_name = 'Raquel Vieira',
+            email = 'raquel@gmail.com',
+            cpf = '99999999999',
+            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            is_seller = True
+        )
+        self.test_login(user)
+        category = Category.objects.create(
+            name='Verdura'
+        )
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/user/admin"))
+        driver.find_element_by_xpath("//a[@href=\"/product/categories/list\"]").click()
+        
+        driver.find_element_by_xpath(f"//button[@data-query=\"category_id={category.id}\"]").click()
+        driver.find_element_by_xpath("//button[@class=\"btn btn-danger btn-confirm\"]").click()
+
+        assert 'Verdura' not in driver.page_source
