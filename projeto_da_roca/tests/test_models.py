@@ -185,7 +185,7 @@ class DeliveryTimeTest(TestCase):
 class CategoryTest(TestCase):
     def setUp(self):
         self.user = User.objects.create(
-            first_name = "Raquel", email = "raquel@gmail.com", 
+            first_name = "Raquel", email = "raquel@gmail.com",
             cpf="70550481419", password="teste"
         )
 
@@ -199,7 +199,7 @@ class CategoryTest(TestCase):
         )
 
         self.assertTrue(category)
-    
+
     def test_create_category_with_error_name(self):
         name = 'Frutas'
         category = None

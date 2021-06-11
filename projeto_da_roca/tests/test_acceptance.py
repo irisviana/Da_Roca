@@ -4,7 +4,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 
 from users.models import User, DeliveryTime, ServiceAddress
-from products.models import Category, Product
+from products.models import Category
 
 
 env = environ.Env()
@@ -408,9 +408,9 @@ class CategoryTest(StaticLiveServerTestCase):
 
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, "/user/admin"))
-        driver.find_element_by_xpath(f"//a[@href=\"/product/categories/create\"]").click()
+        driver.find_element_by_xpath("//a[@href=\"/product/categories/create\"]").click()
         search_input = driver.find_element_by_name('name')
-        search_input.send_keys('Frutas')        
+        search_input.send_keys('Frutas')
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         assert 'Frutas' in driver.page_source
     
