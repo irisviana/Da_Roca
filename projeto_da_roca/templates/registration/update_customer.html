@@ -19,24 +19,97 @@
                 </div>
             </div>
             {% if message %}
-            <div class="alert alert-success">
-                {{ message }}
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                <div class="alert alert-success">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endif %}
+            {% if error_message %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    {% for error in error_message %}
+
+                        <li class="error">{{ error|escape }}</li>
+
+                    {% endfor %}
+
+                </div>
             {% endif %}
             <div class="d-flex justify-content-center form_container">
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-toggle="modal"
+                        data-target="#updateEmailModal">
+                    Alterar e-mail
+                </button>
+                <button type="button"
+                        class="btn btn-secondary"
+                        data-toggle="modal"
+                        data-target="#updatePasswordModal">
+                    Alterar senha
+                </button>
+            </div>
+            <div class="d-flex justify-content-center form_container">
+
                 {% crispy form %}
 
             </div>
             <div class="d-flex justify-content-center form_container mx-auto">
                 <button type="button"
-                    class="btn btn-danger"
-                    data-toggle="modal"
-                    data-target="#includedModal">
+                        class="btn btn-danger"
+                        data-toggle="modal"
+                        data-target="#includedModal">
                     Excluir minha conta
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="updateEmailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alterar E-mail</h5>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="updateEmilForm" action="{% url 'update_email_customer' %}">
+                        {% crispy update_email_form %}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary w-50" data-dismiss="modal">Cancelar</button>
+
+                    <button type="submit" form="updateEmilForm" class="btn btn-primary w-50">Alterar</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="updatePasswordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Alterar Senha</h5>
+                </div>
+                <div class="modal-body">
+                    <form method="post" id="updatePasswordForm" action="{% url 'update_password_customer' %}">
+
+                        {% crispy update_password_form %}
+
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary w-50" data-dismiss="modal">Cancelar</button>
+
+                    <button type="submit" form="updatePasswordForm" class="btn btn-primary w-50">Alterar</button>
+
+                </div>
             </div>
         </div>
     </div>
