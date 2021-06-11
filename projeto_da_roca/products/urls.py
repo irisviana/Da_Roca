@@ -11,5 +11,4 @@ urlpatterns = [
     path('categories/create', CategoryView.create_category, name='create_category'),
     path('categories/update/<int:category_id>', CategoryView.update_category, name='update_category'),
     path('categories/delete', CategoryView.delete_category, name='delete_category'),
-
 ]

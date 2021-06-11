@@ -12,8 +12,10 @@ from .utils import validate_cpf
 
 
 class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput, min_length=6, max_length=20)
-    confirm_password = forms.CharField(widget=forms.PasswordInput, min_length=6, max_length=20)
+    password = forms.CharField(
+        widget=forms.PasswordInput, min_length=6, max_length=20)
+    confirm_password = forms.CharField(
+        widget=forms.PasswordInput, min_length=6, max_length=20)
     cpf = forms.CharField(min_length=14, max_length=14)
 
     class Meta:
@@ -127,7 +129,8 @@ class AddressForm(forms.ModelForm):
 
     class Meta:
         model = Address
-        fields = ('zip_code', 'state', 'city', 'district', 'street', 'house_number')
+        fields = ('zip_code', 'state', 'city',
+                  'district', 'street', 'house_number')
 
     def __init__(self, *args, **kwargs):
         super(AddressForm, self).__init__(*args, **kwargs)
@@ -153,7 +156,7 @@ class DeliveryTimeForm(forms.ModelForm):
             'day': 'Dia',
         }
         widgets = {
-            'time': forms.TimeInput(attrs={'type':'time'}),
+            'time': forms.TimeInput(attrs={'type': 'time'}),
             'day': forms.Select(attrs={'value': 'monday'})
         }
 
@@ -167,7 +170,7 @@ class DeliveryTimeForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('time', type='time', placeholder='Hora'),
             Field('day', placeholder='Dia'),
-            Submit('save', 'Cadastrar'),
+            Submit('save', 'Salvar'),
         )
 
 
@@ -176,8 +179,8 @@ class ServiceAddressForm(forms.ModelForm):
         model = ServiceAddress
         fields = ('city', 'state')
         labels = {
-            'city' : 'Cidade',
-            'state' : 'Estado',
+            'city': 'Cidade',
+            'state': 'Estado',
         }
 
     def __init__(self, *args, **kwargs):
@@ -187,5 +190,6 @@ class ServiceAddressForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('city', type='text', placeholder="Cidade"),
             Field('state', placeholder="Estado"),
-            Submit('save', 'Cadastrar'),
+            Submit('save', 'Salvar'),
         )
+

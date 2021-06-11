@@ -1,6 +1,9 @@
-from django.test import TestCase
 from django.db.utils import DataError, IntegrityError
-from users.models import User, ServiceAddress, DeliveryTime
+from django.test import TestCase
+
+from products.models import Category
+from users.models import User, ServiceAddress, DeliveryTime, Address
+
 
 # Create your tests here.
 
@@ -9,18 +12,22 @@ class UsersTest(TestCase):
 
     def setUp(self):
         self.user_rodrigo = User.objects.create(
-            first_name = "Rodrigo", email = "rodrigo@gmail.com",
+            first_name="Rodrigo", email="rodrigo@gmail.com",
             cpf="70550481419", password="teste")
 
         self.user_thais = User.objects.create(
-            first_name = "Thais", email = "thais@gmail.com",
+            first_name="Thais", email="thais@gmail.com",
             cpf="66668592007", password="teste")
 
+        self.user_amanda = User.objects.create(
+            first_name="Amanda", email="amanda@gmail.com",
+            cpf="29963571085", password="teste")
+
         self.user_admin = User.objects.create(
-            first_name = 'Admin',
-            email = 'admin@gmail.com',
-            cpf = '11111111111',
-            password = '123456',
+            first_name='Admin',
+            email='admin@gmail.com',
+            cpf='11111111111',
+            password='123456',
         )
 
     def test_create_client_successfully(self):
@@ -120,15 +127,27 @@ class UsersTest(TestCase):
         except User.DoesNotExist:
             self.assertFalse(user)
 
+    def test_update_store_status_to_open(self):
+        old_status = self.user_amanda.store_status
+        self.user_amanda.store_status = "Aberto"
+        self.user_amanda.save()
+        self.assertNotEqual(old_status, self.user_amanda.store_status)
+
+    def test_update_store_status_to_closed(self):
+        self.user_amanda.store_status = "Fechado"
+        self.user_amanda.save()
+        self.assertNotEqual("Aberto", self.user_amanda.store_status)
+
+
 class DeliveryTimeTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create(
-            first_name = "Rodrigo", email = "rodrigo@gmail.com",
+            first_name="Rodrigo", email="rodrigo@gmail.com",
             cpf="70550481419", password="teste"
         )
         self.service_address = ServiceAddress.objects.create(
-            user = self.user,
+            user=self.user,
             city = 'Garanhuns',
             state = 'PE'
         )
@@ -170,3 +189,111 @@ class DeliveryTimeTest(TestCase):
             DeliveryTime.objects.filter(pk=self.delivery_time.pk).update(day=None)
         except IntegrityError:
             self.assertEqual(old_delivery_time_day, self.delivery_time.day)
+
+    def test_delete_delivery_time(self):
+        old_id = self.delivery_time.pk
+        self.delivery_time.delete()
+
+        search_delivery_time = None
+        try:
+            search_delivery_time = DeliveryTime.objects.get(pk=old_id)
+        except DeliveryTime.DoesNotExist:
+            self.assertFalse(search_delivery_time)
+
+
+class CategoryTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            first_name="Raquel", email="raquel@gmail.com",
+            cpf="70550481419", password="teste"
+        )
+
+        self.category = Category.objects.create(
+            name='Frutas'
+        )
+
+    def test_create_category_successfully(self):
+        category = Category.objects.create(
+            name='Verduras'
+        )
+
+        self.assertTrue(category)
+
+    def test_create_category_with_error_name(self):
+        name = 'Frutas'
+        category = None
+        try:
+            category = Category.objects.create(
+                name=name
+            )
+        except IntegrityError:
+            self.assertFalse(category)
+
+    def test_create_category_with_error_empty(self):
+        category = None
+        try:
+            category = Category.objects.create(
+                name=""
+            )
+        except IntegrityError:
+            self.assertFalse(category)
+
+    def test_delete_category(self):
+        old_id = self.category.pk
+        self.category.delete()
+        search_category = None
+        try:
+            search_category = Category.objects.get(pk=old_id)
+        except Category.DoesNotExist:
+            self.assertFalse(search_category)
+
+
+class AddressTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create(
+            first_name="Rodrigo", email="rodrigo@gmail.com",
+            cpf="70550481419", password="teste"
+        )
+        self.address = Address.objects.create(
+            user=self.user, zip_code="56.640-000",
+            state="PE", city="Custódia",
+            district="centro", street="Rua 1",
+            house_number=1
+        )
+
+    def test_create_address_successfully(self):
+        address = Address.objects.create(
+            user=self.user, zip_code="56.640-000",
+            state="PE", city="Custódia",
+            district="centro", street="Rua 1",
+            house_number=1
+        )
+
+        self.assertTrue(address)
+
+    def test_create_address_with_error(self):
+        address = None
+        try:
+            address = Address.objects.create(
+                user=self.user,
+                state="PE", city="Custódia",
+                district="centro", street="Rua 1",
+                house_number=1
+            )
+
+        except DataError:
+            self.assertFalse(address)
+
+    def test_update_address_successfully(self):
+        old_address_house_number = self.address.house_number
+        self.address.house_number = 2
+        self.address.save()
+        self.assertNotEqual(old_address_house_number, self.address.house_number)
+
+    def test_update_address_with_error(self):
+        old_address_zip_code = self.address.zip_code
+        try:
+            Address.objects.filter(pk=self.address.pk).update(zip_code=None)
+        except IntegrityError:
+            self.assertEqual(old_address_zip_code, self.address.zip_code)

@@ -37,7 +37,7 @@
                     </h3>
                 </div>
                 <div class="card-footer">
-                    <a href="#" class="btn btn-primary">
+                    <a href="{% url 'create_product'%}" class="btn btn-primary">
                         Adicionar
                     </a>
                     <a href="{% url 'list_products'%}"class="btn btn-primary">
@@ -48,14 +48,18 @@
             <div class="card manage">
                 <div class="card-body">
                     <span class="fas fa-store fa-2x"></span>
-                    <h3 class="card-title">
-
-                        Status da loja: {{ request.user.store_status }}
+                    <h3 id="status" class="card-title">
+                        Status da loja
                     </h3>
+                    <input type="text" class="form-control text-center" disabled name="status" value="{{ request.user.store_status }}">
                 </div>
                 <div class="card-footer">
-                    <a href="{% url 'store_status_update'%}" class="btn btn-primary">
-                        Alterar
+                    <a href="{% url 'store_status_update'%}" class="btn btn-primary" name="alterar">
+                        {% if request.user.store_status == 'Aberto' %}
+                            Fechar loja
+                        {% else %}
+                            Abrir loja
+                        {% endif %}
                     </a>
                 </div>
             </div>

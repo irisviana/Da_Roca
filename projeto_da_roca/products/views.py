@@ -4,6 +4,7 @@ from .forms import ProductForm, CategoryForm
 
 # Create your views here.
 
+
 class ProductView:
     @classmethod
     def list_products(cls, request):
@@ -40,14 +41,14 @@ class ProductView:
 
     @classmethod
     def update_product(cls, request, product_id):
-        product = get_object_or_404(Product, id = product_id)
+        product = get_object_or_404(Product, id=product_id)
         if request.user.is_authenticated:
             form = ProductForm(instance=product)
             user = request.user
             if request.method == 'POST':
-                form = ProductForm(request.POST,instance=product)
+                form = ProductForm(request.POST, instance=product)
                 if form.is_valid():
-                    product = form.save(commit = False)
+                    product = form.save(commit=False)
                     product.user = user
                     product.save()
 
@@ -65,10 +66,13 @@ class ProductView:
         if request.user.is_authenticated:
             if request.method == 'POST':
                 product_id = request.POST['product_id']
-                product = get_object_or_404(Product, id=product_id)
+                product = get_object_or_404(
+                Product, id=product_id)
                 product.delete()
                 return redirect('list_products')
         return redirect('login')
+
+        
 
 class CategoryView:
     @classmethod
@@ -133,3 +137,9 @@ class CategoryView:
                 category.delete()
                 return redirect('list_categories')
         return redirect('login')
+
+    
+def get_categories(request):
+    categories = Category.objects.all()
+    return {"categories": categories}
+

@@ -31,19 +31,21 @@
                 </tr>
             </thead>
             <tbody>
+            {% if categories|length > 0 %}
                 {% for category in categories %}
                 <tr>
                     <td>
                         <div class="actions">
-                            <form action="{% url 'delete_category' %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="category_id" value="{{ category.id }}">
-                                <button class="btn btn-danger" type="submit" value="Remover">
-                                    <span class="fas fa-trash"></span>
-                                </button>
-                            </form>
-                            
-                            <a class="btn btn-primary" href="{% url 'update_category' category.id %}">
+                            <button type="button"
+                                class="btn btn-danger"
+                                data-toggle="modal"
+                                data-target="#includedModal"
+                                data-query="category_id={{ category.id }}"
+                                tittle="Deletar categoria">
+                                <span class="fas fa-trash"></span>
+                            </button>
+                          
+                            <a class="btn btn-primary" href="{% url 'update_category' category.id %}" tittle="Editar categoria">
                                 <span class="fas fa-edit"></span>
                             </a>
                         </div>
@@ -51,7 +53,14 @@
                     <td>{{ category.name }}</td>
                 </tr>
                 {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2">Nenhuma categoria cadastrada</td>
+                </tr>
+            {% endif %}
             </tbody>
         </table>
     </div>
+    {% url 'delete_category' as action_url %}
+    {% include 'modal.html' with header="Excluir categoria?" message='Tem certeza que deseja excluir a categoria?' confirm="Sim" cancel="Cancelar" %}
 {% endblock %}
