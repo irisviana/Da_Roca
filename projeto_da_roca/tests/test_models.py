@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.db.utils import DataError, IntegrityError
 from users.models import User, ServiceAddress, DeliveryTime
+from products.models import Category
 
 # Create your tests here.
 
@@ -171,3 +172,48 @@ class DeliveryTimeTest(TestCase):
         except IntegrityError:
             self.assertEqual(old_delivery_time_day, self.delivery_time.day)
 
+class CategoryTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            first_name = "Raquel", email = "raquel@gmail.com", 
+            cpf="70550481419", password="teste"
+        )
+
+        self.category = Category.objects.create(
+            name = 'Frutas'
+        )
+
+    def test_create_category_successfully(self):
+        category = Category.objects.create(
+            name = 'Verduras'
+        )
+
+        self.assertTrue(category)
+    
+    def test_create_category_with_error_name(self):
+        name = 'Frutas'
+        category = None
+        try:
+            category = Category.objects.create(
+                name = name
+            )
+        except IntegrityError:
+            self.assertFalse(category)
+    
+    def test_create_category_with_error_empty(self):
+        category = None
+        try:
+            category = Category.objects.create(
+                name = ""
+            )
+        except IntegrityError:
+            self.assertFalse(category)
+    
+    def test_delete_category(self):
+        id = self.category.id
+        self.category.delete()
+        search_category = None
+        try:
+            search_category = Category.objects.get(id=id)
+        except Category.DoesNotExist:
+            self.assertFalse(search_category)
