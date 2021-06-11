@@ -326,7 +326,7 @@ class ServiceAddressView:
                 service_address = ServiceAddress.objects.all()
 
             return render(request, 'service_address/home.html', {
-                "services_address": service_address,
+                "services_addresses": service_address,
             })
         return redirect('login')
 

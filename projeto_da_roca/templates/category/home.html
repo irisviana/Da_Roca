@@ -31,6 +31,7 @@
                 </tr>
             </thead>
             <tbody>
+            {% if categories|length > 0 %}
                 {% for category in categories %}
                 <tr>
                     <td>
@@ -52,6 +53,11 @@
                     <td>{{ category.name }}</td>
                 </tr>
                 {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2">Nenhuma categoria cadastrada</td>
+                </tr>
+            {% endif %}
             </tbody>
         </table>
     </div>

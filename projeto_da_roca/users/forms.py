@@ -170,7 +170,7 @@ class DeliveryTimeForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('time', type='time', placeholder='Hora'),
             Field('day', placeholder='Dia'),
-            Submit('save', 'Cadastrar'),
+            Submit('save', 'Salvar'),
         )
 
 
@@ -190,6 +190,6 @@ class ServiceAddressForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('city', type='text', placeholder="Cidade"),
             Field('state', placeholder="Estado"),
-            Submit('save', 'Cadastrar'),
+            Submit('save', 'Salvar'),
         )
 
