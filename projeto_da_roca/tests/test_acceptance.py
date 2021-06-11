@@ -114,7 +114,7 @@ class UsersTest(StaticLiveServerTestCase):
         driver = self.selenium
         self.test_login(user)
         driver = self.selenium
-        driver.get('%s%s' % (self.live_server_url, f"/user/{user.username}/update"))
+        driver.get('%s%s' % (self.live_server_url, "/user/update"))
         driver.find_element_by_xpath("//button[@class=\"btn btn-danger\"]").click()
         driver.find_element_by_xpath("//button[@class=\"btn btn-danger btn-confirm\"]").click()
         assert 'Acesso' not in driver.page_source
@@ -126,16 +126,32 @@ class UsersTest(StaticLiveServerTestCase):
             cpf = '22222222222',
             password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
         )
-
         driver = self.selenium
         self.test_login(user)
-        driver.get('%s%s' % (self.live_server_url, f"/user/{user.username}/update"))
+        driver.get('%s%s' % (self.live_server_url, "/user/update"))
         first_name_input = driver.find_element_by_name("first_name")
         first_name_input.send_keys('Iris')
         last_name_input = driver.find_element_by_name("last_name")
         last_name_input.send_keys('Viana')
         driver.find_element_by_xpath("//input[@name=\"save\"]").click()
         assert 'Atualizado com sucesso.' in driver.page_source
+
+    def test_update_store_status(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            is_seller=True
+        )
+
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, "/user/seller/"))
+        status_old = driver.find_element_by_name("status").get_attribute('value')
+        driver.find_element_by_xpath("//a[@href=\"/user/seller/updateStoreStatus\"]").click()
+
+        assert status_old not in driver.page_source
 
     def test_user_self_edit_without_name(self):
         user = User.objects.create(
@@ -147,14 +163,13 @@ class UsersTest(StaticLiveServerTestCase):
 
         driver = self.selenium
         self.test_login(user)
-        driver.get('%s%s' % (self.live_server_url, f"/user/{user.username}/update"))
+        driver.get('%s%s' % (self.live_server_url, "/user/update"))
         first_name_input = driver.find_element_by_name("first_name")
         first_name_input.clear()
         last_name_input = driver.find_element_by_name("last_name")
         last_name_input.send_keys('Viana')
         driver.find_element_by_xpath("//input[@name=\"save\"]").click()
         assert 'Atualizado com sucesso.' not in driver.page_source
-
 class DeliveryTimeTest(StaticLiveServerTestCase):
 
     @classmethod
