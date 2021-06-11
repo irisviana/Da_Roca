@@ -1,10 +1,13 @@
-language: python
-python:
-  – "3.9" #versão do python
-env:
-  – SECRET_KEY=TopSecretKey DEBUG=True ALLOWED_HOSTS=127.0.0.1 #Configuração das variáveis de ambiente
-install:
-  – pip install -r requirements.txt
-script: #comandos a serem executados para realizar o teste
-  – python manage.py check 
-  – python manage.py test
+language: python # => 1
+    python: # => 2
+      - "3.9"
+    services: # => 3
+      - mysql
+    env: # => 4
+      -DJANGO=1.8 DB=mysql
+    install: # => 5
+      - pip install -r requirements.txt
+    before_script: # => 6
+      - mysql -e 'create database test;' -u root
+    script: # => 7
+      - python manage.py test
