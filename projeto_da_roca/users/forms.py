@@ -144,12 +144,12 @@ class UserUpdatePasswordForm(forms.ModelForm):
         widget=forms.PasswordInput, min_length=6, max_length=20)
     new_password = forms.CharField(
         widget=forms.PasswordInput, min_length=6, max_length=20)
-    confirm_password = forms.CharField(
+    confirm_new_password = forms.CharField(
         widget=forms.PasswordInput, min_length=6, max_length=20)
 
     class Meta:
         model = User
-        fields = ('old_password', 'new_password', 'confirm_password')
+        fields = ('old_password', 'new_password', 'confirm_new_password')
 
     def __init__(self, *args, **kwargs):
         super(UserUpdatePasswordForm, self).__init__(*args, **kwargs)
@@ -161,14 +161,14 @@ class UserUpdatePasswordForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('old_password', placeholder='Senha atual'),
             Field('new_password', placeholder='Nova senha'),
-            Field('confirm_password', placeholder='Confirme a nova senha'),
+            Field('confirm_new_password', placeholder='Confirme a nova senha'),
 
         )
 
     def clean(self):
         old_password = self.cleaned_data.get('old_password')
         new_password = self.cleaned_data.get('new_password')
-        confirm_password = self.cleaned_data.get('confirm_password')
+        confirm_password = self.cleaned_data.get('confirm_new_password')
         user = self.instance
 
         if not user.check_password(old_password):
