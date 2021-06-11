@@ -10,4 +10,5 @@ language: python # => 1
     before_script: # => 6
       - mysql -e 'create database test;' -u root
     script: # => 7
-      - python manage.py test
+      - cd projeto_da_roca
+      - python manage.py test tests
