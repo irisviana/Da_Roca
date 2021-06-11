@@ -117,6 +117,24 @@ class UsersTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath("//a[@class=\"btn btn-danger btn-confirm\"]").click()
         assert 'Acesso' not in driver.page_source
 
+    def test_update_store_status(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            is_seller=True
+        )
+
+        driver = self.selenium
+        self.test_login(user)
+
+        driver.get('%s%s' % (self.live_server_url, f"/seller/home_seller"))
+        status_old = driver.find_element_by_id("status")
+        driver.find_element_by_xpath("//select[@name='alterar']").click()
+
+        assert status_old not in driver.page_source
+
 class DeliveryTimeTest(StaticLiveServerTestCase):
 
     @classmethod
