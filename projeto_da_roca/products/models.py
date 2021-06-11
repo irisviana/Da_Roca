@@ -14,4 +14,4 @@ class Product(models.Model):
 
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
-    name = models.CharField(max_length=30, null=False, blank=False)
+    name = models.CharField(max_length=30, null=False, blank=False, unique=True)
