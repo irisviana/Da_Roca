@@ -74,8 +74,7 @@ class UsersTest(TestCase):
 
     def test_update_user_password(self):
         try:
-            new_password = 'abcde123456'
-            self.user_rodrigo.password = new_password
+            self.user_rodrigo.password = 'abcde123456'
             self.user_rodrigo.save()
             assert True
         except IntegrityError:

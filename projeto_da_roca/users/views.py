@@ -59,7 +59,7 @@ class UserView:
         try:
             error_message = request.session["update_user_error_message"]
             del request.session["update_user_error_message"]
-        except:
+        except Exception:
             error_message = False
 
         if request.user.is_authenticated:
@@ -84,7 +84,7 @@ class UserView:
             if request.method == 'POST':
                 form = UserUpdateEmailForm(request.POST, instance=request.user)
                 if form.is_valid():
-                    user = form.save()
+                    form.save()
 
                     return redirect('logout')
                 else:
@@ -300,6 +300,8 @@ class UserView:
                 redirect('home_seller')
 
         return redirect('home_seller')
+
+
 class AddressView:
     @classmethod
     def create_address(cls, request):
