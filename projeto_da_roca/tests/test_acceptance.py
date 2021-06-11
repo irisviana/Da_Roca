@@ -431,7 +431,7 @@ class CategoryTest(StaticLiveServerTestCase):
         search_input.send_keys('Frutas')
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         assert 'Frutas' in driver.page_source
-        driver.find_element_by_xpath(f"//a[@href=\"/product/categories/create\"]").click()
+        driver.find_element_by_xpath("//a[@href=\"/product/categories/create\"]").click()
         search_input = driver.find_element_by_name('name')
         search_input.send_keys('Frutas')
         assert 'Cadastre sua categoria' in driver.page_source
