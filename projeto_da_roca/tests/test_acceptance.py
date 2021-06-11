@@ -426,7 +426,7 @@ class CategoryTest(StaticLiveServerTestCase):
 
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, "/user/admin"))
-        driver.find_element_by_xpath(f"//a[@href=\"/product/categories/create\"]").click()
+        driver.find_element_by_xpath("//a[@href=\"/product/categories/create\"]").click()
         search_input = driver.find_element_by_name('name')
         search_input.send_keys('Frutas')
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
@@ -449,7 +449,7 @@ class CategoryTest(StaticLiveServerTestCase):
 
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, "/user/admin"))
-        driver.find_element_by_xpath(f"//a[@href=\"/product/categories/create\"]").click()
+        driver.find_element_by_xpath("//a[@href=\"/product/categories/create\"]").click()
         search_input = driver.find_element_by_name('name')
         search_input.send_keys('')
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()

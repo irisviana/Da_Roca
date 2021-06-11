@@ -209,7 +209,7 @@ class CategoryTest(TestCase):
             )
         except IntegrityError:
             self.assertFalse(category)
-    
+
     def test_create_category_with_error_empty(self):
         category = None
         try:
@@ -218,7 +218,7 @@ class CategoryTest(TestCase):
             )
         except IntegrityError:
             self.assertFalse(category)
-    
+
     def test_delete_category(self):
         old_id = self.category.pk
         self.category.delete()
