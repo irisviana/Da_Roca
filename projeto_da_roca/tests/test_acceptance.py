@@ -258,7 +258,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Quinta-feira']").click()
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         
-        assert 'Novo horário de entrega' == driver.title
+        assert 'Quando você irá atender?' == driver.title
 
     def test_update_delivery_time(self):
         # Use already created delivery time
@@ -336,7 +336,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Sexta-feira']").click()
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         
-        assert 'Novo horário de entrega' == driver.title
+        assert 'Quando você irá atender?' == driver.title
 
     def test_delete_delivery_time(self):
         # Use already created delivery time

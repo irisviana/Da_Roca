@@ -4,7 +4,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 
 from users.models import User
-from products.models import Product, Category
+from products.models import Category
 
 env = environ.Env()
 
@@ -16,7 +16,7 @@ class ProductsTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        
+
         cls.selenium = None
         if TEST_ON_CHROME:
             cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
@@ -76,7 +76,7 @@ class ProductsTest(StaticLiveServerTestCase):
         stock_amount =  driver.find_element_by_name('stock_amount')
         stock_amount.send_keys('50')
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
-        assert 'Apple' in driver.page_source 
+        assert 'Apple' in driver.page_source
 
     def test_register_product_without_some_data(self):
         producer_rodrigo = User.objects.create(
