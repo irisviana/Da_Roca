@@ -134,7 +134,7 @@ class UserView:
 
             if user is not None:
                 login(request, user)
-                return redirect('home')
+                return redirect('customer_home')
             else:
                 messages.error(request, 'email ou senha estão incorretos')
 
@@ -242,6 +242,22 @@ class UserView:
 
             return HttpResponseRedirect(reverse('manage_user'))
         return redirect('login')
+
+    @classmethod
+    def update_users_store_status(cls, request):
+        user = get_object_or_404(User, username=request.user.username)
+
+        if request.user.is_authenticated:
+            if user.store_status == 'Aberto':
+                user.store_status = 'Fechado'
+                user.save()
+                return redirect('home_seller')
+            else:
+                user.store_status = 'Aberto'
+                user.save()
+                redirect('home_seller')
+
+        return redirect('home_seller')
 class AddressView:
     @classmethod
     def create_address(cls, request, username):

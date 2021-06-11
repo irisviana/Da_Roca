@@ -27,7 +27,6 @@
             <thead>
                 <tr>
                     <th>Ações</th>
-                    <th>Id</th>
                     <th>Cidade</th>
                     <th>Estado</th>
                 </tr>
@@ -46,7 +45,6 @@
                             <a class="btn btn-primary" href="{% url 'update_service_address' service_address.id %}">Editar</a>
                         </div>
                     </td>
-                    <td>{{ service_address.user.id }}</td>
                     <td>{{ service_address.city }}</td>
                     <td>{{ service_address.state }}</td>
                 </tr>

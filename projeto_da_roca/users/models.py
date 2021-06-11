@@ -23,6 +23,7 @@ class User(AbstractUser):
     is_admin = models.BooleanField(default=False, null=True, blank=True)
     is_seller = models.BooleanField(default=False, null=True, blank=True)
     seller_status = models.CharField(max_length=1, null=True, blank=True, choices=SELLER_STATUS)
+    store_status = models.CharField(default='Fechado', max_length=8, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.username = uuid.uuid4().hex[:30]
