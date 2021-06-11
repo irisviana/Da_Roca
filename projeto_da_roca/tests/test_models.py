@@ -65,6 +65,22 @@ class UsersTest(TestCase):
         except IntegrityError:
             self.assertFalse(user_raquel)
 
+    def test_update_user_existing_email(self):
+        try:
+            self.user_rodrigo.email = 'thais@gmail.com'
+            self.user_rodrigo.save()
+        except IntegrityError:
+            assert True
+
+    def test_update_user_password(self):
+        try:
+            new_password = 'abcde123456'
+            self.user_rodrigo.password = new_password
+            self.user_rodrigo.save()
+            assert True
+        except IntegrityError:
+            assert False
+
     def test_login_user(self):
         user = User.objects.get(email=self.user_admin.email, password=self.user_admin.password)
         self.assertEqual(user.email, self.user_admin.email)
