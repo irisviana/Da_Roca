@@ -11,6 +11,8 @@ produtos, realizar a compra e aguardar receber sem sair de casa.
 - [Raquel Vieira](https://github.com/RaquelVieiraa)
 - [Vinícius Santos](https://github.com/vinesnts)
 
+> Acesse a nossa [Wiki](https://github.com/irisviana/Da_Roca/wiki) para mais informações e detalhes do projeto.
+
 ## Como testar o DaRoça na sua máquina?
 O DaRoça é desenvolvido utilizando o framework Django, que utiliza a linguagem de programação
 a linguagem de programação Python, além disso, o banco de dados usado no desenvolvimento é o
@@ -57,7 +59,7 @@ python manage.py runserver
 ## Como rodar os testes?
 Para rodar os testes de unidade do projeto é necessário apenas rodar o comando abaixo:
 ```sh
-python manage.py test
+python manage.py test tests
 ```
 
 > Projeto desenvolvido na disciplina de Projetão 2020.1
