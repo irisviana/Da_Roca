@@ -142,9 +142,9 @@ class UserView:
     def remove_admin(cls, request):
         if request.user.is_authenticated:
             user_type = 'all'
-            if request.method == 'GET':
-                user_type = request.GET.get('user_type', 'all')
-                admin_id = request.GET.get('admin_id')
+            if request.method == 'POST':
+                user_type = request.POST.get('user_type', 'all')
+                admin_id = request.POST.get('admin_id')
                 user = User.objects.get(pk=admin_id)
                 user.is_admin = False
                 user.save()
@@ -156,9 +156,9 @@ class UserView:
     def refuse_seller_request(cls, request):
         if request.user.is_authenticated:
             user_type = 'all'
-            if request.method == 'GET':
-                user_type = request.GET.get('user_type', 'all')
-                user_id = request.GET.get('user_id')
+            if request.method == 'POST':
+                user_type = request.POST.get('user_type', 'all')
+                user_id = request.POST.get('user_id')
                 user = User.objects.get(pk=user_id)
                 user.is_seller = False
                 user.seller_status = 'R'

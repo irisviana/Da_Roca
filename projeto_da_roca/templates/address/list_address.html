@@ -88,5 +88,5 @@
         </table>
     </div>
     {% url 'delete_address' as action_url %}
-    {% include 'modal.html' with header="Excluir endereço?" message='Tem certeza que deseja excluir o endereço?' confirm="Sim" cancel="Cancelar" %}
+    {% include 'modal.html' with modal_id="includedModal" header="Excluir endereço?" message='Tem certeza que deseja excluir o endereço?' confirm="Sim" cancel="Cancelar" %}
 {% endblock %}

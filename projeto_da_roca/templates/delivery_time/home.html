@@ -80,6 +80,6 @@
         </div>
     </div>
     {% url 'delete_delivery_time' as action_url %}
-    {% include 'modal.html' with header="Excluir horário entrega?" message='Tem certeza que deseja excluir o horário de entrega?' confirm="Sim" cancel="Cancelar" %}
+    {% include 'modal.html' with modal_id="includedModal" header="Excluir horário entrega?" message='Tem certeza que deseja excluir o horário de entrega?' confirm="Sim" cancel="Cancelar" %}
     <script src="{% static 'js/custom-paginated-table.js' %}"></script>
 {% endblock %}
