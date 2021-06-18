@@ -1,5 +1,5 @@
 <!-- Modal -->
-<div class="modal" id="includedModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal" id="{{ modal_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -10,7 +10,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary w-50" data-dismiss="modal">{{ cancel }}</button>
-        <form action="{{ action_url }}" method="POST" id="modal-form" class="w-50">
+        <form action="{{ action_url }}" method="POST" class="modal-form w-50">
           {% csrf_token %}
           <button type="submit" class="btn btn-danger btn-confirm">{{ confirm }}</button>
         </form>
@@ -19,7 +19,7 @@
   </div>
 </div>
 <script>
-    $('#includedModal').on('shown.bs.modal', function (event) {
+    $('#{{ modal_id }}').on('shown.bs.modal', function (event) {
         var modal = $(this);
         var button = $(event.relatedTarget); // Button that triggered the modal
         var query = button.data('query');
@@ -34,7 +34,7 @@
 
           params.forEach((param) => {
             const hiddenField = `<input type="hidden" name="${param.key}" value="${param.value}">`;
-            $('#modal-form').append(hiddenField);
+            $('#{{ modal_id }} .modal-form').append(hiddenField);
           });
         }
         
