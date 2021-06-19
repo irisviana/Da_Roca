@@ -56,6 +56,14 @@
                                 <div>R$ {{ cart_product.product.price|floatformat:2|intcomma }}</div>
                             </div>
                             <div class="quantity">
+                                <form action="{% url 'remove-cart' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
+                                    <input type="hidden" name="decrement" value="1">
+                                    <button type="submit" class="btn btn-primary" title="Remover um item">
+                                        <span class="fas fa-minus"></span>
+                                    </button>
+                                </form>
                                 <form class="form" id="quantity-form-{{ cart_product.id }}" action="{% url 'update-cart' %}" method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
@@ -69,11 +77,22 @@
                                     </button>
                                 </form>
                             </div>
+                            <div class="subtotal">
+                                {% multiply cart_product.quantity cart_product.product.price as subtotal %}
+                                <div>R$ {{ subtotal|floatformat:2|intcomma }}</div>
+                                <form action="{% url 'remove-cart' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
+                                    <button type="submit" class="btn btn-secondary" tittle="Remover produto da cesta">
+                                        <span class="fas fa-trash"></span>
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}
             {% else %}
-                <div class="alert cart-item message">
+                <div class="alert cart-item message {{ message.tags }}">
                     <div>Nenhum produto no carrinho</div>
                 </div>
             {% endif %}

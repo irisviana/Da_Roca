@@ -47,8 +47,12 @@ class CartProductView():
                 quantity = request.POST.get('quantity', None) # Increment if no quantity is provided
                 cart_product = get_object_or_404(CartProduct, id=cart_product_id)
                 if quantity:
-                    if int(quantity) <= 0:
+                    if int(quantity) < 0:
                         messages.error(request, 'Quantidade não pode ser negativa.')
+                    elif int(quantity) == 0:
+                        cart_product.delete()
+                        messages.success(request, 'Item removido com sucesso.')
+                        return redirect('cart')
                     elif int(quantity) <= cart_product.product.stock_amount:
                         cart_product.quantity = quantity
                     else:
@@ -57,5 +61,21 @@ class CartProductView():
                     cart_product.quantity += 1
 
                 cart_product.save()
+            return redirect('cart')
+        return redirect('login')
+
+    @classmethod
+    def delete(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                cart_product_id = request.POST['cart_product_id']
+                decrement = request.POST.get('decrement', 0)
+                cart_product = get_object_or_404(CartProduct, id=cart_product_id)
+                if int(decrement) == cart_product.quantity or int(decrement) == 0:
+                    cart_product.delete()
+                    messages.success(request, 'Item removido com sucesso.')
+                else:
+                    cart_product.quantity -= 1
+                    cart_product.save()
             return redirect('cart')
         return redirect('login')
