@@ -13,7 +13,7 @@
     <nav class="ml-auto mr-auto mr-md-0">
         <ul>
             <li><a class="btn btn-secondary btn-thin" href="" title="Produtos favoritos"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>
-            <li><a class="btn btn-secondary btn-thin" href="" title="Cesta de produtos"><i class="fa fa-shopping-basket fa-2x" aria-hidden="true" ></i></a></li>
+            <li><a class="btn btn-secondary btn-thin" href="{% url 'cart' %}" title="Cesta de produtos"><i class="fa fa-shopping-basket fa-2x" aria-hidden="true" ></i></a></li>
 
             {% if request.user.is_authenticated %}
                 <li>

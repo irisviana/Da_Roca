@@ -72,5 +72,5 @@
         </table>
     </div>
     {% url 'delete_product' as action_url %}
-    {% include 'modal.html' with modal_id="includedModal" header="Você tem certeza?" message='Você não poderá acessar esse produto, tem certeza que deseja proceder?' confirm="Sim, remover permanentemente" cancel="Cancelar" %}
+    {% include 'modal.html' with modal_id="includedModal" header="Você tem certeza?" message='Você não poderá acessar esse produto, tem certeza que deseja proceder?' confirm="Remover permanentemente" cancel="Cancelar" %}
 {% endblock %}

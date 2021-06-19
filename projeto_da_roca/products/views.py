@@ -138,7 +138,6 @@ class CategoryView:
                 return redirect('list_categories')
         return redirect('login')
 
-    
 def get_categories(request):
     categories = Category.objects.all()
     return {"categories": categories}

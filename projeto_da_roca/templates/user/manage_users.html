@@ -144,11 +144,11 @@
         </table>
     </div>
     {% url 'delete_user' as action_url %}
-    {% include 'modal.html' with modal_id="includedModal" header="Você tem certeza?" message='O usuário não poderá mais acessar o sistema, tem certeza que deseja proceder?' confirm="Sim, remover permanentemente" cancel="Cancelar" %}
+    {% include 'modal.html' with modal_id="includedModal" header="Você tem certeza?" message='O usuário não poderá mais acessar o sistema, tem certeza que deseja proceder?' confirm="Remover permanentemente" cancel="Cancelar" %}
     {% url 'admin_remove' as action_url %}
-    {% include 'modal.html' with modal_id="includedModalRemoveAdmin" header="Você tem certeza?" message='O usuário perderá os privilégios de administrador, tem certeza que deseja proceder?' confirm="Sim, remover administrador" cancel="Cancelar" %}
+    {% include 'modal.html' with modal_id="includedModalRemoveAdmin" header="Você tem certeza?" message='O usuário perderá os privilégios de administrador, tem certeza que deseja proceder?' confirm="Remover administrador" cancel="Cancelar" %}
     {% url 'refuse_request_seller' as action_url %}
-    {% include 'modal.html' with modal_id="includedModalRemoveProducer" header="Você tem certeza?" message='O usuário perderá os privilégios de produtor, tem certeza que deseja proceder?' confirm="Sim, remover produtor" cancel="Cancelar" %}
+    {% include 'modal.html' with modal_id="includedModalRemoveProducer" header="Você tem certeza?" message='O usuário perderá os privilégios de produtor, tem certeza que deseja proceder?' confirm="Remover produtor" cancel="Cancelar" %}
     <script>
         document.getElementById('filter').addEventListener('click', function(event) {
             document.getElementById('filter-popup').classList.toggle('disabled');
