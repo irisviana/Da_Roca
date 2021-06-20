@@ -5,6 +5,7 @@ from django.urls import path, include
 from users import urls as user_urls
 from users.views import UserView
 from products import urls as product_urls
+from orders import urls as cart_urls
 
 urlpatterns = [
     path('', UserView.home, name='home'),
@@ -13,6 +14,7 @@ urlpatterns = [
     path('logout/', UserView.logout_page, name='logout'),
     path('admin/', admin.site.urls),
     path('product/', include(product_urls)),
+    path('order/', include(cart_urls)),
 
     path('reset_password/',
          auth_views.PasswordResetView.as_view(template_name='registration/reset_password.html'),

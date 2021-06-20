@@ -1,0 +1,101 @@
+<!-- templates/delivery_time/create.html -->
+{% extends 'base.html' %}
+{% load humanize %}
+{% load custom_tags %}
+{% load static %}
+
+{% block title %}
+<title>Cesta de compras</title>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Cesta de compras</h4>
+        </div>
+    </div>
+    <div class="inner_container mt-4">
+        <div class="d-flex flex-column">
+            <div class="cart-item">
+                <div class="header">
+                    <div>Produto</div>
+                    <div>Valor</div>
+                    <div>Quantidade</div>
+                    <div>Subtotal</div>
+                </div>
+            </div>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert cart-item message {{ message.tags }}">
+                        <div>{{ message }}</div>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+            {% if cart|length > 0 %}
+                {% for cart_product in cart %}
+                    <div class="cart-item">
+                        <div class="body">
+                            <div class="product">
+                                <div class="img">
+                                    {% comment %} Foto do produto aqui {% endcomment %}
+                                </div>
+                                <div>
+                                    <h5>{{ cart_product.product.name }}</h5>
+                                    <p>{{ cart_product.product.variety }}</p>
+                                    <p>Vendedor: {{ cart_product.user.first_name }}</p>
+                                </div>
+                            </div>
+                            <div class="unit-value">
+                                <div>R$ {{ cart_product.product.price|floatformat:2|intcomma }}</div>
+                            </div>
+                            <div class="quantity">
+                                <form action="{% url 'remove-cart' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
+                                    <input type="hidden" name="decrement" value="1">
+                                    <button type="submit" class="btn btn-primary" title="Remover um item">
+                                        <span class="fas fa-minus"></span>
+                                    </button>
+                                </form>
+                                <form class="form" id="quantity-form-{{ cart_product.id }}" action="{% url 'update-cart' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
+                                    <input type="number" onblur="$('#quantity-form-{{ cart_product.id }}').submit()" max="{{ cart_product.product.stock_amount }}" name="quantity" value="{{ cart_product.quantity }}" class="form-control">
+                                </form>
+                                <form action="{% url 'update-cart' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
+                                    <button type="submit" class="btn btn-primary" title="Adicionar um item">
+                                        <span class="fas fa-plus"></span>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="subtotal">
+                                {% multiply cart_product.quantity cart_product.product.price as subtotal %}
+                                <div>R$ {{ subtotal|floatformat:2|intcomma }}</div>
+                                <form action="{% url 'remove-cart' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
+                                    <button type="submit" class="btn btn-secondary" tittle="Remover produto da cesta">
+                                        <span class="fas fa-trash"></span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert cart-item message {{ message.tags }}">
+                    <div>Nenhum produto na cesta de compras</div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
