@@ -1,6 +1,5 @@
 import environ
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-import time
 from selenium import webdriver
 
 from products.models import Category
