@@ -1,6 +1,6 @@
 import environ
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-
+import time
 from selenium import webdriver
 
 from products.models import Category
@@ -248,6 +248,100 @@ class UsersTest(StaticLiveServerTestCase):
         driver.find_element_by_id("update-password-modal-button").click()
 
         assert 'As senhas precisam ser iguais' in driver.page_source
+
+    def test_admin_remove_admin_permissions(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+
+        user_to_remove = User.objects.create(
+            first_name='Vinicius',
+            email='vinicius@gmail.com',
+            cpf='33333333333',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, "/user/admin/users/admin"))
+        driver.find_element_by_xpath(f"//button[@data-query=\"admin_id={user_to_remove.id},user_type=admin\"]").click()
+        driver.find_element_by_xpath("//*[text()='Remover administrador']").click()
+        assert user_to_remove.first_name not in driver.page_source
+
+    def test_admin_cancel_remove_admin_permissions(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+
+        user_to_remove = User.objects.create(
+            first_name='Vinicius',
+            email='vinicius@gmail.com',
+            cpf='33333333333',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, "/user/admin/users/admin"))
+        driver.find_element_by_xpath(f"//button[@data-query=\"admin_id={user_to_remove.id},user_type=admin\"]").click()
+        driver.find_element_by_xpath("//div[@id=\"includedModalRemoveAdmin\"]/div/div/div/button[@class=\"btn btn-primary w-50\"]").click()
+        assert user_to_remove.first_name in driver.page_source
+
+    def test_admin_remove_producer_permissions(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True,
+            is_seller=True
+        )
+
+        user_to_remove = User.objects.create(
+            first_name='Vinicius',
+            email='vinicius@gmail.com',
+            cpf='33333333333',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_seller=True
+        )
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, "/user/admin/users/producer"))
+        driver.find_element_by_xpath(f"//button[@title=\"Tirar privilégios de vendedor\" and @data-query=\"user_id={user_to_remove.id},user_type=producer\"]").click()
+        driver.find_element_by_xpath("//*[text()='Remover produtor']").click()
+        assert user_to_remove.first_name not in driver.page_source
+
+    def test_admin_cancel_remove_producer_permissions(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True,
+            is_seller=True
+        )
+
+        user_to_remove = User.objects.create(
+            first_name='Vinicius',
+            email='vinicius@gmail.com',
+            cpf='33333333333',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_seller=True
+        )
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, "/user/admin/users/producer"))
+        driver.find_element_by_xpath(f"//button[@title=\"Tirar privilégios de vendedor\" and @data-query=\"user_id={user_to_remove.id},user_type=producer\"]").click()
+        driver.find_element_by_xpath("//div[@id=\"includedModalRemoveProducer\"]/div/div/div/button[@class=\"btn btn-primary w-50\"]").click()
+        assert user_to_remove.first_name in driver.page_source
 
 
 class DeliveryTimeTest(StaticLiveServerTestCase):
