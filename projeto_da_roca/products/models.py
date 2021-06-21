@@ -20,3 +20,7 @@ class Product(models.Model):
     stock_amount = models.IntegerField(null=True, blank=True)
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE, null=False, blank=False)
+
+class favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False, blank=False)
