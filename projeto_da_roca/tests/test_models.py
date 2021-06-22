@@ -1,7 +1,8 @@
 from django.db.utils import DataError, IntegrityError
 from django.test import TestCase
 
-from products.models import Category
+from products.models import Category, Product
+from orders.models import CartProduct
 from users.models import User, ServiceAddress, DeliveryTime, Address
 
 
@@ -312,3 +313,74 @@ class AddressTest(TestCase):
             Address.objects.filter(pk=self.address.pk).update(zip_code=None)
         except IntegrityError:
             self.assertEqual(old_address_zip_code, self.address.zip_code)
+
+class CartProductTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create(
+            first_name="Rodrigo",
+            email="rodrigo@gmail.com",
+            cpf="70550481419",
+            password="teste",
+        )
+
+        self.category = Category.objects.create(
+            user=self.user,
+            name='Frutas'
+        )
+
+        self.maca = Product.objects.create(
+            user=self.user,
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            stock_amount=50,
+            category=self.category,
+        )
+
+        self.banana = Product.objects.create(
+            user=self.user,
+            name='Banana',
+            variety='Prata',
+            expiration_days=7,
+            stock_amount=50,
+            category=self.category,
+        )
+
+        self.cart_product = CartProduct.objects.create(
+            quantity=10,
+            product=self.maca,
+            user=self.user,
+        )
+
+    def test_add_cart_product(self):
+        cart_product = CartProduct.objects.create(
+            quantity=10,
+            product=self.maca,
+            user=self.user,
+        )
+
+        self.assertTrue(cart_product)
+
+    def test_remove_cart_product(self):
+        old_id = self.cart_product.pk
+        self.cart_product.delete()
+
+        search_cart_product = None
+        try:
+            search_cart_product = CartProduct.objects.get(
+                pk=old_id)
+        except CartProduct.DoesNotExist:
+            self.assertFalse(search_cart_product)
+
+    def test_increment_cart_product(self):
+        old_cart_product_quantity = self.cart_product.quantity
+        self.cart_product.quantity += 1
+        self.cart_product.save()
+        self.assertNotEqual(self.cart_product.quantity, old_cart_product_quantity)
+
+    def test_decrement_cart_product(self):
+        old_cart_product_quantity = self.cart_product.quantity
+        self.cart_product.quantity -= 1
+        self.cart_product.save()
+        self.assertNotEqual(self.cart_product.quantity, old_cart_product_quantity)
