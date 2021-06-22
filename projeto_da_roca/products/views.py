@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Product, Category
+from .models import Product, Category, Favorite
 from .forms import ProductForm, CategoryForm
 
 # Create your views here.
@@ -142,3 +142,41 @@ def get_categories(request):
     categories = Category.objects.all()
     return {"categories": categories}
 
+class FavoriteView:
+    @classmethod
+    def list_favorites(cls, request):
+        if request.user.is_authenticated:
+            user = request.user
+            favorites = Favorite.objects.filter(user_id=user.id)
+
+            return render(request, 'favorite/home.html', {
+                "favorites": favorites 
+            })
+        return redirect('login')
+            
+    @classmethod
+    def create_favorite(cls, request):
+        if request.user.is_authenticated:
+            user = request.user
+            if request.method == 'POST':
+                product_id = request.POST['product_id']
+                product = Product.objects.get(id=product_id)
+
+                favorite = Favorite(user=user, product=product)
+                favorite.save()
+
+            return redirect('list_favorites')
+        return redirect('login')
+    
+    @classmethod
+    def delete_favorite(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                favorite_id = request.POST['favorite_id']
+                favorite = get_object_or_404(Favorite, id=favorite_id)
+                favorite.delete()
+
+                return redirect('list_favorites')
+        return redirect('login')
+
+                
