@@ -3,6 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.hashers import make_password
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect, reverse
+from django.db.models import Q
 
 from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm, AddressForm, UserUpdateForm, UserUpdateEmailForm, \
     UserUpdatePasswordForm
@@ -301,6 +302,16 @@ class UserView:
 
         return redirect('home_seller')
 
+    @classmethod
+    def search_seller(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'GET':
+                search_string = request.GET.get('search')
+                sellers = User.objects.filter(Q(first_name__icontains=search_string) | Q(last_name__icontains=search_string),is_seller=True)
+                return render(request, '../templates/users_profile/customer_home_base.html', {'sellers': sellers})
+
+        return redirect('login')
+
 
 class AddressView:
     @classmethod
@@ -361,6 +372,7 @@ class AddressView:
                 address.delete()
                 return redirect('list_customer_address')
         return redirect('login')
+
 
 class ServiceAddressView:
     @classmethod
