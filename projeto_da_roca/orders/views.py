@@ -88,28 +88,31 @@ class ConfirmOrderView:
         user = get_object_or_404(User, id=request.user.id)
         error_message = []
         if request.user.is_authenticated:
-            if request.method == "POST":
-
-                payment_method = request.POST.get('payment_method')
-                address_id = request.POST.get('address')
-                if not payment_method:
-                    error_message.append('Selecione um método de pagamento')
-                if not address_id:
-                    error_message.append('Selecione um endereço de entrega')
-                if address_id:
-                    address = Address.objects.filter(id=address_id, user=user)
-                    if not address:
-                        error_message.append('O endereço selecionado não existe')
-
-
-
-                ## redirect pra onde quiser
-
-            addresses = Address.objects.filter(user=user)
             cart = CartProduct.objects.filter(user_id=user.id).order_by('-id')
-            return render(request, 'cart/confirm_order.html', {
-                "cart": cart,
-                "addresses": addresses,
-                "error_message": error_message
-            })
+            if len(cart) > 0:
+                if request.method == "POST":
+                    payment_method = request.POST.get('payment_method')
+                    address_id = request.POST.get('address')
+                    if not payment_method:
+                        error_message.append('Selecione um método de pagamento')
+                    if not address_id:
+                        error_message.append('Selecione um endereço de entrega')
+                    if address_id:
+                        address = Address.objects.filter(id=address_id, user=user)
+                        if not address:
+                            error_message.append('O endereço selecionado não existe')
+
+
+
+                    ## redirect pra onde quiser
+
+                addresses = Address.objects.filter(user=user)
+                cart = CartProduct.objects.filter(user_id=user.id).order_by('-id')
+                return render(request, 'cart/confirm_order.html', {
+                    "cart": cart,
+                    "addresses": addresses,
+                    "error_message": error_message
+                })
+
+            return render('cart')
         return redirect('login')

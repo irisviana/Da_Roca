@@ -60,7 +60,7 @@
                         <p>{{ address.street }} {{ address.number }}</p>
                         <p class="mb-1">{{ address.district }}</p>
 
-                        <small class="text-muted">{{ address.zip_code }}</small>
+                        <small>{{ address.zip_code }}</small>
                     </a>
                 {% endfor %}
 
@@ -77,8 +77,56 @@
                 </div>
             </div>
         </div>
-        <div class="float-right">
-            <button class="mt-4 btn btn-primary" form="confirm-form" type="submit">Próximo</button>
+        <div class="row text-center mb-3 mt-5">
+            <div class="col-12">
+                <h4>Produtos adicionados</h4>
+            </div>
+        </div>
+        <div class="d-flex flex-column">
+            <div class="cart-item">
+                <div class="header">
+                    <div>Produto</div>
+                    <div>Valor</div>
+                    <div>Quantidade</div>
+                    <div>Subtotal</div>
+                </div>
+            </div>
+            {% if cart|length > 0 %}
+                {% for cart_product in cart %}
+                    <div class="cart-item">
+                        <div class="body">
+                            <div class="product">
+                                <div class="img">
+                                    {% comment %} Foto do produto aqui {% endcomment %}
+                                </div>
+                                <div>
+                                    <h5>{{ cart_product.product.name }}</h5>
+                                    <p>{{ cart_product.product.variety }}</p>
+                                    <p>Vendedor: {{ cart_product.user.first_name }}</p>
+                                </div>
+                            </div>
+                            <div class="unit-value">
+                                <div>R$ {{ cart_product.product.price|floatformat:2|intcomma }}</div>
+                            </div>
+                            <div class="quantity">
+                                <input type="number" readonly max="{{ cart_product.product.stock_amount }}" name="quantity" value="{{ cart_product.quantity }}" class="form-control">
+                            </div>
+                            <div class="subtotal">
+                                {% multiply cart_product.quantity cart_product.product.price as subtotal %}
+                                <div>R$ {{ subtotal|floatformat:2|intcomma }}</div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert cart-item message {{ message.tags }}">
+                    <div>Nenhum produto na cesta de compras</div>
+                </div>
+            {% endif %}
+        </div>
+        <div class="d-flex justify-content-between">
+            <a class="mt-4 btn btn-secondary w-25" href="{% url 'cart' %}" type="submit">Voltar para o carrinho</a>
+            <button class="mt-4 btn btn-primary w-25" form="confirm-form" type="submit">Finalizar compra</button>
         </div>
     </form>
     <script>

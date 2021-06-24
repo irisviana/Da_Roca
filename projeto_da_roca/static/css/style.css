@@ -289,6 +289,16 @@
     flex: 0 1 80px;
     margin: 0 1em 0 0;
   }
+
+  .list-group .list-group-item.active {
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    color: var(--color-white);
+  }
+
+  .list-group .list-group-item.active:hover, .list-group .list-group-item.active:active {
+    color: var(--color-white);
+  }
   
   /* 2- ADMIN CARDS */
   .card.manage {
