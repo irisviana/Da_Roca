@@ -43,6 +43,11 @@
                 </ul>
             </nav>
         </div>
+        <div class="col-sm-12 col-lg-9">
+            {% block page %}
+
+            {% endblock %}
+        </div>
         <div class="col-sm-12 col-lg-6">
             <div>
                 <div class="row ml-3">
@@ -83,5 +88,6 @@
             </div>
         </div>
     </div>
+    <script src="{% static 'js/main.js' %}"></script>
 
 {% endblock %}
