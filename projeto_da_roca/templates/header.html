@@ -5,15 +5,17 @@
         <img src="{% static 'images/logo.svg' %}" alt="Logo do DaRoça">
     </div>
     <div class="search-bar input-group border-custom rounded-pill p-1">
-        <input type="search" placeholder="O que você procura?" aria-describedby="button-addon3" class="form-control bg-none border-0">
-        <div class="input-group-append border-0">
-            <button id="button-addon3" type="button" class="btn btn-primary"><i class="fa fa-search"></i></button>
-        </div>
+        <form id="form-search" name="form-search" class="search-bar input-group" method="get" action="">
+            <input name="search" type="search" placeholder="O que você procura?" aria-describedby="button-addon3" class="form-control bg-none border-0">
+             <div class="input-group-append border-0">
+                <button id="button-addon3" type="submit" onclick="choice();" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            </div>
+        </form>
     </div>
     <nav class="ml-auto mr-auto mr-md-0">
         <ul>
             <li><a class="btn btn-secondary btn-thin" href="" title="Produtos favoritos"><i class="fa fa-heart fa-2x" aria-hidden="true"></i></a></li>
-            <li><a class="btn btn-secondary btn-thin" href="" title="Cesta de produtos"><i class="fa fa-shopping-basket fa-2x" aria-hidden="true" ></i></a></li>
+            <li><a class="btn btn-secondary btn-thin" href="{% url 'cart' %}" title="Cesta de produtos"><i class="fa fa-shopping-basket fa-2x" aria-hidden="true" ></i></a></li>
 
             {% if request.user.is_authenticated %}
                 <li>
@@ -33,3 +35,22 @@
 {% block content %}
     {% include 'navbar.html' %}
 {% endblock %}
+
+<script type="text/javascript">
+
+    document.getElementById("button-addon3").addEventListener("click", choice);
+
+    function choice() {
+
+        var element= document.getElementById("form-search");
+        var seller= document.getElementById("vendedor");
+
+        if(seller.checked){
+            element.setAttribute("action", "{% url 'search_sellers' %}");
+        }
+        else{
+            element.setAttribute("action", "{% url 'search_products' %}");
+        }
+
+    }
+</script>

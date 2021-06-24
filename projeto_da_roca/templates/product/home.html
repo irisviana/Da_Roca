@@ -34,6 +34,7 @@
                 </tr>
             </thead>
             <tbody>
+            {% if products|length > 0 %}
                 {% for product in products %}
                 <tr>
                     <td>
@@ -50,7 +51,7 @@
 
                             <a class="btn btn-primary"
                                     href="{% url 'update_product' product.id %}"
-                                    tittle="Editar product">
+                                    tittle="Editar produto">
                                     <span class="fas fa-edit"></span>
                             </a>
                             
@@ -62,9 +63,14 @@
                     <td>{{ product.stock_amount }}</td>
                 </tr>
                 {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="5">Nenhum produto cadastrado</td>
+                </tr>
+            {% endif %}
             </tbody>
         </table>
     </div>
     {% url 'delete_product' as action_url %}
-    {% include 'modal.html' with header="Você tem certeza?" message='Você não poderá acessar esse produto, tem certeza que deseja proceder?' confirm="Sim, remover permanentemente" cancel="Cancelar" %}
+    {% include 'modal.html' with modal_id="includedModal" header="Você tem certeza?" message='Você não poderá acessar esse produto, tem certeza que deseja proceder?' confirm="Remover permanentemente" cancel="Cancelar" %}
 {% endblock %}

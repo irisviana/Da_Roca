@@ -6,11 +6,23 @@
     --color-black: #000000;
     --color-transparent: rgba(0,0,0,0);
     --color-dark-shadow: rgba(0,0,0,0.2);
+    --color-danger: #aa0000;
     
     /* Shadows */
     --shadow-button: 2px 2px 10px var(--color-dark-shadow);
   }
 
+  /* Chrome, Safari, Edge, Opera */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
 
   body,
   html {
@@ -402,4 +414,141 @@
   }
   /* 5- FIM DE CUSTOM TABLE */
 
-  
+
+  /* 6- CART ITEM CARD */
+  .cart-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    color: var(--color-primary);
+    border-radius: 5px;
+    border: 1px solid var(--color-primary);
+    margin: 0.375em;
+    flex: 0 0 30%;
+    text-align: center;
+  }
+
+  .cart-item.message {
+    flex-direction: row;
+    justify-content: center;
+    padding: 0.5em;
+  }
+
+  .cart-item.message div {
+    flex: 0 0 95%;
+  }
+
+  .cart-item.message button {
+    flex: 0 0 5%;
+  }
+
+  .cart-item.message.error {
+    color: var(--color-danger);
+    border: 1px solid var(--color-danger);
+  }
+
+  .cart-item.message.success {
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+  }
+
+  .cart-item .header {
+    display: flex;
+    align-items: center;
+  }
+
+  .cart-item .body {
+    display: flex;
+    flex: 0 0 30%;
+  }
+
+  .cart-item .header > div {
+    padding: 0.5em;
+  }
+
+  .cart-item .header > div:first-child {
+    flex: 0 1 40%;
+  }
+
+  .cart-item .header > div:nth-child(2) {
+    flex: 0 1 15%;
+  }
+
+  .cart-item .header > div:nth-child(3) {
+    flex: 0 1 25%;
+  }
+
+  .cart-item .header > div:last-child {
+    flex: 0 1 20%;
+  }
+
+  .cart-item .body .product {
+    display: flex;
+    flex: 0 1 40%;
+    text-align: left;
+    align-items: center;
+  }
+
+  .cart-item .product .img {
+    background-color: var(--color-primary);
+    flex: 0 1 20%;
+    height: 100px;
+    margin: 0.5em;
+  }
+
+  .cart-item .body .product > div {
+    flex: 0 1 40%;
+    margin: 0 0.5em 0 0;
+  }
+
+  .cart-item .product h5 {
+    margin-right: auto;
+  }
+
+  .cart-item .body .unit-value {
+    flex: 0 1 15%;
+    text-align: center;
+    align-self: center;
+  }
+
+  .cart-item .body .quantity {
+    display: flex;
+    align-items: center;
+    flex: 0 1 25%;
+  }
+
+  .cart-item .quantity form {
+    margin: 0;
+    padding: 0;
+    flex: 0 1 48px;
+  }
+
+  .cart-item .quantity form.form {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 0 1 96px;
+  }
+
+  .cart-item .quantity .btn, .cart-item .subtotal > form .btn{
+    margin: 0.375em;
+    width: 48px;
+  }
+
+  .cart-item .subtotal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 1 20%;
+  }
+
+  .cart-item .subtotal > div {
+    flex: 0 0 65%;
+    text-align: right;
+  }
+
+  .cart-item .subtotal > form {
+    flex: 0 0 35%;
+  }
+  /* 6- FIM DE CART ITEM CARD */
+

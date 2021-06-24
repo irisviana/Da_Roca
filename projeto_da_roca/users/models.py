@@ -14,7 +14,8 @@ class User(AbstractUser):
         ('P', 'Pendente'),
         ('I', 'Inativo'),
     )
-
+    first_name = models.CharField(null=False, blank=False, max_length=50)
+    last_name = models.CharField(null=False, blank=False, max_length=50)
     email = models.EmailField(unique=True)
     cpf = models.CharField(max_length=11, null=True, blank=True, unique=True)
     phone_number = models.CharField(max_length=50, null=True, blank=True)

@@ -3,12 +3,15 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.hashers import make_password
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, redirect, reverse
+from django.db.models import Q
 
-from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm, AddressForm, UserUpdateForm
+from .forms import DeliveryTimeForm, ServiceAddressForm, UserForm, AddressForm, UserUpdateForm, UserUpdateEmailForm, \
+    UserUpdatePasswordForm
+from .models import Address
 from .models import DeliveryTime
 from .models import ServiceAddress
 from .models import User
-from .models import Address
+
 
 # Create your views here.
 
@@ -62,34 +65,77 @@ class UserView:
         return redirect('login')
 
     @classmethod
-    def update_users(cls, request, username):
-        user = get_object_or_404(User, username=username)
+    def update_users(cls, request):
+        user = request.user
+        form = UserUpdateForm(instance=user)
+        update_email_form = UserUpdateEmailForm()
+        update_password_form = UserUpdatePasswordForm()
+        message = False
+        try:
+            error_message = request.session["update_user_error_message"]
+            del request.session["update_user_error_message"]
+        except Exception:
+            error_message = False
 
         if request.user.is_authenticated:
-            form = UserUpdateForm(instance=user)
 
             if request.method == 'POST':
-                form = UserUpdateForm(request.POST, instace=user)
+                form = UserUpdateForm(request.POST, instance=user)
                 if form.is_valid():
                     user = form.save()
-                    return render(request, '../templates/registration/update_customer.html', {
-                        'form': form
-                    })
 
-        return render(request, '../templates/registration/update_customer.html', {'form': form})
+                    message = 'Atualizado com sucesso.'
+
+            return render(request, '../templates/registration/update_customer.html', {
+                'form': form, 'update_email_form': update_email_form, 'error_message': error_message,
+                'update_password_form': update_password_form, 'message': message
+            })
+
+        return redirect('login')
 
     @classmethod
-    def self_delete(cls, request, username):
+    def update_email_user(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                form = UserUpdateEmailForm(request.POST, instance=request.user)
+                if form.is_valid():
+                    form.save()
+
+                    return redirect('logout')
+                else:
+                    request.session["update_user_error_message"] = form.errors['__all__']
+
+            return redirect('update_customer')
+
+        return redirect('login')
+
+    @classmethod
+    def update_password_user(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                form = UserUpdatePasswordForm(request.POST, instance=request.user)
+                if form.is_valid():
+                    user = form.save(commit=False)
+                    user.password = make_password(form.cleaned_data.get('new_password'))
+                    user.save()
+                    return redirect('logout')
+                else:
+                    request.session["update_user_error_message"] = form.errors['__all__']
+
+            return redirect('update_customer')
+
+        return redirect('login')
+
+    @classmethod
+    def self_delete(cls, request):
         if request.user.is_authenticated:
             auth_user = request.user
             if request.method == 'POST':
-                if auth_user.username == username:
-                    user = User.objects.get(username=username)
-                    user.is_active = False
-                    user.save()
-                    return redirect('logout')
-                return redirect('home')
-            return redirect('update_customer', username=username)
+                user = User.objects.get(username=auth_user.username)
+                user.is_active = False
+                user.save()
+                return redirect('logout')
+            return redirect('home')
 
         return redirect('login')
 
@@ -111,9 +157,9 @@ class UserView:
     def remove_admin(cls, request):
         if request.user.is_authenticated:
             user_type = 'all'
-            if request.method == 'GET':
-                user_type = request.GET.get('user_type', 'all')
-                admin_id = request.GET.get('admin_id')
+            if request.method == 'POST':
+                user_type = request.POST.get('user_type', 'all')
+                admin_id = request.POST.get('admin_id')
                 user = User.objects.get(pk=admin_id)
                 user.is_admin = False
                 user.save()
@@ -125,9 +171,9 @@ class UserView:
     def refuse_seller_request(cls, request):
         if request.user.is_authenticated:
             user_type = 'all'
-            if request.method == 'GET':
-                user_type = request.GET.get('user_type', 'all')
-                user_id = request.GET.get('user_id')
+            if request.method == 'POST':
+                user_type = request.POST.get('user_type', 'all')
+                user_id = request.POST.get('user_id')
                 user = User.objects.get(pk=user_id)
                 user.is_seller = False
                 user.seller_status = 'R'
@@ -269,25 +315,42 @@ class UserView:
                 redirect('home_seller')
 
         return redirect('home_seller')
+
+    @classmethod
+    def search_seller(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'GET':
+                search_string = request.GET.get('search')
+                sellers = User.objects.filter(Q(first_name__icontains=search_string) | Q(last_name__icontains=search_string),is_seller=True)
+                return render(request, '../templates/users_profile/customer_home_base.html', {'sellers': sellers})
+
+        return redirect('login')
+
+
 class AddressView:
     @classmethod
-    def create_address(cls, request, username):
-        user = get_object_or_404(User, username=username)
-        form = AddressForm(request.POST or None)
-        if request.method == 'POST':
-            if form.is_valid():
-                address = form.save()
-                address.user = user
-                address.save()
-                return redirect('list_customer_address', user.username)
-        return render(request, '../templates/address/create_address.html', {'form': form})
+    def create_address(cls, request):
+        if request.user.is_authenticated:
+            user = request.user
+            form = AddressForm(request.POST or None)
+            if request.method == 'POST':
+                if form.is_valid():
+                    address = form.save()
+                    address.user = user
+                    address.save()
+                    return redirect('list_customer_address')
+            return render(request, '../templates/address/create_address.html', {'form': form})
+        return redirect('login')
 
     @classmethod
-    def list_address(cls, request, username):
-        user = get_object_or_404(User, username=username)
-        addresses = Address.objects.filter(user=user)
+    def list_address(cls, request):
+        if request.user.is_authenticated:
+            user = request.user
+            queried_user = get_object_or_404(User, username=user)
+            addresses = Address.objects.filter(user=queried_user)
 
-        return render(request, '../templates/address/list_address.html', {'addresses': addresses})
+            return render(request, '../templates/address/list_address.html', {'addresses': addresses})
+        return redirect('login')
 
     @classmethod
     def update_address(cls, request, address_id):
@@ -303,7 +366,7 @@ class AddressView:
                     address.user = user
                     address.save()
 
-                    return redirect('list_customer_address', user.username)
+                    return redirect('list_customer_address')
 
             return render(request, '../templates/address/create_address.html', {
                 'form': form,
@@ -321,8 +384,9 @@ class AddressView:
                 user = get_object_or_404(User, username=address.user.username)
 
                 address.delete()
-                return redirect('list_customer_address', user.username)
+                return redirect('list_customer_address')
         return redirect('login')
+
 
 class ServiceAddressView:
     @classmethod
@@ -335,7 +399,7 @@ class ServiceAddressView:
                 service_address = ServiceAddress.objects.all()
 
             return render(request, 'service_address/home.html', {
-                "services_address": service_address,
+                "services_addresses": service_address,
             })
         return redirect('login')
 

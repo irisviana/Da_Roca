@@ -6,10 +6,13 @@ from .views import UserView, AddressView, DeliveryTimeView, ServiceAddressView
 
 urlpatterns = [
     path('create', UserView.create_users, name='create_customer'),
-    path('<str:username>/update', UserView.update_users, name='update_customer'),
-    path('<str:username>/delete', UserView.self_delete, name='self_delete'),
-    path('<str:username>/address/create', AddressView.create_address, name='create_customer_address'),
-    path('<str:username>/address/list', AddressView.list_address, name='list_customer_address'),
+    path('update', UserView.update_users, name='update_customer'),
+    path('update/email', UserView.update_email_user, name='update_email_customer'),
+    path('update/password', UserView.update_password_user, name='update_password_customer'),
+
+    path('delete', UserView.self_delete, name='self_delete'),
+    path('address/create', AddressView.create_address, name='create_customer_address'),
+    path('address/list', AddressView.list_address, name='list_customer_address'),
 
     path('address/delete', AddressView.delete_address, name='delete_address'),
     path('address/update/<int:address_id>', AddressView.update_address,
@@ -37,6 +40,7 @@ urlpatterns = [
     path('admin/user/delete', UserView.delete_user, name="delete_user"),
 
     path('customer_home', UserView.customer_home, name='customer_home'),
+    path('customer_home_search_seller', UserView.search_seller, name='search_sellers'),
     path('seller/', UserView.seller_home, name='home_seller'),
     path('seller/updateStoreStatus', UserView.update_users_store_status, name='store_status_update'),
     path('seller/request', UserView.request_seller, name='seller_request'),

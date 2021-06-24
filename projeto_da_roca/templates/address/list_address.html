@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="inner_container mt-4">
-        <a class="btn btn-primary" href="{% url 'create_customer_address' request.user.username %}">
+        <a class="btn btn-primary" href="{% url 'create_customer_address' %}">
             Adicionar
         </a>
         <table class="custom_table mt-5">
@@ -28,56 +28,65 @@
             </tr>
             </thead>
             <tbody>
-            {% for address in addresses %}
-                <tr>
-                    <td>
-                        <div class="actions">
-                            <form action="{% url 'delete_address' %}" method="post">
-                                {% csrf_token %}
-                                <input type="hidden" name="address_id" value="{{ address.id }}">
-                                <button class="btn btn-primary" type="submit" value="Remover">
+            {% if addresses|length > 0 %}
+                {% for address in addresses %}
+                    <tr>
+                        <td>
+                            <div class="actions">
+                                <a class="btn btn-primary" href="{% url 'update_address' address.id %}">
+                                    <span class="fas fa-edit"></span>
+                                </a>
+                                <button type="button"
+                                    class="btn btn-danger"
+                                    data-toggle="modal"
+                                    data-target="#includedModal"
+                                    data-query="address_id={{ address.id }}"
+                                    tittle="Deletar horário de entrega">
                                     <span class="fas fa-trash"></span>
                                 </button>
-                            </form>
-                            <a class="btn btn-primary" href="{% url 'update_address' address.id %}">
-                                <span class="fas fa-edit"></span>
-                            </a>
-                        </div>
-                    </td>
-                    <td>
-                        {% if address.zip_code %}
-                            {{ address.zip_code }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if address.state %}
-                            {{ address.state }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if address.city %}
-                            {{ address.city }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if address.district %}
-                            {{ address.district }}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if address.street %}
-                            {{ address.street }}
-                        {% endif %}
-                    </td>
+                            </div>
+                        </td>
+                        <td>
+                            {% if address.zip_code %}
+                                {{ address.zip_code }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if address.state %}
+                                {{ address.state }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if address.city %}
+                                {{ address.city }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if address.district %}
+                                {{ address.district }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if address.street %}
+                                {{ address.street }}
+                            {% endif %}
+                        </td>
 
-                    <td>
-                        {% if address.house_number %}
-                            {{ address.house_number }}
-                        {% endif %}
-                    </td>
+                        <td>
+                            {% if address.house_number %}
+                                {{ address.house_number }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7">Nenhum endereço cadastrado</td>
                 </tr>
-            {% endfor %}
+            {% endif %}
             </tbody>
         </table>
     </div>
+    {% url 'delete_address' as action_url %}
+    {% include 'modal.html' with modal_id="includedModal" header="Excluir endereço?" message='Tem certeza que deseja excluir o endereço?' confirm="Sim" cancel="Cancelar" %}
 {% endblock %}

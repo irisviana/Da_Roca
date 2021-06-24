@@ -11,9 +11,32 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarText">
 			<ul class="navbar-nav mr-auto">
-				<li class="nav-item dropdown">
-					<a class="btn btn-secondary btn-nav dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Categorias </a>
-				</li>
+				<p class="mr-2">
+					Buscar por:
+				</p>
+				<div class="form-check form-check-inline">
+  					<input class="form-check-input" type="radio" name="inlineRadioOptions" id="vendedor" value="option1" checked>
+					<label class="form-check-label" for="vendedor">Vendedor</label>
+				</div>
+
+				<div class="form-check form-check-inline">
+  					<input class="form-check-input" type="radio" name="inlineRadioOptions" id="produto" value="option2">
+  					<label class="form-check-label" for="produto">Produto</label>
+				</div>
+
+				<div class="dropdown">
+					<button class="btn btn-secondary btn-nav dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Categorias
+					</button>
+					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						{% for category in categories %}
+					  		<a class="dropdown-item" href="#">{{category.name}}</a>
+						{% endfor%}
+					</div>
+				  </div>
+
+
+
 				{% if request.user.is_authenticated %}
 				<li class="nav-item">
 					<a class="btn btn-secondary btn-nav" href="{% url 'home_seller' %}">Vender</a>

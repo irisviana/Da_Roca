@@ -89,13 +89,23 @@
                         <td>
                             <div class="actions">
                                 {% if user_type == 'admin' %}
-                                <a href="{% url 'admin_remove' %}?admin_id={{ user.id }}&user_type={{ user_type }}" class="btn btn-primary" title="Tirar privilégios de administrador">
-                                    <span class="fas fa-times"></span>
-                                </a>
+                                    <button type="button"
+                                        class="btn btn-primary"
+                                        data-toggle="modal"
+                                        data-target="#includedModalRemoveAdmin"
+                                        data-query="admin_id={{ user.id }},user_type={{ user_type }}"
+                                        title="Tirar privilégios de administrador">
+                                        <span class="fas fa-times"></span>
+                                    </button>
                                 {% elif user_type == 'producer' %}
-                                <a href="{% url 'refuse_request_seller' %}?user_id={{ user.id }}&user_type={{ user_type }}" class="btn btn-primary" title="Tirar privilégios de vendedor">
-                                    <span class="fas fa-times"></span>
-                                </a>
+                                    <button type="button"
+                                        class="btn btn-primary"
+                                        data-toggle="modal"
+                                        data-target="#includedModalRemoveProducer"
+                                        data-query="user_id={{ user.id }},user_type={{ user_type }}"
+                                        title="Tirar privilégios de vendedor">
+                                        <span class="fas fa-times"></span>
+                                    </button>
                                 {% elif user_type == 'client' %}
                                 {% endif %}
                                 {% if user.username != request.user.username %}
@@ -134,7 +144,11 @@
         </table>
     </div>
     {% url 'delete_user' as action_url %}
-    {% include 'modal.html' with header="Você tem certeza?" message='O usuário não poderá mais acessar o sistema, tem certeza que deseja proceder?' confirm="Sim, remover permanentemente" cancel="Cancelar" %}
+    {% include 'modal.html' with modal_id="includedModal" header="Você tem certeza?" message='O usuário não poderá mais acessar o sistema, tem certeza que deseja proceder?' confirm="Remover permanentemente" cancel="Cancelar" %}
+    {% url 'admin_remove' as action_url %}
+    {% include 'modal.html' with modal_id="includedModalRemoveAdmin" header="Você tem certeza?" message='O usuário perderá os privilégios de administrador, tem certeza que deseja proceder?' confirm="Remover administrador" cancel="Cancelar" %}
+    {% url 'refuse_request_seller' as action_url %}
+    {% include 'modal.html' with modal_id="includedModalRemoveProducer" header="Você tem certeza?" message='O usuário perderá os privilégios de produtor, tem certeza que deseja proceder?' confirm="Remover produtor" cancel="Cancelar" %}
     <script>
         document.getElementById('filter').addEventListener('click', function(event) {
             document.getElementById('filter-popup').classList.toggle('disabled');

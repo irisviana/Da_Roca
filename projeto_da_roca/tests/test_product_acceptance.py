@@ -4,7 +4,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 
 from users.models import User
-from products.models import Product, Category
+from products.models import Category
 
 env = environ.Env()
 
@@ -16,7 +16,7 @@ class ProductsTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        
+
         cls.selenium = None
         if TEST_ON_CHROME:
             cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
@@ -50,29 +50,57 @@ class ProductsTest(StaticLiveServerTestCase):
         assert 'email ou senha estão incorretos' not in driver.page_source
 
     def test_register_product_with_all_data_filled_in(self):
-        self.fruit_category = Category.objects.create(
-            name="Fruit")
-        apple = Product.objects.create(user=self.producer_rodrigo,
-                                       name="apple", variety="test",
-                                       expiration_days=10, price=2.0,
-                                       stock_amount=50,
-                                       category=self.fruit_category)
+        producer_rodrigo = User.objects.create(
+            first_name = 'Iris Viana',
+            email = 'iris@gmail.com',
+            cpf = '22222222222',
+            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            is_seller = True,
+        )
+        self.test_login(producer_rodrigo)
+
+        fruit_category = Category.objects.create(name="Fruit")
 
         driver = self.selenium
-        driver.get('%s%s' % (self.live_server_url, f"/product/products/list/{apple.id}"))
-        driver.find_element_by_xpath(f"//a[@href=\"/product/create/{apple.id}\"]").click()
-        driver.find_element_by_xpath("//select[@name='category']/option[text()='Fruit']").click()
-        name = driver.find_element_by_name("apple")
-        name.send_keys(apple.name)
-        variety = driver.find_element_by_name("teste")
-        variety.send_keys(apple.variety)
-        expiration_days = driver.find_element_by_name(10)
-        expiration_days.send_keys(apple.expiration_days)
-        price = driver.find_element_by_name(2.0)
-        price.send_keys(apple.price)
-        stock_amount =  driver.find_element_by_name(10)
-        stock_amount.send_keys(apple.stock_amount)
+        driver.get('%s%s' % (self.live_server_url, "/product/products/list"))
+        driver.find_element_by_xpath("//a[@href=\"/product/create\"]").click()
+        driver.find_element_by_xpath(f"//select[@name='category']/option[text()='{fruit_category.name}']").click()
+        name = driver.find_element_by_name("name")
+        name.send_keys('Apple')
+        variety = driver.find_element_by_name("variety")
+        variety.send_keys('Normal')
+        expiration_days = driver.find_element_by_name('expiration_days')
+        expiration_days.send_keys('7')
+        price = driver.find_element_by_name('price')
+        price.send_keys('1')
+        stock_amount =  driver.find_element_by_name('stock_amount')
+        stock_amount.send_keys('50')
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
-        assert 'apple' in driver.page_source 
+        assert 'Apple' in driver.page_source
 
-        
+    def test_register_product_without_some_data(self):
+        producer_rodrigo = User.objects.create(
+            first_name = 'Iris Viana',
+            email = 'iris@gmail.com',
+            cpf = '22222222222',
+            password = 'pbkdf2_sha256$260000$Sp6bL4xpZQ9iXLHVbpGNHe$QsVBRhxviJntcy4dZuzT0PhiotJ41gCKGTR1yKOJR1s=',
+            is_seller = True,
+        )
+        self.test_login(producer_rodrigo)
+
+        fruit_category = Category.objects.create(name="Fruit")
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/product/products/list"))
+        driver.find_element_by_xpath("//a[@href=\"/product/create\"]").click()
+        driver.find_element_by_xpath(f"//select[@name='category']/option[text()='{fruit_category.name}']").click()
+        variety = driver.find_element_by_name("variety")
+        variety.send_keys('Normal')
+        expiration_days = driver.find_element_by_name('expiration_days')
+        expiration_days.send_keys('7')
+        price = driver.find_element_by_name('price')
+        price.send_keys('1')
+        stock_amount =  driver.find_element_by_name('stock_amount')
+        stock_amount.send_keys('50')
+        driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
+        assert 'Cadastre seu produto' in driver.page_source 
