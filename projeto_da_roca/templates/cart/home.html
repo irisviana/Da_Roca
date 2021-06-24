@@ -83,7 +83,7 @@
                                 <form action="{% url 'remove-cart' %}" method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
-                                    <button type="submit" class="btn btn-secondary" tittle="Remover produto da cesta">
+                                    <button type="submit" class="btn btn-secondary" title="Remover produto da cesta">
                                         <span class="fas fa-trash"></span>
                                     </button>
                                 </form>

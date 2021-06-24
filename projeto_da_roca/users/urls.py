@@ -38,6 +38,7 @@ urlpatterns = [
     path('admin/user/delete', UserView.delete_user, name="delete_user"),
 
     path('customer_home', UserView.customer_home, name='customer_home'),
+    path('customer_home_search_seller', UserView.search_seller, name='search_sellers'),
     path('seller/', UserView.seller_home, name='home_seller'),
     path('seller/updateStoreStatus', UserView.update_users_store_status, name='store_status_update'),
     path('seller/request', UserView.request_seller, name='seller_request'),

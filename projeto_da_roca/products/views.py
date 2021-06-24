@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Product, Category, Favorite
 from .forms import ProductForm, CategoryForm
+from django.db.models import Q
 
 # Create your views here.
 
@@ -70,6 +71,16 @@ class ProductView:
                 Product, id=product_id)
                 product.delete()
                 return redirect('list_products')
+        return redirect('login')
+
+    @classmethod
+    def search_product(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'GET':
+                search_string = request.GET.get('search')
+                products = Product.objects.filter(Q(name__icontains=search_string))
+                return render(request, '../templates/users_profile/customer_home_base.html', {'products': products})
+
         return redirect('login')
 
         
