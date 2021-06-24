@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import environ
-
+import os
 
 # Initialise environment variables
 env = environ.Env()
@@ -150,3 +150,17 @@ AUTHENTICATION_BACKENDS = ['users.backends.EmailBackend']
 LOGIN_REDIRECT_URL = ''
 LOGIN_URL = 'login/'
 LOGOUT_REDIRECT_URL = ''
+
+# SMTP Configuration
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_USE_TLS = env('EMAIL_USE_TLS')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+#Images Configuration
+MEDIA_PRODUCT_ROOT =  STATICFILES_DIRS
+MEDIA__PRODUCT_URL = STATIC_URL
+

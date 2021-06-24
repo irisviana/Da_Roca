@@ -35,7 +35,7 @@ class UserView:
     @classmethod
     def create_users(cls, request):
         if request.method == 'POST':
-            form = UserForm(request.POST)
+            form = UserForm(request.POST,request.FILES)
             password = request.POST['password']
             if form.is_valid():
                 user = form.save()
@@ -46,6 +46,20 @@ class UserView:
         else:
             form = UserForm()
         return render(request, 'registration/create_customer.html', {'form': form})
+    
+    @classmethod
+    def view_seller(cls, request, user_id):
+        seller = get_object_or_404(User, id=user_id)
+        service_adds = ServiceAddress.objects.filter(user=seller)
+        deliveryTimes = DeliveryTime.objects.filter(service_address=service_adds)
+        
+        if request.user.is_authenticated:
+            if request.method == 'GET':
+                return render(request, 'seller/view_seller.html', {
+                    'seller':  seller, 'service_adds':service_adds,
+                    "deliveryTimes": deliveryTimes
+                })
+        return redirect('login')
 
     @classmethod
     def update_users(cls, request, username):
