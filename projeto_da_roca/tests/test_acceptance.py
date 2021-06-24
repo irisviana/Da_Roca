@@ -1,8 +1,13 @@
 import environ
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-from products.models import Category
+from orders.models import CartProduct
+from products.models import Category, Product
 from users.models import User, DeliveryTime, ServiceAddress
 
 env = environ.Env()
@@ -664,3 +669,199 @@ class CategoryTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath("//button[@class=\"btn btn-danger btn-confirm\"]").click()
 
         assert 'Verdura' not in driver.page_source
+
+class CartProductTest(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.selenium = None
+
+        if TEST_ON_CHROME:
+            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+        elif TEST_ON_FIREFOX:
+            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+
+        cls.selenium.get('http://127.0.0.1:8000')
+    
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+
+    def test_login(self, user=False):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        ) if not user else user
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = driver.find_element_by_name("username")
+        username_input.send_keys(user.email)
+        password_input = driver.find_element_by_name("password")
+        password_input.send_keys('abcde123456')
+        driver.find_element_by_xpath('//input[@value="Entrar"]').click()
+        assert 'email ou senha estão incorretos' not in driver.page_source
+
+    def test_increment_cart_product(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        CartProduct.objects.create(
+            user=user,
+            product=maca_product,
+            quantity=1
+        )
+        driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
+        driver.find_element_by_xpath("//button[@title=\"Adicionar um item\"]").click()
+        quantity = driver.find_element_by_name("quantity")
+        assert '2' == quantity.get_attribute('value')
+
+    def test_decrement_cart_product(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        CartProduct.objects.create(
+            user=user,
+            product=maca_product,
+            quantity=10
+        )
+        driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
+        driver.find_element_by_xpath("//button[@title=\"Remover um item\"]").click()
+        quantity = driver.find_element_by_name("quantity")
+        assert '9' == quantity.get_attribute('value')
+
+    def test_update_cart_product(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        CartProduct.objects.create(
+            user=user,
+            product=maca_product,
+            quantity=1
+        )
+        driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
+        quantity = driver.find_element_by_name("quantity")
+        quantity.clear()
+        quantity.send_keys('30')
+        quantity.send_keys(Keys.TAB)
+        assert '30' == quantity.get_attribute('value')
+
+    def test_remove_cart_product(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        CartProduct.objects.create(
+            user=user,
+            product=maca_product,
+            quantity=1
+        )
+        driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
+        driver.find_element_by_xpath("//button[@title=\"Remover produto da cesta\"]").click()
+        assert maca_product.name not in driver.page_source
+
+    def test_update_cart_product_exceed_stock(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        CartProduct.objects.create(
+            user=user,
+            product=maca_product,
+            quantity=20
+        )
+        driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
+        quantity = driver.find_element_by_name("quantity")
+        quantity.send_keys('1')
+        quantity.send_keys(Keys.TAB)
+        WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[@class=\"alert cart-item message error\"]")))
+        assert 'Quantidade de estoque excedida.' in driver.page_source
