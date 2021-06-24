@@ -51,7 +51,7 @@
     font-family: 'Raleway', sans-serif;
     font-weight: 400;
     text-transform: uppercase;
-    color: #d2d2d2;
+    color: black;
     letter-spacing: 0.2em;
   }
   
@@ -73,25 +73,7 @@
     position: relative;
   }
   
-  .product-price-btn p {
-    display: inline-block;
-    position: absolute;
-    top: -13px;
-    height: 50px;
-    font-family: 'Trocchi', serif;
-    margin: 0 0 0 38px;
-    font-size: 28px;
-    font-weight: lighter;
-    color: #474747;
-  }
-  
-  span {
-    display: inline-block;
-    height: 50px;
-    font-family: 'Suranna', serif;
-    font-size: 34px;
-  }
-  
+
   .product-price-btn button {
     float: right;
     display: inline-block;
