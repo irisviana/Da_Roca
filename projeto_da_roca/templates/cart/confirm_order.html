@@ -1,0 +1,98 @@
+<!-- templates/delivery_time/create.html -->
+{% extends 'base.html' %}
+{% load humanize %}
+{% load custom_tags %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/progress_style.css' %}">
+
+{% endblock %}
+
+{% block title %}
+    <title>Confirmar comprar</title>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center mb-4">
+        <div>
+            <h4>Confirmar dados</h4>
+        </div>
+    </div>
+    {% if error_message %}
+        <div class="alert alert-danger">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            {% for error in error_message %}
+
+                <li class="error">{{ error|escape }}</li>
+
+            {% endfor %}
+
+        </div>
+    {% endif %}
+    <form method="post" id="confirm-form">
+        {% csrf_token %}
+        <input name="payment_method" id="payment_method" hidden value="">
+        <input name="address" id="address" hidden value="">
+
+        <div class="row mb-3">
+            <div class="col-6">
+                <h4>Endereço de entrega</h4>
+            </div>
+            <div class="col-6">
+                <h4>Formas de pagamento</h4>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col-4 list-group" id="confirm-container">
+
+                {% for address in addresses %}
+                    <a id="{{ address.id }}" class="list-group-item address list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">{{ address.city }} - {{ address.state }}</h5>
+                        </div>
+                        <p>{{ address.street }} {{ address.number }}</p>
+                        <p class="mb-1">{{ address.district }}</p>
+
+                        <small class="text-muted">{{ address.zip_code }}</small>
+                    </a>
+                {% endfor %}
+
+            </div>
+            <div class="col-2"></div>
+            <div class="col-6">
+
+                <div class="list-group">
+                    <a id="cash" class="list-group-item list-group-item-action payment">
+                        Dinheiro
+                    </a>
+                    <a id="credit_card" class="list-group-item list-group-item-action payment">Cartão de credito</a>
+                    <a id="debit_card" class="list-group-item list-group-item-action payment">Cartão de debito</a>
+                </div>
+            </div>
+        </div>
+        <div class="float-right">
+            <button class="mt-4 btn btn-primary" form="confirm-form" type="submit">Próximo</button>
+        </div>
+    </form>
+    <script>
+        $('.list-group-item.address').on('click', function () {
+            $('.list-group-item.address').removeClass('active')
+            $(this).addClass('active')
+            $('#address').val($(this).attr('id'))
+        })
+        $('.list-group-item.payment').on('click', function () {
+            $('.list-group-item.payment').removeClass('active')
+            $(this).addClass('active')
+            $('#payment_method').val($(this).attr('id'))
+
+        })
+
+    </script>
+{% endblock %}

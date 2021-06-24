@@ -1,0 +1,5 @@
+#confirm-container {
+    max-height: 400px;
+    overflow: hidden;
+    overflow-y: scroll;
+}
