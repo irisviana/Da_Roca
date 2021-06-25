@@ -78,9 +78,12 @@ class ProductView:
     def view_product(cls, request, product_id):
         product = get_object_or_404(Product, id=product_id)
         if request.user.is_authenticated:
+            user = request.user
             if request.method == 'GET':
+                favorite = Favorite.objects.filter(user=user, product=product)
                 return render(request, 'product/view_product.html', {
-                    'product': product
+                    'product': product,
+                    'favorites': favorite
                 })
         return redirect('login')
 
@@ -187,10 +190,14 @@ class FavoriteView:
                 product_id = request.POST['product_id']
                 product = Product.objects.get(id=product_id)
 
-                favorite = Favorite(user=user, product=product)
-                favorite.save()
+                try:
+                    favorite = Favorite.objects.get(user=user, product=product)
+                    favorite.delete()
+                except Favorite.DoesNotExist:
+                    favorite = Favorite(user=user, product=product)
+                    favorite.save()
 
-            return redirect('list_favorites')
+            return redirect('view_product', product_id=product.id)
         return redirect('login')
     
     @classmethod
@@ -201,7 +208,7 @@ class FavoriteView:
                 favorite = get_object_or_404(Favorite, id=favorite_id)
                 favorite.delete()
 
-                return redirect('list_favorites')
+            return redirect('list_favorites')
         return redirect('login')
 
                 
