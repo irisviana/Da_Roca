@@ -115,7 +115,7 @@ class FavoritesTest(TestCase):
         )
 
         self.assertTrue(favorite)
-    
+
     def test_delete_favoite(self):
         old_id = self.favorite.id
         self.favorite.delete()
