@@ -25,6 +25,7 @@ class CartProductView():
                 product_id = request.POST['product_id']
                 quantity = request.POST['quantity']
                 try:
+                    quantity = int(quantity)
                     cart_product = CartProduct.objects.get(
                         user_id=user.id, product_id=product_id)
                     cart_product.quantity += quantity
@@ -36,6 +37,9 @@ class CartProductView():
                         product=Product.objects.get(pk=product_id),
                         user=User.objects.get(pk=user.id))
                     cart_product.save()
+                return render(request, 'cart/home.html', {
+                    "cart": cart_product,
+                    })
         return redirect('login')
 
     @classmethod

@@ -26,8 +26,9 @@ class ProductView:
         form = ProductForm()
         if request.user.is_authenticated:
             user = request.user
+            print(request.FILES)
             if request.method == 'POST':
-                form = ProductForm(request.POST or None)
+                form = ProductForm(request.POST or None,request.FILES)
                 if form.is_valid():
                     product = form.save(commit=False)
                     product.user = user
@@ -47,9 +48,11 @@ class ProductView:
             form = ProductForm(instance=product)
             user = request.user
             if request.method == 'POST':
-                form = ProductForm(request.POST, instance=product)
+                form = ProductForm(request.POST,request.FILES, instance=product)
                 if form.is_valid():
+                   
                     product = form.save(commit=False)
+                   
                     product.user = user
                     product.save()
 
@@ -72,6 +75,19 @@ class ProductView:
                 product.delete()
                 return redirect('list_products')
         return redirect('login')
+    
+    @classmethod
+    def view_product(cls, request, product_id):
+        product = get_object_or_404(Product, id=product_id)
+        if request.user.is_authenticated:
+            if request.method == 'GET':
+                return render(request, 'product/view_product.html', {
+                    'product': product
+                })
+        return redirect('login')
+
+    
+        
 
     @classmethod
     def search_product(cls, request):
