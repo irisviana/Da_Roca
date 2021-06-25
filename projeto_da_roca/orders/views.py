@@ -5,8 +5,8 @@ from products.models import Product
 from users.models import User, Address
 from .models import CartProduct, Order, OrderProduct, Payment
 
-class CartProductView():
 
+class CartProductView:
     @classmethod
     def list(cls, request):
         if request.user.is_authenticated:
@@ -79,6 +79,7 @@ class CartProductView():
                     cart_product.save()
             return redirect('cart')
         return redirect('login')
+
 
 class ConfirmOrderView:
     @classmethod

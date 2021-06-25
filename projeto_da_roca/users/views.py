@@ -11,6 +11,7 @@ from .models import Address
 from .models import DeliveryTime
 from .models import ServiceAddress
 from .models import User
+from orders.models import Order
 
 
 # Create your views here.
@@ -49,6 +50,7 @@ class UserView:
         else:
             form = UserForm()
         return render(request, 'registration/create_customer.html', {'form': form})
+
     @classmethod
     def view_seller(cls, request, user_id):
         seller = get_object_or_404(User, id=user_id)
@@ -534,4 +536,16 @@ class DeliveryTimeView:
                 delivery_time.delete()
 
             return redirect('list_delivery_time', service_address_id=service_address_id)
+        return redirect('login')
+
+
+class OrderView:
+    @classmethod
+    def list_order(cls, request):
+        if request.user.is_authenticated:
+            user = get_object_or_404(User, username=request.user.username)
+            orders = Order.objects.filter(user=user)
+
+            return render(request, '../templates/orders/list_user_orders.html', {'orders': orders})
+
         return redirect('login')

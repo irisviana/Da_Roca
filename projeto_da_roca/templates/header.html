@@ -19,7 +19,7 @@
 
             {% if request.user.is_authenticated %}
                 <li>
-                    <a class="btn btn-secondary btn-nav" href="{% url 'customer_home' %}" title="Minha conta">
+                    <a class="btn btn-secondary btn-nav" href="{% url 'list_user_orders' %}" title="Minha conta">
                         <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>
                         {{ request.user.first_name }}
                     </a>

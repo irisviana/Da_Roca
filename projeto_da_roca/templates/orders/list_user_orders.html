@@ -1,0 +1,64 @@
+{% extends 'users_profile/customer_home_base.html' %}
+
+{% block title %}
+<title>Pedidos</title>
+{% endblock %}
+
+{% block page %}
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Pedidos</h4>
+        </div>
+    </div>
+    <div class="inner_container mt-4">
+        <table class="custom_table mt-5">
+            <thead>
+            <tr>
+                <th>Status</th>
+                <th>Local</th>
+                <th>Método de pagamento</th>
+                <th>Status pagamento</th>
+                <th>Valor Total</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% if orders|length > 0 %}
+                {% for order in orders %}
+                    <tr>
+                        <td>
+                            {% if order.get_status %}
+                                {{ order.get_status }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if order.address %}
+                                {{ order.address.city }} - {{ order.address.state }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if order.payment.type %}
+                                {{ order.payment.get_type }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if order.payment.get_status %}
+                                {{ order.payment.get_status }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if order.total_price %}
+                                {{  order.total_price }}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7">Nenhum pedido feito</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
