@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Product, Category
 from .forms import ProductForm, CategoryForm
@@ -161,7 +162,12 @@ class CategoryView:
             if request.method == 'POST':
                 category_id = request.POST['category_id']
                 category = get_object_or_404(Category, id=category_id)
-                category.delete()
+                product = Product.objects.filter(category=category)
+                if len(product) > 0:
+                    messages.error(request, 'Não é possível excluir categorias com produtos.')
+                else:
+                    category.delete()
+                    messages.success(request, 'Categoria removida com sucesso.')
                 return redirect('list_categories')
         return redirect('login')
 

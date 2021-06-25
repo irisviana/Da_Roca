@@ -686,6 +686,37 @@ class CategoryTest(StaticLiveServerTestCase):
 
         assert 'Verdura' not in driver.page_source
 
+    def test_delete_category_with_product(self):
+        user = User.objects.create(
+            first_name = 'Raquel Vieira',
+            email = 'raquel@gmail.com',
+            cpf = '99999999999',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_seller = True
+        )
+        self.test_login(user)
+        category = Category.objects.create(
+            name='Verdura'
+        )
+
+        Product.objects.create(
+            user=user,
+            name='Alface',
+            variety='Americano',
+            expiration_days=7,
+            price=2,
+            category=category,
+        )
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/user/admin"))
+        driver.find_element_by_xpath("//a[@href=\"/product/categories/list\"]").click()
+
+        driver.find_element_by_xpath(f"//button[@data-query=\"category_id={category.id}\"]").click()
+        driver.find_element_by_xpath("//button[@class=\"btn btn-danger btn-confirm\"]").click()
+
+        assert 'Não é possível excluir categorias com produtos.' in driver.page_source
+
 class CartProductTest(StaticLiveServerTestCase):
 
     @classmethod
