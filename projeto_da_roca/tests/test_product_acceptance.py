@@ -24,7 +24,7 @@ class ProductsTest(StaticLiveServerTestCase):
             cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
-        cls.selenium.get('http://127.0.0.1:8000')
+        cls.selenium.get('http://127.0.0.1:4444')
 
     @classmethod
     def tearDownClass(cls):
@@ -126,3 +126,58 @@ class ProductsTest(StaticLiveServerTestCase):
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{-1}"))
         assert 'teste' not in driver.page_source
+
+    def test_product_search_with_name(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+        )
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+
+        driver = self.selenium
+        self.test_login()
+        driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
+        search_input = driver.find_element_by_id('search_')
+        driver.find_element_by_xpath("//input[@id=\"produto\"]").click()
+        search_input.send_keys(maca_product.name)
+        driver.find_element_by_id("button-addon3").click()
+        assert maca_product.name in driver.page_source
+
+    def test_product_search_with_name_error(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+        )
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+
+        driver = self.selenium
+        self.test_login()
+        driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
+        search_input = driver.find_element_by_id('search_')
+        driver.find_element_by_xpath("//input[@id=\"produto\"]").click()
+        search_input.send_keys(maca_product.name)
+        assert maca_product.name not in driver.page_source

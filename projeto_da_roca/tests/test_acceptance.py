@@ -364,6 +364,41 @@ class UsersTest(StaticLiveServerTestCase):
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, f"/user/seller/view/view/{-1}"))
         assert 'teste' not in driver.page_source
+
+    def test_seller_search_with_name(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_seller=True,
+        )
+
+        driver = self.selenium
+        self.test_login()
+        driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
+        search_input = driver.find_element_by_id("search_")
+        search_input.send_keys(user.first_name)
+        driver.find_element_by_id("button-addon3").click()
+        assert user.first_name in driver.page_source
+
+    def test_seller_search_with_name_error(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_seller=False,
+        )
+
+        driver = self.selenium
+        self.test_login()
+        driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
+        search_input = driver.find_element_by_id("search_")
+        search_input.send_keys(user.first_name)
+        assert user.first_name not in driver.page_source
+
+
 class DeliveryTimeTest(StaticLiveServerTestCase):
 
     @classmethod
