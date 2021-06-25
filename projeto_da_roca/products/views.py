@@ -99,7 +99,7 @@ class ProductView:
             if request.method == 'GET':
                 search_string = request.GET.get('search')
                 products = Product.objects.filter(Q(name__icontains=search_string))
-                return render(request, '../templates/users_profile/customer_home_base.html', {'products': products})
+                return render(request, '../templates/users_profile/search_seller_product.html', {'products': products})
 
         return redirect('login')
 
