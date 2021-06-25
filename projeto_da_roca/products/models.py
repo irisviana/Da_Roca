@@ -1,15 +1,13 @@
 from django.db import models
 from users.models import User
 
-
-# Create your models here.
-
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=False)
     name = models.CharField(max_length=30, null=False, blank=False, unique=True)
 
     def __str__(self):
         return u'{0}'.format(self.name)
+
 class Product(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=False, blank=False)
@@ -19,4 +17,9 @@ class Product(models.Model):
     price = models.FloatField(null=True, blank=True)
     stock_amount = models.IntegerField(null=True, blank=True)
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, null=False, blank=False)
+               Category, on_delete=models.CASCADE, null=False, blank=False)
+    product_pic = models.ImageField(upload_to='static/productImages/',default='static/productImages/img_default.png')
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=False, blank=False)

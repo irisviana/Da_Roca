@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from orders.models import CartProduct
 from products.models import Category, Product
-from users.models import User, DeliveryTime, ServiceAddress
+from users.models import User, DeliveryTime, ServiceAddress, Address
 
 env = environ.Env()
 
@@ -21,7 +21,7 @@ class UsersTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        
+
         cls.selenium = None
         if TEST_ON_CHROME:
             cls.selenium = webdriver.Chrome(executable_path=env('CHROMEDRIVER_PATH'))
@@ -347,6 +347,57 @@ class UsersTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath("//div[@id=\"includedModalRemoveProducer\"]/div/div/div/button[@class=\"btn btn-primary w-50\"]").click()
         assert user_to_remove.first_name in driver.page_source
 
+    def test_visualize_existent_producer(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+        self.test_login(user)
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, f"/user/seller/view/{user.id}"))
+        assert user.first_name in driver.page_source
+
+    def test_visualize_inexistent_producer(self):
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, f"/user/seller/view/view/{-1}"))
+        assert 'teste' not in driver.page_source
+
+    def test_seller_search_with_name(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_seller=True,
+        )
+
+        driver = self.selenium
+        self.test_login()
+        driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
+        search_input = driver.find_element_by_id("search_")
+        search_input.send_keys(user.first_name)
+        driver.find_element_by_id("button-addon3").click()
+        assert user.first_name in driver.page_source
+
+    def test_seller_search_with_name_error(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_seller=False,
+        )
+
+        driver = self.selenium
+        self.test_login()
+        driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
+        search_input = driver.find_element_by_id("search_")
+        search_input.send_keys(user.first_name)
+        assert user.first_name not in driver.page_source
+
 
 class DeliveryTimeTest(StaticLiveServerTestCase):
 
@@ -434,7 +485,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath(f"//a[@href=\"/user/delivery_time/create/{service_address.id}\"]").click()
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Quinta-feira']").click()
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
-        
+
         assert 'Quando você irá atender?' == driver.title
 
     def test_update_delivery_time(self):
@@ -468,11 +519,11 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
 
         # Click edit button to start editing delivery time
         driver.find_element_by_xpath(f"//a[@href=\"/user/delivery_time/update/{delivery_time.id}\"]").click()
-        
+
         # Update fields
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Sexta-feira']").click()
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
-        
+
         assert '13:00' in driver.page_source and 'Sexta-feira' in driver.page_source
 
     def test_update_delivery_time_with_error(self):
@@ -506,13 +557,13 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
 
         # Click edit button to start editing delivery time
         driver.find_element_by_xpath(f"//a[@href=\"/user/delivery_time/update/{delivery_time.id}\"]").click()
-        
+
         # Update fields
         time_input = driver.find_element_by_name("time")
         time_input.send_keys('')
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Sexta-feira']").click()
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
-        
+
         assert 'Quando você irá atender?' == driver.title
 
     def test_delete_delivery_time(self):
@@ -566,7 +617,7 @@ class CategoryTest(StaticLiveServerTestCase):
             cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
 
         cls.selenium.get('http://127.0.0.1:8000')
-    
+
     @classmethod
     def tearDownClass(cls):
         cls.selenium.quit()
@@ -607,7 +658,7 @@ class CategoryTest(StaticLiveServerTestCase):
         search_input.send_keys('Frutas')
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         assert 'Frutas' in driver.page_source
-    
+
     def test_create_category_with_error_name(self):
         user = User.objects.create(
             first_name = 'Raquel Vieira',
@@ -664,11 +715,42 @@ class CategoryTest(StaticLiveServerTestCase):
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, "/user/admin"))
         driver.find_element_by_xpath("//a[@href=\"/product/categories/list\"]").click()
-        
+
         driver.find_element_by_xpath(f"//button[@data-query=\"category_id={category.id}\"]").click()
         driver.find_element_by_xpath("//button[@class=\"btn btn-danger btn-confirm\"]").click()
 
         assert 'Verdura' not in driver.page_source
+
+    def test_delete_category_with_product(self):
+        user = User.objects.create(
+            first_name = 'Raquel Vieira',
+            email = 'raquel@gmail.com',
+            cpf = '99999999999',
+            password = 'pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_seller = True
+        )
+        self.test_login(user)
+        category = Category.objects.create(
+            name='Verdura'
+        )
+
+        Product.objects.create(
+            user=user,
+            name='Alface',
+            variety='Americano',
+            expiration_days=7,
+            price=2,
+            category=category,
+        )
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/user/admin"))
+        driver.find_element_by_xpath("//a[@href=\"/product/categories/list\"]").click()
+
+        driver.find_element_by_xpath(f"//button[@data-query=\"category_id={category.id}\"]").click()
+        driver.find_element_by_xpath("//button[@class=\"btn btn-danger btn-confirm\"]").click()
+
+        assert 'Não é possível excluir categorias com produtos.' in driver.page_source
 
 class CartProductTest(StaticLiveServerTestCase):
 
@@ -684,7 +766,7 @@ class CartProductTest(StaticLiveServerTestCase):
             cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
 
         cls.selenium.get('http://127.0.0.1:8000')
-    
+
     @classmethod
     def tearDownClass(cls):
         cls.selenium.quit()
@@ -707,6 +789,32 @@ class CartProductTest(StaticLiveServerTestCase):
         password_input.send_keys('abcde123456')
         driver.find_element_by_xpath('//input[@value="Entrar"]').click()
         assert 'email ou senha estão incorretos' not in driver.page_source
+
+    def test_create_cart_product(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+
+        driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{maca_product.id}"))
+        driver.find_element_by_xpath("//button[@title=\"Comprar agora\"]").click()
+        assert maca_product.name in driver.page_source and 'Cesta de compras' in driver.page_source
 
     def test_increment_cart_product(self):
         user = User.objects.create(
@@ -865,3 +973,87 @@ class CartProductTest(StaticLiveServerTestCase):
         quantity.send_keys(Keys.TAB)
         WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[@class=\"alert cart-item message error\"]")))
         assert 'Quantidade de estoque excedida.' in driver.page_source
+
+    def test_create_order(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        )
+        Address.objects.create(
+            user = user,
+            address_type = 'user',
+            zip_code = '55370000',
+            state = 'PE',
+            city = 'Garanhuns',
+            district = 'Boa Vista',
+            street = 'Rua rua rua rua',
+            house_number = 123,
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        CartProduct.objects.create(
+            user=user,
+            product=maca_product,
+            quantity=20
+        )
+        driver.get('%s%s' % (self.live_server_url, f"/order/cart/"))
+        driver.find_element_by_xpath("//a[@title=\"Prosseguir compra\"]").click()
+        driver.find_element_by_class_name("address").click()
+        driver.find_element_by_id("C").click()
+        driver.find_element_by_xpath("//button[@title=\"Finalizar compra\"]").click()
+        assert 'Pedido feito com sucesso.' in driver.page_source
+
+    def test_create_order_back_to_cart(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        )
+        Address.objects.create(
+            user = user,
+            address_type = 'user',
+            zip_code = '55370000',
+            state = 'PE',
+            city = 'Garanhuns',
+            district = 'Boa Vista',
+            street = 'Rua rua rua rua',
+            house_number = 123,
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        CartProduct.objects.create(
+            user=user,
+            product=maca_product,
+            quantity=20
+        )
+        driver.get('%s%s' % (self.live_server_url, f"/order/cart/"))
+        driver.find_element_by_xpath("//a[@title=\"Prosseguir compra\"]").click()
+        driver.find_element_by_xpath("//a[@title=\"Voltar para o carrinho\"]").click()
+        assert 'Cesta de compras' in driver.page_source

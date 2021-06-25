@@ -181,7 +181,7 @@
     outline: 0px !important;
   }
 
-  .form-control {
+  .form-control, .custom-file-label{
     border: 1px solid var(--color-primary);
     background: var(--color-light);
     color: var(--color-primary);
@@ -288,6 +288,16 @@
   .actions > * {
     flex: 0 1 80px;
     margin: 0 1em 0 0;
+  }
+
+  .list-group .list-group-item.active {
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    color: var(--color-white);
+  }
+
+  .list-group .list-group-item.active:hover, .list-group .list-group-item.active:active {
+    color: var(--color-white);
   }
   
   /* 2- ADMIN CARDS */
@@ -413,6 +423,7 @@
     text-decoration: none;
   }
   /* 5- FIM DE CUSTOM TABLE */
+
 
   /* 6- CART ITEM CARD */
   .cart-item {
@@ -550,3 +561,9 @@
     flex: 0 0 35%;
   }
   /* 6- FIM DE CART ITEM CARD */
+
+  #confirm-container {
+    max-height: 400px;
+    overflow: hidden;
+    overflow-y: auto;
+  }

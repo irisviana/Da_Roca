@@ -47,9 +47,9 @@
                                     {% comment %} Foto do produto aqui {% endcomment %}
                                 </div>
                                 <div>
-                                    <h5>{{ cart_product.product.name }}</h5>
+                                    <h5><a href="{% url 'view_product' cart_product.product.id %}">{{ cart_product.product.name }}</a></h5>
                                     <p>{{ cart_product.product.variety }}</p>
-                                    <p>Vendedor: {{ cart_product.user.first_name }}</p>
+                                    <p>Vendedor: <a href="{% url 'view_seller' cart_product.product.user.id %}">{{ cart_product.user.first_name }}</a></p>
                                 </div>
                             </div>
                             <div class="unit-value">
@@ -97,5 +97,10 @@
                 </div>
             {% endif %}
         </div>
+        {% if cart|length > 0%}
+            <div class="my-2 mx-auto w-25">
+                <a href="{% url 'confirm-order' %}" type="submit" class="btn btn-primary " title="Prosseguir compra">Prosseguir compra</a>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

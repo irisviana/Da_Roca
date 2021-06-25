@@ -11,6 +11,7 @@ from .models import Address
 from .models import DeliveryTime
 from .models import ServiceAddress
 from .models import User
+from orders.models import Order
 
 
 # Create your views here.
@@ -38,7 +39,7 @@ class UserView:
     @classmethod
     def create_users(cls, request):
         if request.method == 'POST':
-            form = UserForm(request.POST)
+            form = UserForm(request.POST,request.FILES)
             password = request.POST['password']
             if form.is_valid():
                 user = form.save()
@@ -49,6 +50,19 @@ class UserView:
         else:
             form = UserForm()
         return render(request, 'registration/create_customer.html', {'form': form})
+
+    @classmethod
+    def view_seller(cls, request, user_id):
+        seller = get_object_or_404(User, id=user_id)
+        service_adds = ServiceAddress.objects.filter(user=seller)
+        deliveryTimes = DeliveryTime.objects.filter(service_address=service_adds)
+        if request.user.is_authenticated:
+            if request.method == 'GET':
+                return render(request, 'seller/view_seller.html', {
+                    'seller':  seller, 'service_adds':service_adds,
+                    "deliveryTimes": deliveryTimes
+                })
+        return redirect('login')
 
     @classmethod
     def update_users(cls, request):
@@ -66,7 +80,7 @@ class UserView:
         if request.user.is_authenticated:
 
             if request.method == 'POST':
-                form = UserUpdateForm(request.POST, instance=user)
+                form = UserUpdateForm(request.POST, request.FILES, instance=user)
                 if form.is_valid():
                     user = form.save()
 
@@ -308,7 +322,7 @@ class UserView:
             if request.method == 'GET':
                 search_string = request.GET.get('search')
                 sellers = User.objects.filter(Q(first_name__icontains=search_string) | Q(last_name__icontains=search_string),is_seller=True)
-                return render(request, '../templates/users_profile/customer_home_base.html', {'sellers': sellers})
+                return render(request, '../templates/users_profile/search_seller_product.html', {'sellers': sellers})
 
         return redirect('login')
 
@@ -522,4 +536,16 @@ class DeliveryTimeView:
                 delivery_time.delete()
 
             return redirect('list_delivery_time', service_address_id=service_address_id)
+        return redirect('login')
+
+
+class OrderView:
+    @classmethod
+    def list_order(cls, request):
+        if request.user.is_authenticated:
+            user = get_object_or_404(User, username=request.user.username)
+            orders = Order.objects.filter(user=user)
+
+            return render(request, '../templates/orders/list_user_orders.html', {'orders': orders})
+
         return redirect('login')

@@ -1,6 +1,8 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 
-from .views import UserView, AddressView, DeliveryTimeView, ServiceAddressView
+from .views import UserView, AddressView, DeliveryTimeView, ServiceAddressView, OrderView
 
 urlpatterns = [
     path('create', UserView.create_users, name='create_customer'),
@@ -28,6 +30,7 @@ urlpatterns = [
     path('service_address/delete', ServiceAddressView.delete_service_address, name='delete_service_address'),
     path('service_address/update/<int:service_address_id>', ServiceAddressView.update_service_address,
          name='update_service_address'),
+    path('order/list', OrderView.list_order, name='list_user_orders'),
 
     path('customer_home_first', UserView.customer_home_first, name='customer_home_first'),
     path('admin/', UserView.admin_home, name='home_admin'),
@@ -47,4 +50,9 @@ urlpatterns = [
     path('seller/refuse_seller_request', UserView.refuse_seller_request, name='refuse_request_seller'),
     path('seller/approve_seller_request', UserView.approve_seller_request, name='approve_request_seller'),
     path('seller/make_admin', UserView.make_admin, name='admin_make'),
+    path('seller/view/<int:user_id>', UserView.view_seller, name='view_seller'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA__PRODUCT_URL,
+                          document_root=settings.MEDIA_PRODUCT_ROOT)

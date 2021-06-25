@@ -1,0 +1,51 @@
+<!-- templates/product/create.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} 
+<title>Visualizar produto</title>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+
+<body>
+  <div class="wrapper">
+    <div class="product-img">
+      <img src="{{ product.product_pic.url}}" height="420" width="327">
+    </div>
+    <div class="product-info">
+      <div class="product-text">
+        <h1>{{ product.name }}</h1>
+        <h2>Vendido por {{ product.user.first_name }}</h2>
+        <p>Categoria | {{ product.category }} <br>Preço por UN | {{ product.price }}R$ </p>
+       
+      </div>
+      <div class="product-price-btn">
+        <form method="POST" action="{% url 'create_favorite' %}">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{product.id}}">
+            <button class="favorite" type="submit" title="{% if favorites|length > 0 %}Favoritar{% else %}Desfavoritar{%endif%}">
+              {% if favorites|length > 0 %}Favoritar{% else %}Desfavoritar{%endif%}
+            </button>
+        </form>
+ 
+        <form action="{% url 'create-cart'%}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="product_id", value="{{product.id}}">
+          <input type="hidden" name="quantity", value="1">
+          <button  type="submit" title="Comprar agora">Comprar agora</button>
+        </form> 
+        
+      </div>
+    </div>
+  </div>
+
+</body>
+
+
+{% endblock %}
