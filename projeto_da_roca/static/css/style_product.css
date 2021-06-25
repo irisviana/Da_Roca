@@ -99,3 +99,12 @@
   .product-price-btn button:hover {
     background-color:#0F8D50;
   }
+
+  #div_id_product_pic .text-break{
+    overflow: hidden;
+  }
+  label[for="id_product_pic"]::after{
+    content: "Adicionar foto";
+    background-color: var(--color-primary);
+    color: white;
+  }
