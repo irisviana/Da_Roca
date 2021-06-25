@@ -54,7 +54,6 @@ class UserView:
         seller = get_object_or_404(User, id=user_id)
         service_adds = ServiceAddress.objects.filter(user=seller)
         deliveryTimes = DeliveryTime.objects.filter(service_address=service_adds)
-        
         if request.user.is_authenticated:
             if request.method == 'GET':
                 return render(request, 'seller/view_seller.html', {
