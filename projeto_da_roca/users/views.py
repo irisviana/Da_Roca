@@ -320,7 +320,7 @@ class UserView:
             if request.method == 'GET':
                 search_string = request.GET.get('search')
                 sellers = User.objects.filter(Q(first_name__icontains=search_string) | Q(last_name__icontains=search_string),is_seller=True)
-                return render(request, '../templates/users_profile/customer_home_base.html', {'sellers': sellers})
+                return render(request, '../templates/users_profile/search_seller_product.html', {'sellers': sellers})
 
         return redirect('login')
 
