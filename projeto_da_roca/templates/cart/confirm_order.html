@@ -23,23 +23,20 @@
             <h4>Confirmar dados</h4>
         </div>
     </div>
-    {% if error_message %}
-        <div class="alert alert-danger">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-            {% for error in error_message %}
-
-                <li class="error">{{ error|escape }}</li>
-
-            {% endfor %}
-
-        </div>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert cart-item message {{ message.tags }}">
+                <div>{{ message }}</div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        {% endfor %}
     {% endif %}
     <form method="post" id="confirm-form">
         {% csrf_token %}
-        <input name="payment_method" id="payment_method" hidden value="">
-        <input name="address" id="address" hidden value="">
+        <input type="hidden" name="payment_method" id="payment_method" value="">
+        <input type="hidden" name="address" id="address" value="">
 
         <div class="row mb-3">
             <div class="col-6">
@@ -69,11 +66,11 @@
             <div class="col-6">
 
                 <div class="list-group">
-                    <a id="cash" class="list-group-item list-group-item-action payment">
+                    <a id="C" class="list-group-item list-group-item-action payment">
                         Dinheiro
                     </a>
-                    <a id="credit_card" class="list-group-item list-group-item-action payment">Cartão de credito</a>
-                    <a id="debit_card" class="list-group-item list-group-item-action payment">Cartão de debito</a>
+                    <a id="CC" class="list-group-item list-group-item-action payment">Cartão de credito</a>
+                    <a id="DC" class="list-group-item list-group-item-action payment">Cartão de debito</a>
                 </div>
             </div>
         </div>
