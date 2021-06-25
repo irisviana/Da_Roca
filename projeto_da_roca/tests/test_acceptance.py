@@ -977,7 +977,7 @@ class CartProductTest(StaticLiveServerTestCase):
         )
         driver.get('%s%s' % (self.live_server_url, f"/order/cart/"))
         driver.find_element_by_xpath("//a[@title=\"Prosseguir compra\"]").click()
-        driver.find_element_by_id("1").click()
+        driver.find_element_by_class_name("address").click()
         driver.find_element_by_id("C").click()
         driver.find_element_by_xpath("//button[@title=\"Finalizar compra\"]").click()
         assert 'Pedido feito com sucesso.' in driver.page_source
