@@ -1,6 +1,5 @@
 from django.db import models
 from django.db.models.deletion import CASCADE
-from django.db.models.fields import DecimalField
 
 from products.models import Product
 from users.models import User, Address
