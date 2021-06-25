@@ -4,7 +4,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 
 from users.models import User
-from products.models import Category
+from products.models import Category, Product, Favorite
 
 env = environ.Env()
 
@@ -104,3 +104,94 @@ class ProductsTest(StaticLiveServerTestCase):
         stock_amount.send_keys('50')
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         assert 'Cadastre seu produto' in driver.page_source 
+
+class FavoritesTest(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.selenium = None
+        if TEST_ON_CHROME:
+            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+        elif TEST_ON_FIREFOX:
+            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+
+        #Choose your url to visit
+        cls.selenium.get('http://127.0.0.1:8000')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+    
+    def test_login(self, user=False):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password = 'pbkdf2_sha256$216000$Dq1SuZLYh6Hu$Lo2SXFFPL08fXk4HZ2USt2lODDc/FwOZYt3L/1JZ3As=',
+            is_admin = True
+        ) if not user else user
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = driver.find_element_by_name("username")
+        username_input.send_keys(user.email)
+        password_input = driver.find_element_by_name("password")
+        password_input.send_keys('99102904')
+        driver.find_element_by_xpath('//input[@value="Entrar"]').click()
+        assert 'email ou senha estão incorretos' not in driver.page_source
+
+    def test_create_favorite(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$216000$Dq1SuZLYh6Hu$Lo2SXFFPL08fXk4HZ2USt2lODDc/FwOZYt3L/1JZ3As=',
+            is_admin = True
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+
+        driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{maca_product.id}"))
+        driver.find_element_by_class_name("favorite").click()
+        assert "Desfavoritar" not in driver.page_source
+
+    def test_delete_favorite(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$216000$Dq1SuZLYh6Hu$Lo2SXFFPL08fXk4HZ2USt2lODDc/FwOZYt3L/1JZ3As=',
+            is_admin = True
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        Favorite.objects.create(user=user, product=maca_product)
+
+        driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{maca_product.id}"))
+        driver.find_element_by_class_name("favorite").click()
+        assert "Favoritar" not in driver.page_source
