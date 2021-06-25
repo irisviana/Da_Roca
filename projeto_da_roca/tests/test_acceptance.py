@@ -471,7 +471,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         )
 
         delivery_time = DeliveryTime.objects.create(
-            service_address = service_address,
+            service_address=service_address,
             time='13:00',
             day='thursday'
         )
@@ -509,7 +509,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         )
 
         delivery_time = DeliveryTime.objects.create(
-            service_address = service_address,
+            service_address=service_address,
             time='13:00',
             day='thursday'
         )

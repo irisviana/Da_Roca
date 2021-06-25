@@ -78,7 +78,7 @@ class UserView:
         if request.user.is_authenticated:
 
             if request.method == 'POST':
-                form = UserUpdateForm(request.POST, instance=user)
+                form = UserUpdateForm(request.POST, request.FILES, instance=user)
                 if form.is_valid():
                     user = form.save()
 

@@ -30,7 +30,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', 'f7aabb64dd16.ngrok.io']
+ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', '39f84bf249d0.ngrok.io']
 
 
 # Application definition

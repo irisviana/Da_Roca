@@ -1,11 +1,10 @@
-from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
+from django.shortcuts import get_object_or_404, render, redirect
 
-from .models import CartProduct
-from users.models import User
 from products.models import Product
+from users.models import User, Address
+from .models import CartProduct, Order, OrderProduct, Payment
 
-# Create your views here.
 class CartProductView():
 
     @classmethod
@@ -83,3 +82,65 @@ class CartProductView():
                     cart_product.save()
             return redirect('cart')
         return redirect('login')
+
+class ConfirmOrderView:
+    @classmethod
+    def list(cls, request):
+        user = get_object_or_404(User, id=request.user.id)
+        if request.user.is_authenticated:
+            cart = CartProduct.objects.filter(user_id=user.id).order_by('-id')
+            if len(cart) > 0:
+                if request.method == "POST":
+                    payment_method = request.POST.get('payment_method')
+                    address_id = request.POST.get('address')
+                    address = None
+                    if not payment_method:
+                        messages.error(request, 'Selecione um método de pagamento')
+                        return redirect('confirm-order')
+                    if not address_id:
+                        messages.error(request, 'Selecione um endereço de entrega')
+                        return redirect('confirm-order')
+                    try:
+                        address = Address.objects.get(id=address_id, user=user)
+                        if not address:
+                            messages.error(request, 'O endereço selecionado não existe')
+                    except Address.DoesNotExist:
+                        messages.error(request, 'Endereço inválido, tente novamente')
+                        return redirect('confirm-order')
+
+                    total_price = ConfirmOrderView.get_total_price(cart)
+                    payment = Payment(type=payment_method, status=0)
+                    payment.save()
+                    order = Order(
+                        status=0, address=address, user=user, payment=payment, total_price=total_price)
+                    order.save()
+
+                    for c in cart:
+                        orderProduct = OrderProduct(
+                            quantity=c.quantity, product=c.product, order=order)
+                        orderProduct.save()
+
+                        c.delete()
+
+                    messages.success(request, 'Pedido feito com sucesso.')
+                    return redirect('cart')
+
+                addresses = Address.objects.filter(user=user)
+                cart = CartProduct.objects.filter(user_id=user.id).order_by('-id')
+                return render(request, 'cart/confirm_order.html', {
+                    "cart": cart,
+                    "addresses": addresses,
+                })
+
+            return redirect('cart')
+        return redirect('login')
+
+    @staticmethod
+    def get_total_price(cart):
+        total = 0
+
+        if len(cart):
+            for c in cart:
+                total += c.product.price * c.quantity
+
+        return total
