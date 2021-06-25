@@ -103,8 +103,8 @@ class ProductsTest(StaticLiveServerTestCase):
         stock_amount =  driver.find_element_by_name('stock_amount')
         stock_amount.send_keys('50')
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
-        assert 'Cadastre seu produto' in driver.page_source 
-        
+        assert 'Cadastre seu produto' in driver.page_source
+
     def test_visualize_existent_product(self):
         producer_rodrigo = User.objects.create(
             first_name = 'Iris Viana',
@@ -119,14 +119,10 @@ class ProductsTest(StaticLiveServerTestCase):
         product = Product.objects.create(user=producer_rodrigo,name="Abacate",expiration_days=2,price=10,category=fruit_category)
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{product.id}"))
-        assert product.name in driver.page_source 
+        assert product.name in driver.page_source
     
     def test_visualize_inexistent_product(self):
        
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{-1}"))
-        assert 'teste' not in driver.page_source 
-        
-        
-     
-        
+        assert 'teste' not in driver.page_source

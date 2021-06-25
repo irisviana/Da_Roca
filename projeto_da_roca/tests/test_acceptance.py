@@ -21,7 +21,7 @@ class UsersTest(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        
+
         cls.selenium = None
         if TEST_ON_CHROME:
             cls.selenium = webdriver.Chrome(executable_path=env('CHROMEDRIVER_PATH'))
@@ -358,12 +358,12 @@ class UsersTest(StaticLiveServerTestCase):
         self.test_login(user)
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, f"/user/seller/view/{user.id}"))
-        assert user.first_name in driver.page_source 
-    
+        assert user.first_name in driver.page_source
+
     def test_visualize_inexistent_producer(self):
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, f"/user/seller/view/view/{-1}"))
-        assert 'teste' not in driver.page_source 
+        assert 'teste' not in driver.page_source
 class DeliveryTimeTest(StaticLiveServerTestCase):
 
     @classmethod
@@ -450,7 +450,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath(f"//a[@href=\"/user/delivery_time/create/{service_address.id}\"]").click()
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Quinta-feira']").click()
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
-        
+
         assert 'Quando você irá atender?' == driver.title
 
     def test_update_delivery_time(self):
@@ -484,11 +484,11 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
 
         # Click edit button to start editing delivery time
         driver.find_element_by_xpath(f"//a[@href=\"/user/delivery_time/update/{delivery_time.id}\"]").click()
-        
+
         # Update fields
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Sexta-feira']").click()
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
-        
+
         assert '13:00' in driver.page_source and 'Sexta-feira' in driver.page_source
 
     def test_update_delivery_time_with_error(self):
@@ -522,13 +522,13 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
 
         # Click edit button to start editing delivery time
         driver.find_element_by_xpath(f"//a[@href=\"/user/delivery_time/update/{delivery_time.id}\"]").click()
-        
+
         # Update fields
         time_input = driver.find_element_by_name("time")
         time_input.send_keys('')
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Sexta-feira']").click()
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
-        
+
         assert 'Quando você irá atender?' == driver.title
 
     def test_delete_delivery_time(self):
@@ -582,7 +582,7 @@ class CategoryTest(StaticLiveServerTestCase):
             cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
 
         cls.selenium.get('http://127.0.0.1:8000')
-    
+
     @classmethod
     def tearDownClass(cls):
         cls.selenium.quit()
@@ -623,7 +623,7 @@ class CategoryTest(StaticLiveServerTestCase):
         search_input.send_keys('Frutas')
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
         assert 'Frutas' in driver.page_source
-    
+
     def test_create_category_with_error_name(self):
         user = User.objects.create(
             first_name = 'Raquel Vieira',
@@ -680,7 +680,7 @@ class CategoryTest(StaticLiveServerTestCase):
         driver = self.selenium
         driver.get('%s%s' % (self.live_server_url, "/user/admin"))
         driver.find_element_by_xpath("//a[@href=\"/product/categories/list\"]").click()
-        
+
         driver.find_element_by_xpath(f"//button[@data-query=\"category_id={category.id}\"]").click()
         driver.find_element_by_xpath("//button[@class=\"btn btn-danger btn-confirm\"]").click()
 
@@ -700,7 +700,7 @@ class CartProductTest(StaticLiveServerTestCase):
             cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
 
         cls.selenium.get('http://127.0.0.1:8000')
-    
+
     @classmethod
     def tearDownClass(cls):
         cls.selenium.quit()
