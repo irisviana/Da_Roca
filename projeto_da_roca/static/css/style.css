@@ -560,3 +560,9 @@
     flex: 0 0 35%;
   }
   /* 6- FIM DE CART ITEM CARD */
+
+  #confirm-container {
+    max-height: 400px;
+    overflow: hidden;
+    overflow-y: auto;
+  }

@@ -128,7 +128,7 @@ class ConfirmOrderView:
                     "addresses": addresses,
                 })
 
-            return render('cart')
+            return redirect('cart')
         return redirect('login')
 
     @staticmethod
