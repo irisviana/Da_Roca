@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 from orders.models import CartProduct
 from products.models import Category, Product
-from users.models import User, DeliveryTime, ServiceAddress
+from users.models import User, DeliveryTime, ServiceAddress, Address
 
 env = environ.Env()
 
@@ -724,6 +724,32 @@ class CartProductTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath('//input[@value="Entrar"]').click()
         assert 'email ou senha estão incorretos' not in driver.page_source
 
+    def test_create_cart_product(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+
+        driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{maca_product.id}"))
+        driver.find_element_by_xpath("//button[@title=\"Comprar agora\"]").click()
+        assert maca_product.name in driver.page_source and 'Cesta de compras' in driver.page_source
+
     def test_increment_cart_product(self):
         user = User.objects.create(
             first_name = 'User',
@@ -881,3 +907,87 @@ class CartProductTest(StaticLiveServerTestCase):
         quantity.send_keys(Keys.TAB)
         WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[@class=\"alert cart-item message error\"]")))
         assert 'Quantidade de estoque excedida.' in driver.page_source
+
+    def test_create_order(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        )
+        Address.objects.create(
+            user = user,
+            address_type = 'user',
+            zip_code = '55370000',
+            state = 'PE',
+            city = 'Garanhuns',
+            district = 'Boa Vista',
+            street = 'Rua rua rua rua',
+            house_number = 123,
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        CartProduct.objects.create(
+            user=user,
+            product=maca_product,
+            quantity=20
+        )
+        driver.get('%s%s' % (self.live_server_url, f"/order/cart/"))
+        driver.find_element_by_xpath("//a[@title=\"Prosseguir compra\"]").click()
+        driver.find_element_by_id("1").click()
+        driver.find_element_by_id("C").click()
+        driver.find_element_by_xpath("//button[@title=\"Finalizar compra\"]").click()
+        assert 'Pedido feito com sucesso.' in driver.page_source
+
+    def test_create_order_back_to_cart(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        )
+        Address.objects.create(
+            user = user,
+            address_type = 'user',
+            zip_code = '55370000',
+            state = 'PE',
+            city = 'Garanhuns',
+            district = 'Boa Vista',
+            street = 'Rua rua rua rua',
+            house_number = 123,
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        CartProduct.objects.create(
+            user=user,
+            product=maca_product,
+            quantity=20
+        )
+        driver.get('%s%s' % (self.live_server_url, f"/order/cart/"))
+        driver.find_element_by_xpath("//a[@title=\"Prosseguir compra\"]").click()
+        driver.find_element_by_xpath("//a[@title=\"Voltar para o carrinho\"]").click()
+        assert 'Cesta de compras' in driver.page_source

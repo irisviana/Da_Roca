@@ -2,7 +2,7 @@ from django.db.utils import DataError, IntegrityError
 from django.test import TestCase
 
 from products.models import Category, Product
-from orders.models import CartProduct
+from orders.models import CartProduct, Payment, OrderProduct, Order
 from users.models import User, ServiceAddress, DeliveryTime, Address
 
 
@@ -324,6 +324,17 @@ class CartProductTest(TestCase):
             password="teste",
         )
 
+        self.address = Address.objects.create(
+            user = self.user,
+            address_type = 'user',
+            zip_code = '55370000',
+            state = 'PE',
+            city = 'Garanhuns',
+            district = 'Boa Vista',
+            street = 'Rua rua rua rua',
+            house_number = 123,
+        )
+
         self.category = Category.objects.create(
             user=self.user,
             name='Frutas'
@@ -345,6 +356,7 @@ class CartProductTest(TestCase):
             expiration_days=7,
             stock_amount=50,
             category=self.category,
+            price=3
         )
 
         self.cart_product = CartProduct.objects.create(
@@ -384,3 +396,29 @@ class CartProductTest(TestCase):
         self.cart_product.quantity -= 1
         self.cart_product.save()
         self.assertNotEqual(self.cart_product.quantity, old_cart_product_quantity)
+
+    def test_create_order(self):
+        payment = Payment.objects.create(
+            type='C', status=0
+        )
+        order = Order.objects.create(
+            status=0, address=self.address, user=self.user, payment=payment, total_price=6
+        )
+        OrderProduct.objects.create(
+            quantity=2, product=self.banana, order=order
+        )
+        self.assertTrue(order)
+
+    def test_create_order_incomplete(self):
+        order = None
+        try:
+            order = Order.objects.create(
+                status=0, user=self.user
+            )
+            OrderProduct.objects.create(
+                quantity=2, product=self.banana, order=order
+            )
+        except IntegrityError:
+            self.assertFalse(order)
+
+        
