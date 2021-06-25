@@ -54,3 +54,10 @@ def validate_cpf(cpf):
         return calculated_cpf
 
     return False
+
+
+def check_has_class(classes, occurrence):
+    classes = classes.split(' ')
+    if occurrence in classes:
+        return True
+    return False
