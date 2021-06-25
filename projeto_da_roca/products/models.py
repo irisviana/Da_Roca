@@ -19,4 +19,5 @@ class Product(models.Model):
     price = models.FloatField(null=True, blank=True)
     stock_amount = models.IntegerField(null=True, blank=True)
     category = models.ForeignKey(
-        Category, on_delete=models.CASCADE, null=False, blank=False)
+               Category, on_delete=models.CASCADE, null=False, blank=False)
+    product_pic = models.ImageField(upload_to='static/productImages/',default='static/productImages/img_default.png')

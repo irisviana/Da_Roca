@@ -11,7 +11,7 @@ class ProductForm(forms.ModelForm):
 
     class Meta:
         model = Product
-        fields = ('category', 'name', 'variety',
+        fields = ('product_pic','category', 'name', 'variety',
                   'expiration_days', 'price', 'stock_amount')
 
     def __init__(self, *args, **kwargs):
@@ -22,6 +22,7 @@ class ProductForm(forms.ModelForm):
         self.fields['stock_amount'].widget.attrs['min'] = 0
         self.fields['expiration_days'].widget.attrs['min'] = 0
         self.helper.layout = Layout(
+            Field('product_pic',placeholder='Imagem do produto'),
             Field('category', placeholder='Categoria'),
             Field('name', placeholder='Nome'),
             Field('variety', placeholder='Variedade'),

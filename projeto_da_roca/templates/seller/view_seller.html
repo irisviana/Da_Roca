@@ -1,0 +1,34 @@
+<!-- templates/product/create.html -->
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} 
+<title>Visualizar vendedor</title>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+
+<body>
+  <div class="wrapper">
+    <div class="product-img">
+      <img src="{{ seller.user_pic.url}}" height="420" width="327">
+    </div>
+    <div class="product-info">
+      <div class="product-text">
+        <h1>Produtor | {{ seller.first_name }}</h1>
+        <h2>Contato | {{seller.phone_number}}</h2>
+        <p>Sobre: <br> {{ seller.sale_description }}</p>
+      </div>
+      
+    </div>
+  </div>
+
+</body>
+
+
+{% endblock %}

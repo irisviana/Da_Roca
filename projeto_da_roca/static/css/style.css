@@ -181,7 +181,7 @@
     outline: 0px !important;
   }
 
-  .form-control {
+  .form-control, .custom-file-label{
     border: 1px solid var(--color-primary);
     background: var(--color-light);
     color: var(--color-primary);
@@ -414,6 +414,7 @@
   }
   /* 5- FIM DE CUSTOM TABLE */
 
+
   /* 6- CART ITEM CARD */
   .cart-item {
     display: flex;
@@ -550,3 +551,4 @@
     flex: 0 0 35%;
   }
   /* 6- FIM DE CART ITEM CARD */
+

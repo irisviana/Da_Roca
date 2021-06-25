@@ -1,4 +1,6 @@
 from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 from .views import UserView, AddressView, DeliveryTimeView, ServiceAddressView
 
@@ -47,4 +49,9 @@ urlpatterns = [
     path('seller/refuse_seller_request', UserView.refuse_seller_request, name='refuse_request_seller'),
     path('seller/approve_seller_request', UserView.approve_seller_request, name='approve_request_seller'),
     path('seller/make_admin', UserView.make_admin, name='admin_make'),
+    path('seller/view/<int:user_id>', UserView.view_seller, name='view_seller'),
 ]
+
+if settings.DEBUG:
+        urlpatterns += static(settings.MEDIA__PRODUCT_URL ,
+                              document_root=settings.MEDIA_PRODUCT_ROOT)
