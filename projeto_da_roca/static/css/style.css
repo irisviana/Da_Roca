@@ -414,6 +414,7 @@
   }
   /* 5- FIM DE CUSTOM TABLE */
 
+
   /* 6- CART ITEM CARD */
   .cart-item {
     display: flex;
@@ -550,3 +551,4 @@
     flex: 0 0 35%;
   }
   /* 6- FIM DE CART ITEM CARD */
+

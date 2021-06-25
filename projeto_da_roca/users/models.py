@@ -24,6 +24,7 @@ class User(AbstractUser):
     is_seller = models.BooleanField(default=False, null=True, blank=True)
     seller_status = models.CharField(max_length=1, null=True, blank=True, choices=SELLER_STATUS)
     store_status = models.CharField(default='Fechado', max_length=8, null=True, blank=True)
+    user_pic = models.ImageField(upload_to='static/userImages/',default='static/userImages/img_default.png')
 
 
     def save(self, *args, **kwargs):
