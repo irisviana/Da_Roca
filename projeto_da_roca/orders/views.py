@@ -25,7 +25,6 @@ class CartProductView():
             if request.method == 'POST':
                 product_id = request.POST['product_id']
                 quantity = request.POST['quantity']
-                
                 try:
                     quantity = int(quantity)
                     cart_product = CartProduct.objects.get(

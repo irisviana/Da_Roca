@@ -49,7 +49,6 @@ class UserView:
         else:
             form = UserForm()
         return render(request, 'registration/create_customer.html', {'form': form})
-    
     @classmethod
     def view_seller(cls, request, user_id):
         seller = get_object_or_404(User, id=user_id)
