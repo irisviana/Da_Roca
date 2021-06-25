@@ -1,6 +1,6 @@
 
   .wrapper {
-    height: 420px;
+    height: 450px;
     width: 654px;
     margin: 50px auto;
     border-radius: 7px 7px 7px 7px;
@@ -19,7 +19,7 @@
   .product-img img {
     border-radius: 7px 0 0 7px;
   }
-  
+
   .product-info {
     float: left;
     height: 420px;
@@ -78,10 +78,10 @@
 
   .product-price-btn button {
     float: right;
-    display: inline-block;
+    display: block;
     height: 50px;
     width: 176px;
-    margin: 0 40px 0 16px;
+    margin: 0 40px 16px 16px;
     box-sizing: border-box;
     border: transparent;
     border-radius: 60px;

@@ -26,12 +26,21 @@
        
       </div>
       <div class="product-price-btn">
+        <form method="POST" action="{% url 'create_favorite' %}">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{product.id}}">
+            <button class="favorite" type="submit" title="{% if favorites|length > 0 %}Favoritar{% else %}Desfavoritar{%endif%}">
+              {% if favorites|length > 0 %}Favoritar{% else %}Desfavoritar{%endif%}
+            </button>
+        </form>
+ 
         <form action="{% url 'create-cart'%}" method="POST">
           {% csrf_token %}
           <input type="hidden" name="product_id", value="{{product.id}}">
           <input type="hidden" name="quantity", value="1">
-          <button  type="submit">Comprar agora</button>
+          <button type="submit">Comprar agora</button>
         </form> 
+        
       </div>
     </div>
   </div>

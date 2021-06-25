@@ -2,7 +2,7 @@ from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
 
-from .views import ProductView, CategoryView
+from .views import ProductView, CategoryView, FavoriteView
 
 
 urlpatterns = [
@@ -16,6 +16,9 @@ urlpatterns = [
     path('categories/create', CategoryView.create_category, name='create_category'),
     path('categories/update/<int:category_id>', CategoryView.update_category, name='update_category'),
     path('categories/delete', CategoryView.delete_category, name='delete_category'),
+    path('favorites/create', FavoriteView.create_favorite, name='create_favorite'),
+    path('favorites/list', FavoriteView.list_favorites, name='list_favorites'),
+    path('favorites/delete', FavoriteView.delete_favorite, name='delete_favorite'),
 ]
 
 

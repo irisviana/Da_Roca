@@ -2,7 +2,7 @@
 from django.test import TestCase
 from django.db.utils import IntegrityError
 from users.models import User
-from products.models import Product, Category
+from products.models import Product, Category, Favorite
 
 # Create your tests here.
 
@@ -80,3 +80,51 @@ class ProductTest(TestCase):
 
         except IntegrityError:
             self.assertEqual(self.orange.name, "orange")
+class FavoritesTest(TestCase):
+    def setUp(self):
+        self.user = User.objects.create(
+            first_name="Rodrigo",
+            email="rodrigo@gmail.com",
+            cpf="70550481419",
+            password="teste",
+        )
+
+        self.category = Category.objects.create(
+            user=self.user,
+            name='Frutas'
+        )
+
+        self.banana = Product.objects.create(
+            user=self.user,
+            name='Banana',
+            variety='Prata',
+            expiration_days=7,
+            stock_amount=50,
+            category=self.category,
+        )
+
+        self.favorite = Favorite.objects.create(
+            user=self.user,
+            product=self.banana
+        )
+
+    def test_create_favorite(self):
+        favorite = Favorite.objects.create(
+            user=self.user,
+            product=self.banana
+        )
+
+        self.assertTrue(favorite)
+
+    def test_delete_favoite(self):
+        old_id = self.favorite.id
+        self.favorite.delete()
+
+        search_favorite = None
+        try:
+            search_favorite = Favorite.objects.get(
+                id=old_id)
+        except Favorite.DoesNotExist:
+            self.assertFalse(search_favorite)
+
+
