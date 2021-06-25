@@ -31,6 +31,8 @@
   .product-text {
     height: 300px;
     width: 327px;
+    overflow: hidden;
+    overflow-y: scroll;
   }
   
   .product-text h1 {
@@ -96,4 +98,13 @@
   
   .product-price-btn button:hover {
     background-color:#0F8D50;
+  }
+
+  #div_id_product_pic .text-break{
+    overflow: hidden;
+  }
+  label[for="id_product_pic"]::after{
+    content: "Adicionar foto";
+    background-color: var(--color-primary);
+    color: white;
   }

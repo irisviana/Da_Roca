@@ -21,14 +21,8 @@
     <div class="product-info">
       <div class="product-text">
         <h1>Produtor | {{ seller.first_name }}</h1>
-        {% if service_adds|length > 0 %}
-          {% for service_add in service_adds %}
-          <h2>Estado | {{ service_add.state }}</h2>
-          <h2>Horário de entrega|</h2>
-          {% endfor %}
-        {% endif %}
-        
-        
+        <h2>Contato | {{seller.phone_number}}</h2>
+        <p>Sobre: <br> {{ seller.sale_description }}</p>
       </div>
       
     </div>

@@ -48,9 +48,11 @@ class ProductView:
             form = ProductForm(instance=product)
             user = request.user
             if request.method == 'POST':
-                form = ProductForm(request.POST, instance=product)
+                form = ProductForm(request.POST,request.FILES, instance=product)
                 if form.is_valid():
+                   
                     product = form.save(commit=False)
+                   
                     product.user = user
                     product.save()
 
