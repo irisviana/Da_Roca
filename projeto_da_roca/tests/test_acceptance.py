@@ -347,7 +347,23 @@ class UsersTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath("//div[@id=\"includedModalRemoveProducer\"]/div/div/div/button[@class=\"btn btn-primary w-50\"]").click()
         assert user_to_remove.first_name in driver.page_source
 
-
+    def test_visualize_existent_producer(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+        self.test_login(user)
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, f"/user/seller/view/{user.id}"))
+        assert user.first_name in driver.page_source 
+    
+    def test_visualize_inexistent_producer(self):
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, f"/user/seller/view/view/{-1}"))
+        assert 'teste' not in driver.page_source 
 class DeliveryTimeTest(StaticLiveServerTestCase):
 
     @classmethod
