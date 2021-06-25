@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
-from .models import Product, Category
+from .models import Product, Category, Favorite
 from .forms import ProductForm, CategoryForm
 from django.db.models import Q
 
@@ -81,9 +81,12 @@ class ProductView:
     def view_product(cls, request, product_id):
         product = get_object_or_404(Product, id=product_id)
         if request.user.is_authenticated:
+            user = request.user
             if request.method == 'GET':
+                favorite = Favorite.objects.filter(user=user, product=product)
                 return render(request, 'product/view_product.html', {
-                    'product': product
+                    'product': product,
+                    'favorites': favorite
                 })
         return redirect('login')
 
@@ -175,3 +178,45 @@ def get_categories(request):
     categories = Category.objects.all()
     return {"categories": categories}
 
+class FavoriteView:
+    @classmethod
+    def list_favorites(cls, request):
+        if request.user.is_authenticated:
+            user = request.user
+            favorites = Favorite.objects.filter(user_id=user.id)
+
+            return render(request, 'favorite/home.html', {
+                "favorites": favorites 
+            })
+        return redirect('login')
+            
+    @classmethod
+    def create_favorite(cls, request):
+        if request.user.is_authenticated:
+            user = request.user
+            if request.method == 'POST':
+                product_id = request.POST['product_id']
+                product = Product.objects.get(id=product_id)
+
+                try:
+                    favorite = Favorite.objects.get(user=user, product=product)
+                    favorite.delete()
+                except Favorite.DoesNotExist:
+                    favorite = Favorite(user=user, product=product)
+                    favorite.save()
+
+            return redirect('view_product', product_id=product.id)
+        return redirect('login')
+    
+    @classmethod
+    def delete_favorite(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                favorite_id = request.POST['favorite_id']
+                favorite = get_object_or_404(Favorite, id=favorite_id)
+                favorite.delete()
+
+            return redirect('list_favorites')
+        return redirect('login')
+
+                

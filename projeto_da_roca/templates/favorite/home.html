@@ -1,0 +1,54 @@
+<!-- templates/favorite/home.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Meus produtos favoritos</h4>
+        </div>
+    </div>
+    <div class="inner_container mt-4">
+        <table class="custom_table mt-5">
+            <thead>
+                <tr>
+                    <th>Ações</th>
+                    <th>Produto</th>
+                    <th>Vendedor</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% if favorites|length > 0 %}
+                {% for favorite in favorites %}
+                <tr>
+                    <td>
+                        <div class="actions">
+                            <button type="button"
+                                class="btn btn-danger"
+                                data-toggle="modal"
+                                data-target="#includedModal"
+                                data-query="favorite_id={{ favorite.id }}"
+                                tittle="Remover produto dos meus favoritos">
+                                <span class="fas fa-trash"></span>
+                            </button>
+                        </div>
+                    </td>
+                    <td>{{ favorite.product.name }}</td>
+                    <td>{{ favorite.user.first_name }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="3">Nenhum produto nos meus favoritos</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {% url 'delete_favorite' as action_url %}
+    {% include 'modal.html' with modal_id="includedModal" header="Remover produto dos meus favoritoss" message='Tem certeza que deseja remover esse produto dos meus favoritos?' confirm="Sim" cancel="Cancelar" %}
+{% endblock %}
