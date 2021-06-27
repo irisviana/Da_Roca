@@ -93,17 +93,17 @@ class ConfirmOrderView:
                     address_id = request.POST.get('address')
                     address = None
                     if not payment_method:
-                        messages.error(request, 'Selecione um método de pagamento')
+                        messages.error(request, 'Selecione um método de pagamento.')
                         return redirect('confirm-order')
                     if not address_id:
-                        messages.error(request, 'Selecione um endereço de entrega')
+                        messages.error(request, 'Selecione um endereço de entrega.')
                         return redirect('confirm-order')
                     try:
                         address = Address.objects.get(id=address_id, user=user)
                         if not address:
-                            messages.error(request, 'O endereço selecionado não existe')
+                            messages.error(request, 'O endereço selecionado não existe.')
                     except Address.DoesNotExist:
-                        messages.error(request, 'Endereço inválido, tente novamente')
+                        messages.error(request, 'Endereço inválido, tente novamente.')
                         return redirect('confirm-order')
 
                     total_price = ConfirmOrderView.get_total_price(cart)
@@ -121,7 +121,7 @@ class ConfirmOrderView:
                         c.delete()
 
                     messages.success(request, 'Pedido feito com sucesso.')
-                    return redirect('cart')
+                    return redirect('list_user_orders')
 
                 addresses = Address.objects.filter(user=user)
                 cart = CartProduct.objects.filter(user_id=user.id).order_by('-id')
