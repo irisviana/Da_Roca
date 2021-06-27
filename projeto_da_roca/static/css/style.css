@@ -73,11 +73,11 @@
     padding: 0em;
   }
 
-  header a {
+  a {
     color: var(--color-primary);
   }
 
-  header a:active, header a:hover {
+  a:active, a:hover {
     color: var(--color-primary);
     text-decoration: underline;
   }

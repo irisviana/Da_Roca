@@ -49,7 +49,7 @@
                                 <div>
                                     <h5><a href="{% url 'view_product' cart_product.product.id %}">{{ cart_product.product.name }}</a></h5>
                                     <p>{{ cart_product.product.variety }}</p>
-                                    <p>Vendedor: <a href="{% url 'view_seller' cart_product.product.user.id %}">{{ cart_product.user.first_name }}</a></p>
+                                    <p>Vendedor: <a href="{% url 'view_seller' cart_product.product.user.id %}">{{ cart_product.product.user.first_name }}</a></p>
                                 </div>
                             </div>
                             <div class="unit-value">
