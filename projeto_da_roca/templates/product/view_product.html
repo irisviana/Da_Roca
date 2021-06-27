@@ -29,8 +29,12 @@
         <form method="POST" action="{% url 'create_favorite' %}">
           {% csrf_token %}
           <input type="hidden" name="product_id" value="{{product.id}}">
-            <button class="favorite" type="submit" title="{% if favorites|length > 0 %}Favoritar{% else %}Desfavoritar{%endif%}">
-              {% if favorites|length > 0 %}Favoritar{% else %}Desfavoritar{%endif%}
+            <button class="favorite" type="submit" title="{% if favorites|length > 0 %}Desfavoritar{% else %}Favoritar{%endif%}" style="width:48px; height=48px;">
+              {% if favorites|length > 0 %}
+                <span class="fas fa-heart fa-2x"></span>
+              {% else %}
+                <span class="far fa-heart fa-2x"></span>
+              {% endif %}
             </button>
         </form>
  
