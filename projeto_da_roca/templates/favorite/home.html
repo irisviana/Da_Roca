@@ -18,7 +18,8 @@
                 <tr>
                     <th>Ações</th>
                     <th>Produto</th>
-                    <th>Vendedor</th>
+                    <th>Produtor</th>
+                    <th>Variedade</th>
                 </tr>
             </thead>
             <tbody>
@@ -39,6 +40,7 @@
                     </td>
                     <td>{{ favorite.product.name }}</td>
                     <td>{{ favorite.user.first_name }}</td>
+                    <td>{{ favorite.product.variety}}</td>
                 </tr>
                 {% endfor %}
             {% else %}
