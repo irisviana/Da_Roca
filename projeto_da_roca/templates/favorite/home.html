@@ -18,7 +18,8 @@
                 <tr>
                     <th>Ações</th>
                     <th>Produto</th>
-                    <th>Vendedor</th>
+                    <th>Produtor</th>
+                    <th>Variedade</th>
                 </tr>
             </thead>
             <tbody>
@@ -37,8 +38,9 @@
                             </button>
                         </div>
                     </td>
-                    <td>{{ favorite.product.name }}</td>
-                    <td>{{ favorite.user.first_name }}</td>
+                    <td><a href="{% url 'view_product' favorite.product.id %}">{{ favorite.product.name }}</a></td>
+                    <td><a href="{% url 'view_seller' favorite.product.user.id %}">{{ favorite.user.first_name }}</a></td>
+                    <td>{{ favorite.product.variety}}</td>
                 </tr>
                 {% endfor %}
             {% else %}
