@@ -537,15 +537,3 @@ class DeliveryTimeView:
 
             return redirect('list_delivery_time', service_address_id=service_address_id)
         return redirect('login')
-
-
-class OrderView:
-    @classmethod
-    def list_order(cls, request):
-        if request.user.is_authenticated:
-            user = get_object_or_404(User, username=request.user.username)
-            orders = Order.objects.filter(user=user)
-
-            return render(request, '../templates/orders/list_user_orders.html', {'orders': orders})
-
-        return redirect('login')

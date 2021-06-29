@@ -2,6 +2,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load humanize %}
 
 {% block title %} 
 <title>Visualizar produto</title>
@@ -14,22 +15,35 @@
 {% block content %}
 
 <body>
-  <div class="wrapper">
-    <div class="product-img">
-      <img src="{{ product.product_pic.url}}" height="420" width="327">
+  {% if messages %}
+      {% for message in messages %}
+          <div class="alert cart-item message {{ message.tags }}">
+              <div>{{ message }}</div>
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+      {% endfor %}
+  {% endif %}
+  <div class="d-md-flex flex-md-row p-5 shadow bg-white" style="border-radius: 0.3rem;">
+    <div class="product-img mr-4">
+      <img src="{{ product.product_pic.url}}">
     </div>
-    <div class="product-info">
-      <div class="product-text">
-        <h1>{{ product.name }}</h1>
-        <h2>Vendido por {{ product.user.first_name }}</h2>
-        <p>Categoria | {{ product.category }} <br>Preço por UN | {{ product.price }}R$ </p>
-       
+    <div class="d-flex flex-column justify-content-center w-100">
+      <div class="d-flex flex-column align-items-end mb-5">
+        <h2 class="m-0">{{ product.name }}</h2>
+        <p>{{ product.category }}</p>
+        <p>Vendido por <a href="{% url 'view_seller' product.user.id %}">{{ product.user.first_name }}</a></p>
       </div>
-      <div class="product-price-btn">
-        <form method="POST" action="{% url 'create_favorite' %}">
+      <div class="d-flex flex-column align-items-end mb-4">
+        <h3 class="m-0"><strong>R$ {{ product.price|floatformat:2|intcomma }}</strong></h3>
+        <p>por unidade</p>
+      </div>
+      <div class="d-flex align-self-end">
+        <form class="mr-2" method="POST" action="{% url 'create_favorite' %}">
           {% csrf_token %}
           <input type="hidden" name="product_id" value="{{product.id}}">
-            <button class="favorite" type="submit" title="{% if favorites|length > 0 %}Desfavoritar{% else %}Favoritar{%endif%}" style="width:48px; height=48px;">
+            <button class="btn btn-secondary favorite" type="submit" title="{% if favorites|length > 0 %}Desfavoritar{% else %}Favoritar{%endif%}">
               {% if favorites|length > 0 %}
                 <span class="fas fa-heart fa-2x"></span>
               {% else %}
@@ -37,14 +51,12 @@
               {% endif %}
             </button>
         </form>
- 
-        <form action="{% url 'create-cart'%}" method="POST">
+        <form action="{% url 'create_cart'%}" method="POST">
           {% csrf_token %}
           <input type="hidden" name="product_id", value="{{product.id}}">
           <input type="hidden" name="quantity", value="1">
-          <button  type="submit" title="Comprar agora">Comprar agora</button>
+          <button class="btn btn-primary btn-lg" type="submit" title="Comprar agora">Comprar agora</button>
         </form> 
-        
       </div>
     </div>
   </div>

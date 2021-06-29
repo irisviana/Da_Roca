@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db.models.deletion import CASCADE
 
 from products.models import Product
@@ -39,9 +40,9 @@ class Payment(models.Model):
     
 class Order(models.Model):
     ORDER_STATUS = (
-        (0, 'Espera'),
-        (1, 'Preparação'),
-        (2, 'Entrega'),
+        (0, 'Em Espera'),
+        (1, 'Sendo preparado'),
+        (2, 'Em rota de entrega'),
         (3, 'Concluído'),
         (4, 'Cancelado')
     )
@@ -57,6 +58,10 @@ class Order(models.Model):
     def get_status(self):
         return dict(Order.ORDER_STATUS)[self.status]
 
+    def get_producer(self):
+        order_products = OrderProduct.objects.filter(
+            order=self)
+        return order_products[0].product.user if len(order_products) > 0 else None
 
 class OrderProduct(models.Model):
     quantity = models.IntegerField(null=False, blank=False)
@@ -64,3 +69,26 @@ class OrderProduct(models.Model):
         Product, on_delete=models.CASCADE, null=False, blank=False)
     order = models.ForeignKey(
         Order, on_delete=CASCADE, null=False, blank=False)
+
+class Rating(models.Model):
+    user = models.ForeignKey(
+        User, null=True, blank=False, on_delete=CASCADE)
+    order = models.ForeignKey(
+        Order, null=False, blank=False, on_delete=CASCADE)
+    rate = models.IntegerField(
+        null=False, blank=False, validators=[
+            MinValueValidator(1),MaxValueValidator(5)
+    ])
+    rate_message = models.TextField(null=True, blank=True, max_length=256)
+
+    def get_stars(self):
+        if self.rate == 1:
+            return '1 estrela'
+        elif self.rate == 2:
+            return '2 estrelas'
+        elif self.rate == 3:
+            return '3 estrelas'
+        elif self.rate == 4:
+            return '4 estrelas'
+        elif self.rate == 5:
+            return '5 estrelas'

@@ -1,4 +1,5 @@
 {% extends 'users_profile/customer_home_base.html' %}
+{% load humanize %}
 
 {% block title %}
 <title>Pedidos</title>
@@ -24,10 +25,12 @@
         <table class="custom_table mt-5">
             <thead>
             <tr>
+                <th>Ações</th>
+                <th>Nº do pedido</th>
                 <th>Status</th>
+                <th>Forma de pagamento</th>
                 <th>Local</th>
-                <th>Método de pagamento</th>
-                <th>Status pagamento</th>
+                <th>Produtor</th>
                 <th>Valor Total</th>
 
             </tr>
@@ -37,13 +40,16 @@
                 {% for order in orders %}
                     <tr>
                         <td>
-                            {% if order.get_status %}
-                                {{ order.get_status }}
-                            {% endif %}
+                            <a href="{% url 'view_order' order.id %}" class="btn btn-primary" title="Ver pedido">
+                                <span class="fas fa-eye"></span>
+                            </a>
                         </td>
                         <td>
-                            {% if order.address %}
-                                {{ order.address.city }} - {{ order.address.state }}
+                            {{ order.id }}
+                        </td>
+                        <td>
+                            {% if order.get_status %}
+                                {{ order.get_status }}
                             {% endif %}
                         </td>
                         <td>
@@ -52,13 +58,16 @@
                             {% endif %}
                         </td>
                         <td>
-                            {% if order.payment.get_status %}
-                                {{ order.payment.get_status }}
+                            {% if order.address %}
+                                {{ order.address.city }} - {{ order.address.state }}
                             {% endif %}
                         </td>
                         <td>
+                            <a href="{% url 'view_seller' order.get_producer.id %}">{{ order.get_producer.first_name }}</a>
+                        </td>
+                        <td>
                             {% if order.total_price %}
-                                {{  order.total_price }}
+                                R$ {{ order.total_price|floatformat:2|intcomma }}
                             {% endif %}
                         </td>
                     </tr>

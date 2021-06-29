@@ -2,7 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
 
-from .views import UserView, AddressView, DeliveryTimeView, ServiceAddressView, OrderView
+from .views import UserView, AddressView, DeliveryTimeView, ServiceAddressView
 
 urlpatterns = [
     path('create', UserView.create_users, name='create_customer'),
@@ -30,7 +30,6 @@ urlpatterns = [
     path('service_address/delete', ServiceAddressView.delete_service_address, name='delete_service_address'),
     path('service_address/update/<int:service_address_id>', ServiceAddressView.update_service_address,
          name='update_service_address'),
-    path('order/list', OrderView.list_order, name='list_user_orders'),
 
     path('customer_home_first', UserView.customer_home_first, name='customer_home_first'),
     path('admin/', UserView.admin_home, name='home_admin'),
