@@ -190,7 +190,7 @@ class OrderView:
         return total
 
 class RatingView:
-    
+
     @classmethod
     def create(cls, request):
         if request.user.is_authenticated:
@@ -215,4 +215,4 @@ class RatingView:
                 messages.success(request, 'Avaliação publicada com sucesso.')
             return redirect('list_user_orders')
         return redirect('login')
-            
+
