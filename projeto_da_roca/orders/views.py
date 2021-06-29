@@ -166,7 +166,7 @@ class OrderView:
             try:
                 rating = Rating.objects.get(order_id=order.id)
             except:
-                rating = []
+                rating = None
 
             return render(
                 request,
