@@ -34,7 +34,7 @@ class CartProductView:
                     product = Product.objects.get(pk=product_id)
                     cart_products = CartProduct.objects.filter(
                         user_id=user.id)
-                    
+
                     if (len(cart_products) > 0 and \
                         cart_products[0].product.user.id == product.user.id) or \
                         (len(cart_products) == 0):
@@ -165,13 +165,13 @@ class OrderView:
             order_items = OrderProduct.objects.filter(order_id=order.id)
             try:
                 rating = Rating.objects.get(order_id=order.id)
-            except:
+            except Rating.DoesNotExist:
                 rating = None
 
             return render(
                 request,
                 'orders/view_order.html',
-                { 
+                {
                     'order': order,
                     'order_products': order_items,
                     'rating': rating,
