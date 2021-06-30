@@ -98,9 +98,26 @@ class ProductView:
         if request.user.is_authenticated:
             if request.method == 'GET':
                 search_string = request.GET.get('search')
-                products = Product.objects.filter(Q(name__icontains=search_string))
+                products = Product.objects.filter(Q(name__icontains=search_string) | Q(variety__icontains=search_string))
                 return render(request, '../templates/users_profile/search_seller_product.html', {'products': products})
 
+        return redirect('login')
+
+    @classmethod
+    def search_product_to_admin(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'GET':
+                search_string = request.GET.get('table-search')
+                products = Product.objects.filter(
+                    Q(name__icontains=search_string) | Q(variety__icontains=search_string))
+                return render(request, 'product/manage_products.html', {'products': products})
+
+        return redirect('login')
+
+    @classmethod
+    def see_products(cls, request):
+        if request.user.is_authenticated:
+            return render(request, 'product/manage_products.html', )
         return redirect('login')
 
         

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+<title>
+    Gerenciar Produtos
+</title>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="inner_container mt-4">
+        <form class="input-group mb-4 border-custom rounded-pill mt-5 p-1" method="get" action="{% url 'search_products_admin'%}">
+            <input id="custom_table-search" name="table-search" type="search" placeholder="Procure por nome do produtor ou nome do produto" aria-describedby="button-addon3" class="form-control bg-white border-0">
+            <div class="input-group-append border-0">
+              <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            </div>
+        </form>
+        <table class="custom_table mt-2">
+            <thead>
+                <tr>
+                    <th>Ações</th>
+                    <th>Nome</th>
+                    <th>Variedade</th>
+                    <th>Preço</th>
+                    <th>Proprietário</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if products|length > 0 %}
+                    {% for product in products %}
+                        <tr>
+                            <td>
+                                <div class="actions">
+                                     <button type="button"
+                                            class="btn btn-danger"
+                                             data-toggle="modal"
+                                             data-target="#includedModal"
+                                             data-query="product_id={{ product.id }}"
+                                            title="Remover produto permanentemente">
+                                            <span class="fas fa-trash"></span>
+                                     </button>
+                                </div>
+                            </td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ product.variety }}</td>
+                            <td>{{ product.price }}0</td>
+                            <td>
+                                <!-- <script>
+                                    user = User.objects.get(pk={{ product.user_id }})
+                                </script> -->
+                                {{ user.first_name }} {{ user.last_name }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    {% url 'delete_product' as action_url %}
+    {% include 'modal.html' with modal_id="includedModal" header="Você tem certeza?" message='O produto será totalmente removido do sistema, tem certeza que deseja proceder?' confirm="Remover permanentemente" cancel="Cancelar" %}
+    <script src="{% static 'js/custom-paginated-table.js' %}"></script>
+{% endblock %}

@@ -26,14 +26,19 @@
                     {% elif products|length > 0 %}
 
                         {% for product in products %}
+                        <!--
+                           <script>
+                                user = User.objects.get(pk={{ product.user_id }})
+                           </script> -->
 
-                            <div class="mt-4 col-3">
+                            <div class="mt-4 mb-3 col-3">
                                 <img class="rounded-circle" width="100" height="100" src="{{ product.product_pic.url }}">
                             </div>
 
-                            <div class="col-8 mt-5 ml-3">
+                            <div class="col-8 mt-4 mb-2 ml-3">
                                 <a href="{% url 'view_product' product.id %}" class="link-success h4">{{ product.name }}</a>
-                                <p class="h6 mt-2">R$ {{ product.price }}0</p>
+                                <p class="h6 mt-2">{{ product.variety }} R$ {{ product.price }}0</p>
+                                <p class="h6 mt-2">{{ user.first_name }} {{ user.last_name }}</p>
                             </div>
 
                         {% endfor %}
