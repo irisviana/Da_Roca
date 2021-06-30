@@ -93,4 +93,4 @@ time
 .http/*
 
 #Static
-static/productImages/
+static/productImages/*
