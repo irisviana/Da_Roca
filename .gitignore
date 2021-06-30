@@ -91,3 +91,6 @@ time
 
 .history
 .http/*
+
+#Static
+static/productImages/
