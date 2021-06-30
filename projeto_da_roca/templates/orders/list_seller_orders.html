@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>Pedidos</title>
+{% endblock %}
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Pedidos</h4>
+        </div>
+    </div>
+    <div class="inner_container mt-4">
+        <table class="custom_table mt-5 table-hover">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Status</th>
+                <th>Local</th>
+                <th>Método de pagamento</th>
+                <th>Status pagamento</th>
+                <th>Valor Total</th>
+
+            </tr>
+            </thead>
+            <tbody>
+            {% if orders|length > 0 %}
+                {% for order in orders %}
+                    <tr class="order-cell" id="{{ order.id }}" style="cursor: pointer">
+                        <a>
+                            <td>
+                                {% if order.id %}
+                                    {{ order.id }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if order.get_status %}
+                                    {{ order.get_status }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if order.address %}
+                                    {{ order.address.city }} - {{ order.address.state }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if order.payment.type %}
+                                    {{ order.payment.get_type }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if order.payment.get_status %}
+                                    {{ order.payment.get_status }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if order.total_price %}
+                                    R$ {{ order.total_price }}
+                                {% endif %}
+                            </td>
+                        </a>
+                    </tr>
+
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="7">Nenhum pedido feito</td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <script>
+        $('.order-cell').on('click', function () {
+            const order_id = $(this).attr('id')
+            window.location.replace(`{% url 'seller-order-detail' %}?order_id=${order_id}`)
+        })
+    </script>
+{% endblock %}

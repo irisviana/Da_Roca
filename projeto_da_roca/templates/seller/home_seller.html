@@ -12,7 +12,7 @@
         </div>
     </div>
     {% if request.user.is_seller %}
-        <div class="row justify-content-center">
+        <div class="row justify-content-center mb-3">
             <div class="card manage">
                 <div class="card-body">
                     <span class="fa fa-user-circle fa-2x"></span>
@@ -60,6 +60,21 @@
                         {% else %}
                             Abrir loja
                         {% endif %}
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="card manage">
+                <div class="card-body">
+                    <span class="fas fa-shopping-basket fa-2x"></span>
+                    <h3 id="status" class="card-title">
+                        Pedidos
+                    </h3>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'seller-orders' %}" class="btn btn-primary">
+                        Gerenciar
                     </a>
                 </div>
             </div>

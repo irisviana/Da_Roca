@@ -26,7 +26,6 @@ class User(AbstractUser):
     store_status = models.CharField(default='Fechado', max_length=8, null=True, blank=True)
     user_pic = models.ImageField(upload_to='static/userImages/',default='static/userImages/img_default.png')
 
-
     def save(self, *args, **kwargs):
         self.username = uuid.uuid4().hex[:30]
         super().save(*args, **kwargs)

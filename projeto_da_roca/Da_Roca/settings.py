@@ -30,7 +30,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', '39f84bf249d0.ngrok.io']
+ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com', '62cbed3127bf.ngrok.io']
 
 
 # Application definition
@@ -166,6 +166,6 @@ EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
 
 
 #Images Configuration
-MEDIA_PRODUCT_ROOT =  STATICFILES_DIRS
+MEDIA_PRODUCT_ROOT = STATICFILES_DIRS
 MEDIA__PRODUCT_URL = STATIC_URL
 
