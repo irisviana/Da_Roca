@@ -2,7 +2,7 @@ from django.db.utils import DataError, IntegrityError
 from django.test import TestCase
 
 from products.models import Category, Product
-from orders.models import CartProduct, Payment, OrderProduct, Order
+from orders.models import CartProduct, Payment, OrderProduct, Order, Rating
 from users.models import User, ServiceAddress, DeliveryTime, Address
 
 
@@ -421,4 +421,87 @@ class CartProductTest(TestCase):
         except IntegrityError:
             self.assertFalse(order)
 
-        
+class RatingTest(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create(
+            first_name="Rodrigo",
+            email="rodrigo@gmail.com",
+            cpf="70550481419",
+            password="teste",
+        )
+
+        self.address = Address.objects.create(
+            user = self.user,
+            address_type = 'user',
+            zip_code = '55370000',
+            state = 'PE',
+            city = 'Garanhuns',
+            district = 'Boa Vista',
+            street = 'Rua rua rua rua',
+            house_number = 123,
+        )
+
+        self.category = Category.objects.create(
+            user=self.user,
+            name='Frutas'
+        )
+
+        self.maca = Product.objects.create(
+            user=self.user,
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            stock_amount=50,
+            category=self.category,
+        )
+
+        self.banana = Product.objects.create(
+            user=self.user,
+            name='Banana',
+            variety='Prata',
+            expiration_days=7,
+            stock_amount=50,
+            category=self.category,
+            price=3
+        )
+
+        self.payment = Payment.objects.create(
+            type='C', status=0
+        )
+        self.order = Order.objects.create(
+            status=3, address=self.address, user=self.user, payment=self.payment, total_price=6
+        )
+        OrderProduct.objects.create(
+            quantity=2, product=self.banana, order=self.order
+        )
+
+    def test_create_rating(self):
+        rate = Rating.objects.create(
+            rate=5,
+            rate_message='Muito bom!',
+            user=self.user,
+            order=self.order,
+        )
+
+        self.assertTrue(rate)
+
+    def test_create_rating_without_comment(self):
+        rate = Rating.objects.create(
+            rate=5,
+            user=self.user,
+            order=self.order,
+        )
+
+        self.assertTrue(rate)
+
+    def test_create_rating_without_rate(self):
+        rate = None
+        try:
+            rate = Rating.objects.create(
+                rate_message='Muito bom!',
+                user=self.user,
+                order=self.order,
+            )
+        except IntegrityError:
+            self.assertFalse(rate)

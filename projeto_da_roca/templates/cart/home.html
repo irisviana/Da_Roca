@@ -49,14 +49,14 @@
                                 <div>
                                     <h5><a href="{% url 'view_product' cart_product.product.id %}">{{ cart_product.product.name }}</a></h5>
                                     <p>{{ cart_product.product.variety }}</p>
-                                    <p>Vendedor: <a href="{% url 'view_seller' cart_product.product.user.id %}">{{ cart_product.user.first_name }}</a></p>
+                                    <p>Produtor: <a href="{% url 'view_seller' cart_product.product.user.id %}">{{ cart_product.product.user.first_name }}</a></p>
                                 </div>
                             </div>
                             <div class="unit-value">
                                 <div>R$ {{ cart_product.product.price|floatformat:2|intcomma }}</div>
                             </div>
                             <div class="quantity">
-                                <form action="{% url 'remove-cart' %}" method="POST">
+                                <form action="{% url 'remove_cart' %}" method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
                                     <input type="hidden" name="decrement" value="1">
@@ -64,12 +64,12 @@
                                         <span class="fas fa-minus"></span>
                                     </button>
                                 </form>
-                                <form class="form" id="quantity-form-{{ cart_product.id }}" action="{% url 'update-cart' %}" method="POST">
+                                <form class="form" id="quantity-form-{{ cart_product.id }}" action="{% url 'update_cart' %}" method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
                                     <input type="number" onblur="$('#quantity-form-{{ cart_product.id }}').submit()" max="{{ cart_product.product.stock_amount }}" name="quantity" value="{{ cart_product.quantity }}" class="form-control">
                                 </form>
-                                <form action="{% url 'update-cart' %}" method="POST">
+                                <form action="{% url 'update_cart' %}" method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
                                     <button type="submit" class="btn btn-primary" title="Adicionar um item">
@@ -80,7 +80,7 @@
                             <div class="subtotal">
                                 {% multiply cart_product.quantity cart_product.product.price as subtotal %}
                                 <div>R$ {{ subtotal|floatformat:2|intcomma }}</div>
-                                <form action="{% url 'remove-cart' %}" method="POST">
+                                <form action="{% url 'remove_cart' %}" method="POST">
                                     {% csrf_token %}
                                     <input type="hidden" name="cart_product_id" value="{{ cart_product.id }}">
                                     <button type="submit" class="btn btn-secondary" title="Remover produto da cesta">
@@ -99,7 +99,7 @@
         </div>
         {% if cart|length > 0%}
             <div class="my-2 mx-auto w-25">
-                <a href="{% url 'confirm-order' %}" type="submit" class="btn btn-primary " title="Prosseguir compra">Prosseguir compra</a>
+                <a href="{% url 'confirm_order' %}" type="submit" class="btn btn-primary " title="Prosseguir compra">Prosseguir compra</a>
             </div>
         {% endif %}
     </div>
