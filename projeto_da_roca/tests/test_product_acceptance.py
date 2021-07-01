@@ -11,6 +11,7 @@ env = environ.Env()
 TEST_ON_CHROME = True if env('TEST_ON_CHROME') == 'on' else False
 TEST_ON_FIREFOX = True if env('TEST_ON_FIREFOX') == 'on' else False
 
+
 class ProductsTest(StaticLiveServerTestCase):
 
     @classmethod
@@ -218,6 +219,7 @@ class FavoritesTest(StaticLiveServerTestCase):
         driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{maca_product.id}"))
         driver.find_element_by_class_name("favorite").click()
         assert "Favoritar" not in driver.page_source
+
 
 class ProductsTest(StaticLiveServerTestCase):
 

@@ -24,7 +24,8 @@
         </div>
     </div>
     <div class="d-flex justify-content-between mb-3 ">
-        <a class="mt-4 btn btn-secondary w-25" href="{% url 'cart' %}" type="submit" title="Voltar para o carrinho">
+        <a class="mt-4 btn btn-secondary w-25" href="{% url 'seller-orders' %}" type="submit"
+           title="Voltar para o carrinho">
             Voltar para listagem</a>
         {% if order.status < 3 %}
             <button class="mt-4 btn btn-danger w-25"
@@ -74,6 +75,12 @@
                             >{{ value }}</option>
                             {{ key }}{{ value }}
                         {% endfor %}
+                        {% if order.status == 4 %}
+                            <option value="4"
+                                    disabled="disabled"
+                                    selected="selected"
+                            >Cancelado </option>
+                        {% endif %}
                     </select>
                 </form>
             </div>
