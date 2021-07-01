@@ -97,8 +97,13 @@ class ProductView:
     def search_product(cls, request):
         if request.user.is_authenticated:
             if request.method == 'GET':
-                search_string = request.GET.get('search')
-                products = Product.objects.filter(Q(name__icontains=search_string))
+                search_string = request.GET.get('search', None)
+                search_by_producer = request.GET.get('producer', None)
+                products = None
+                if search_string:
+                    products = Product.objects.filter(Q(name__icontains=search_string))
+                elif search_by_producer:
+                    products = Product.objects.filter(user_id=search_by_producer)
                 return render(request, '../templates/users_profile/search_seller_product.html', {'products': products})
 
         return redirect('login')
@@ -189,7 +194,7 @@ class FavoriteView:
                 "favorites": favorites 
             })
         return redirect('login')
-            
+
     @classmethod
     def create_favorite(cls, request):
         if request.user.is_authenticated:
@@ -218,5 +223,3 @@ class FavoriteView:
 
             return redirect('list_favorites')
         return redirect('login')
-
-                

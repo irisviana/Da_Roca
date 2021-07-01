@@ -6,7 +6,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-from orders.models import CartProduct
+from orders.models import CartProduct, Order, OrderProduct, Payment
 from products.models import Category, Product
 from users.models import User, DeliveryTime, ServiceAddress, Address
 from users.utils import check_has_class
@@ -1221,3 +1221,259 @@ class CartProductTest(StaticLiveServerTestCase):
         payment_element = driver.find_element_by_id('CC')
         payment_element.click()
         assert check_has_class(payment_element.get_attribute("class"), "active")
+
+
+class OrderTest(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.selenium = None
+
+        if TEST_ON_CHROME:
+            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+        elif TEST_ON_FIREFOX:
+            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+
+        cls.selenium.get('http://127.0.0.1:8000')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+
+    def test_login(self, user=False):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        ) if not user else user
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = driver.find_element_by_name("username")
+        username_input.send_keys(user.email)
+        password_input = driver.find_element_by_name("password")
+        password_input.send_keys('abcde123456')
+        driver.find_element_by_xpath('//input[@value="Entrar"]').click()
+        assert 'email ou senha estão incorretos' not in driver.page_source
+
+    def test_view_order(self):
+        user = User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+        Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='55370000',
+            state='PE',
+            city='Garanhuns',
+            district='Boa Vista',
+            street='Rua rua rua rua',
+            house_number=123,
+        )
+
+        address = Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='55370000',
+            state='PE',
+            city='Garanhuns',
+            district='Boa Vista',
+            street='Rua rua rua rua',
+            house_number=123,
+        )
+
+        category = Category.objects.create(
+            user=user,
+            name='Frutas'
+        )
+
+        banana = Product.objects.create(
+            user=user,
+            name='Banana',
+            variety='Prata',
+            expiration_days=7,
+            stock_amount=50,
+            category=category,
+        )
+
+        payment = Payment.objects.create(
+            type='C', status=0
+        )
+        order = Order.objects.create(
+            status=3, address=address, user=user, payment=payment, total_price=6
+        )
+        OrderProduct.objects.create(
+            quantity=2, product=banana, order=order
+        )
+
+        driver = self.selenium
+        self.test_login(user)
+
+        driver.get('%s%s' % (self.live_server_url, "/order/order/list"))
+        driver.find_element_by_xpath(f"//a[@href=\"/order/order/{order.id}\"]").click()
+        assert banana.name in driver.page_source
+
+
+class RatingTest(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.selenium = None
+
+        if TEST_ON_CHROME:
+            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+        elif TEST_ON_FIREFOX:
+            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+
+        cls.selenium.get('http://127.0.0.1:8000')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+
+    def test_login(self, user=False):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        ) if not user else user
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = driver.find_element_by_name("username")
+        username_input.send_keys(user.email)
+        password_input = driver.find_element_by_name("password")
+        password_input.send_keys('abcde123456')
+        driver.find_element_by_xpath('//input[@value="Entrar"]').click()
+        assert 'email ou senha estão incorretos' not in driver.page_source
+
+    def test_rate_an_order_with_comment(self):
+        user = User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+        Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='55370000',
+            state='PE',
+            city='Garanhuns',
+            district='Boa Vista',
+            street='Rua rua rua rua',
+            house_number=123,
+        )
+
+        address = Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='55370000',
+            state='PE',
+            city='Garanhuns',
+            district='Boa Vista',
+            street='Rua rua rua rua',
+            house_number=123,
+        )
+
+        category = Category.objects.create(
+            user=user,
+            name='Frutas'
+        )
+
+        banana = Product.objects.create(
+            user=user,
+            name='Banana',
+            variety='Prata',
+            expiration_days=7,
+            stock_amount=50,
+            category=category,
+        )
+
+        payment = Payment.objects.create(
+            type='C', status=0
+        )
+        order = Order.objects.create(
+            status=3, address=address, user=user, payment=payment, total_price=6
+        )
+        OrderProduct.objects.create(
+            quantity=2, product=banana, order=order
+        )
+
+        driver = self.selenium
+        self.test_login(user)
+
+        driver.get('%s%s' % (self.live_server_url, "/order/order/list"))
+        driver.find_element_by_xpath(f"//a[@href=\"/order/order/{order.id}\"]").click()
+        comment_element = driver.find_element_by_xpath("//textarea[@name=\"rate_message\"]")
+        comment_element.send_keys('Muito bom!')
+        driver.find_element_by_xpath("//input[@id=\"rate-5\"]").click()
+        driver.find_element_by_xpath("//button[@title=\"Avaliar\"]").click()
+        assert 'Avaliação publicada com sucesso.' in driver.page_source
+
+    def test_rate_an_order_without_comment(self):
+        user = User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+        address = Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='55370000',
+            state='PE',
+            city='Garanhuns',
+            district='Boa Vista',
+            street='Rua rua rua rua',
+            house_number=123,
+        )
+
+        category = Category.objects.create(
+            user=user,
+            name='Frutas'
+        )
+
+        banana = Product.objects.create(
+            user=user,
+            name='Banana',
+            variety='Prata',
+            expiration_days=7,
+            stock_amount=50,
+            category=category,
+        )
+
+        payment = Payment.objects.create(
+            type='C', status=0
+        )
+        order = Order.objects.create(
+            status=3, address=address, user=user, payment=payment, total_price=6
+        )
+        OrderProduct.objects.create(
+            quantity=2, product=banana, order=order
+        )
+
+        driver = self.selenium
+        self.test_login(user)
+
+        driver.get('%s%s' % (self.live_server_url, "/order/order/list"))
+        driver.find_element_by_xpath(f"//a[@href=\"/order/order/{order.id}\"]").click()
+        driver.find_element_by_xpath("//input[@id=\"rate-5\"]").click()
+        driver.find_element_by_xpath("//button[@title=\"Avaliar\"]").click()
+        assert 'Avaliação publicada com sucesso.' in driver.page_source

@@ -1,0 +1,110 @@
+{% extends 'users_profile/customer_home_base.html' %}
+{% load humanize %}
+
+{% block title %}
+<title>Pedido #{{ order.id }}</title>
+{% endblock %}
+
+{% block page %}
+    <div class="d-flex flex-column align-items-center">
+        <div>
+            <h4>Pedido nº {{ order.id }}</h4>
+        </div>
+        <div class="alert alert-success w-100 text-center">
+            <h5 class="m-0">{{ order.get_status }}</h5>
+        </div>
+        {% if order.status == 3 and not rating %}
+            <div class="w-100 my-2">
+                <H5>Avalie seu pedido</h5>
+                <form action="{% url 'create_rating' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                    <textarea class="form-control mb-2" name="rate_message" placeholder="O que você achou do pedido?"></textarea>
+                    <div class="form-group">
+                        <input type="radio" name="rate" id="rate-1" value="1">
+                        <label for="rate-1">1 estrela</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="radio" name="rate" id="rate-2" value="2">
+                        <label for="rate-2">2 estrela</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="radio" name="rate" id="rate-3" value="3">
+                        <label for="rate-3">3 estrela</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="radio" name="rate" id="rate-4" value="4">
+                        <label for="rate-4">4 estrela</label>
+                    </div>
+                    <div class="form-group">
+                        <input type="radio" name="rate" id="rate-5" value="5">
+                        <label for="rate-5">5 estrela</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary" title="Avaliar">
+                        Avaliar
+                    </button>
+                </form>
+            </div>
+        {% else %}
+            <div class="w-100 my-2">
+                <h5>Sua avaliação</h5>
+                <textarea class="form-control" disabled>
+{{ rating.rate_message }}
+                </textarea>
+                <p>{{ rating.get_stars }}</p>
+            </div>
+        {% endif %}
+        <div class="w-100 align-left">
+            <p>Total: <strong>R$ {{ order.total_price|floatformat:2|intcomma }}</strong></p>
+            <p>Forma de pagamento: <strong>{{ order.payment.get_type }}</strong></p>
+            <p>Status do pagamento: <strong>{{ order.payment.get_status }}</strong></p>
+            <p>Endereço de entrega:
+                <strong>{{ order.address.street }}</strong>
+            </p>
+            <p>Produtor
+                <strong><a href="{% url 'view_seller' order.get_producer.id %}">{{ order.get_producer.first_name }}</a></strong>
+            </p>
+        </div>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert cart-item message {{ message.tags }}">
+                    <div>{{ message }}</div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="inner_container mt-4">
+        <table class="custom_table mt-5">
+            <thead>
+                <tr>
+                    <th>Produto</th>
+                    <th>Variedade</th>
+                    <th>Quantidade</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if order_products|length > 0 %}
+                    {% for order_product in order_products %}
+                        <tr>
+                            <td><a href="{% url 'view_product' order_product.product.id %}">
+                                {{ order_product.product.name }}
+                                </a>
+                            </td>
+                            <td>{{ order_product.product.variety }}</td>
+                            <td>{{ order_product.quantity }}</td>
+                            <td>R$ {{ order_product.product.price|floatformat:2|intcomma }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7">Histórico indisponível</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="d-flex justify-content-between mb-3 ">
-        <a class="mt-4 btn btn-secondary w-25" href="{% url 'seller-orders' %}" type="submit"
+        <a class="mt-4 btn btn-secondary w-25" href="{% url 'seller_orders' %}" type="submit"
            title="Voltar para o carrinho">
             Voltar para listagem</a>
         {% if order.status < 3 %}
@@ -61,7 +61,7 @@
                 <p class="card-text">{{ order.user.email }}</p>
             </div>
             <div class="card-footer">
-                <form method="post" action="{% url 'update-status-order' order.id %}" id="form-status">
+                <form method="post" action="{% url 'update_status_order' order.id %}" id="form-status">
                     {% csrf_token %}
                     <select class="form-control" id="status-value" name="status_value">
                         {% for key, value in order.get_status_options.items %}
@@ -167,7 +167,7 @@
                         <h5 class="modal-title">Cancelamento de pedido</h5>
                     </div>
                     <div class="modal-body">
-                        <form id="updateStatusForm" method="post" action="{% url 'cancel-order' order.id %}">
+                        <form id="updateStatusForm" method="post" action="{% url 'cancel_order' order.id %}">
                             {% csrf_token %}
                             <div class="alert alert-danger">
 
