@@ -188,6 +188,17 @@ class OrderView:
                 total += c.product.price * c.quantity
 
         return total
+    
+    @classmethod
+    def cancel_order(cls, request):
+        if request.user.is_authenticated:
+            if request.method == "POST":
+                order_id = request.POST.get("order_id")
+                order = get_object_or_404(Order, id=order_id)
+                order.status = 4
+                order.save()
+            return redirect("list_user_orders")
+        return redirect('login')
 
 class RatingView:
 
@@ -215,4 +226,3 @@ class RatingView:
                 messages.success(request, 'Avaliação publicada com sucesso.')
             return redirect('list_user_orders')
         return redirect('login')
-

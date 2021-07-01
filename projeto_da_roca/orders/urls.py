@@ -12,4 +12,5 @@ urlpatterns = [
     path('order/list', OrderView.list_order, name='list_user_orders'),
     path('order/<int:order_id>', OrderView.view_order, name='view_order'),
     path('order/rate', RatingView.create, name='create_rating'),
+    path('order/cancel', OrderView.cancel_order, name='cancel_order'),
 ]

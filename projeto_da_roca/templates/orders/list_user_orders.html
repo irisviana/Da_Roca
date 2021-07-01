@@ -32,6 +32,7 @@
                 <th>Local</th>
                 <th>Produtor</th>
                 <th>Valor Total</th>
+                <th></th>
 
             </tr>
             </thead>
@@ -70,6 +71,12 @@
                                 R$ {{ order.total_price|floatformat:2|intcomma }}
                             {% endif %}
                         </td>
+                        <td>
+                            <button type="button" class="btn btn-danger" data-toggle="modal"
+                                data-target="#includedModal" data-query="order_id={{ order.id }}" 
+                                tittle="Cancelar compra"><span class="fas fa-ban"></span>                           
+                            </button>
+                        </td>
                     </tr>
                 {% endfor %}
             {% else %}
@@ -79,5 +86,7 @@
             {% endif %}
             </tbody>
         </table>
+        {% url 'cancel_order' as action_url %}
+        {% include 'modal.html' with modal_id="includedModal" header="Cancelar compra?" message='Tem certeza que deseja cancelar a compra' confirm="Sim" cancel="Cancelar" %}
     </div>
 {% endblock %}
