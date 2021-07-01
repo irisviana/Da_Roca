@@ -19,6 +19,7 @@
         <table class="custom_table mt-5 table-hover">
             <thead>
             <tr>
+                <th>Ações</th>
                 <th>ID</th>
                 <th>Status</th>
                 <th>Local</th>
@@ -31,8 +32,22 @@
             <tbody>
             {% if orders|length > 0 %}
                 {% for order in orders %}
+                
                     <tr class="order-cell" id="{{ order.id }}" style="cursor: pointer">
                         <a>
+                            <td>
+                                <div class="actions" style="z-index: 99;">
+                                    <a class="btn btn-primary" title="Ver pedido" href="{%url 'seller-order-detail' %}?order_id={{order.id}}">
+                                        <span class="fas fa-eye"></span>
+                                    </a>
+                                    {% if order.status != 4 and user.is_admin %}
+                                        <button type="button" class="btn btn-danger" data-toggle="modal"
+                                            data-target="#includedModal" data-query="order_id={{ order.id }}" 
+                                            title="Cancelar compra"><span class="fas fa-ban"></span>                           
+                                        </button>
+                                    {% endif %}
+                                </div>
+                            </td>
                             <td>
                                 {% if order.id %}
                                     {{ order.id }}
@@ -75,10 +90,12 @@
             </tbody>
         </table>
     </div>
-    <script>
+    <!-- <script>
         $('.order-cell').on('click', function () {
             const order_id = $(this).attr('id')
             window.location.replace(`{% url 'seller-order-detail' %}?order_id=${order_id}`)
         })
-    </script>
+    </script> -->
+    {% url 'cancel_order' as action_url %}
+    {% include 'modal.html' with modal_id="includedModal" header="Cancelar compra?" message='Tem certeza que deseja cancelar a compra' confirm="Sim" cancel="Cancelar" %}
 {% endblock %}

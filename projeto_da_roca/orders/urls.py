@@ -17,4 +17,6 @@ urlpatterns = [
     path('seller/datails', SellerOrderView.index, name='seller-order-detail'),
     path('cancel/<int:order_id>', SellerOrderView.cancel, name='cancel-order'),
     path('update/status/<int:order_id>', SellerOrderView.update, name='update-status-order'),
+    path('list_all_orders/', OrderView.list_all_orders, name='list_all_orders'),
+
 ]

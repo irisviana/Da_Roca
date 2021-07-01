@@ -198,7 +198,14 @@ class OrderView:
                 order = get_object_or_404(Order, id=order_id)
                 order.status = 4
                 order.save()
-            return redirect("list_user_orders")
+            return redirect("list_all_orders")
+        return redirect('login')
+
+    @classmethod
+    def list_all_orders(cls, request):
+        if request.user.is_authenticated:
+            orders = Order.objects.all()
+            return render(request, '../templates/orders/list_seller_orders.html', {'orders': orders})
         return redirect('login')
 
 class RatingView:
