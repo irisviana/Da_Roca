@@ -37,7 +37,7 @@ class Payment(models.Model):
     def get_status(self):
         return dict(Payment.PAYMENT_STATUS)[self.status]
 
-    
+
 class Order(models.Model):
     ORDER_STATUS = (
         (0, 'Em Espera'),
@@ -55,6 +55,9 @@ class Order(models.Model):
         Payment, on_delete=models.SET_NULL, null=True, blank=True)
     total_price = models.DecimalField(null=False, blank=False, max_digits=19, decimal_places=2)
 
+    def __str__(self):
+        return '{} | {}'.format(self.id, self.get_status())
+
     def get_status(self):
         return dict(Order.ORDER_STATUS)[self.status]
 
@@ -63,6 +66,10 @@ class Order(models.Model):
             order=self)
         return order_products[0].product.user if len(order_products) > 0 else None
 
+    def get_status_options(self):
+        options = dict(Order.ORDER_STATUS)
+        del options[4]
+        return options
 class OrderProduct(models.Model):
     quantity = models.IntegerField(null=False, blank=False)
     product = models.ForeignKey(

@@ -1,0 +1,187 @@
+<!-- templates/orders/details_seller_order.html -->
+{% extends 'base.html' %}
+{% load humanize %}
+{% load custom_tags %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/progress_style.css' %}">
+
+{% endblock %}
+
+{% block title %}
+    <title>Informações do pedido</title>
+{% endblock %}
+
+{% block header %}
+    {% include 'header.html' %}
+{% endblock %}
+
+{% block content %}
+    <div class="d-flex flex-column align-items-center mb-4">
+        <div>
+            <h4>Informações do pedido</h4>
+        </div>
+    </div>
+    <div class="d-flex justify-content-between mb-3 ">
+        <a class="mt-4 btn btn-secondary w-25" href="{% url 'cart' %}" type="submit" title="Voltar para o carrinho">
+            Voltar para listagem</a>
+        {% if order.status < 3 %}
+            <button class="mt-4 btn btn-danger w-25"
+                    data-toggle="modal"
+                    id="update-status-button"
+                    data-target="#updateStatusModal" title="Cancelar pedido">
+                Cancelar Pedido
+            </button>
+        {% endif %}
+    </div>
+    <div class="row justify-content-center">
+        <div class="card manage">
+            <div class="card-body">
+                <span class="fas fa-address-card fa-2x"></span>
+                <h3 id="status" class="card-title">
+                    Endereço
+                </h3>
+                <p class="card-text">
+                    {{ order.address.city }} - {{ order.address.state }}
+                </p>
+                <p class="card-text">{{ order.address.street }} {{ order.address.number }}
+                    - {{ order.address.district }}</p>
+                <p class="card-text">{{ order.address.zip_code }}</p>
+            </div>
+        </div>
+        <div class="card manage">
+            <div class="card-body">
+                <span class="fas fa-shopping-basket fa-2x"></span>
+                <h3 id="status" class="card-title">
+                    Pedido
+                </h3>
+                <p class="card-text">{{ order.user.first_name }} {{ order.user.last_name }}</p>
+                <p class="card-text">{{ order.user.email }}</p>
+            </div>
+            <div class="card-footer">
+                <form method="post" action="{% url 'update-status-order' order.id %}" id="form-status">
+                    {% csrf_token %}
+                    <select class="form-control" id="status-value" name="status_value">
+                        {% for key, value in order.get_status_options.items %}
+                            <option value="{{ key }}"
+                                    {% if key < order.status %}
+                                    disabled="disabled"
+                                    {% endif %}
+                                    {% if key == order.status %}
+                                    selected="selected"
+                                    {% endif %}
+                            >{{ value }}</option>
+                            {{ key }}{{ value }}
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </div>
+
+        <div class="card manage">
+            <div class="card-body">
+                <span class="fas fa-money-check-alt fa-2x"></span>
+                <h3 id="status" class="card-title">
+                    Pagamento
+                </h3>
+                <p class="card-text">{{ order.payment.get_type }}</p>
+                <p class="card-text">{{ order.payment.get_status }}</p>
+                <p class="card-text">R$ {{ order.total_price|floatformat:2|intcomma }}</p>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="row text-center mb-3 mt-5">
+        <div class="col-12">
+            <h4>Produtos adicionados</h4>
+        </div>
+    </div>
+    <div class="d-flex flex-column">
+        <div class="cart-item">
+            <div class="header">
+                <div>Produto</div>
+                <div>Valor</div>
+                <div>Quantidade</div>
+                <div>Subtotal</div>
+            </div>
+        </div>
+        {% if order_products|length > 0 %}
+            {% for order_product in order_products %}
+                <div class="cart-item">
+                    <div class="body">
+                        <div class="product">
+                            <div class="img">
+                                {% comment %} Foto do produto aqui {% endcomment %}
+                                <img style="width: 138px; height: 100px"
+                                     src="{{ order_product.product.product_pic.url }}">
+                            </div>
+                            <div>
+                                <h5>{{ order_product.product.name }}</h5>
+                                <p>{{ order_product.product.variety }}</p>
+                                <p>Vendedor: {{ order_product.product.user.first_name }}</p>
+                            </div>
+                        </div>
+                        <div class="unit-value">
+                            <div>R$ {{ order_product.product.price|floatformat:2|intcomma }}</div>
+                        </div>
+                        <div class="quantity">
+                            <input type="number" readonly max="{{ order_product.product.stock_amount }}" name="quantity"
+                                   value="{{ order_product.quantity }}" class="form-control">
+
+                        </div>
+                        <div class="subtotal">
+                            {% multiply order_product.quantity order_product.product.price as subtotal %}
+                            <div>R$ {{ subtotal|floatformat:2|intcomma }}</div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert cart-item message {{ message.tags }}">
+                <div>Nenhum produto na cesta de compras</div>
+            </div>
+        {% endif %}
+
+    </div>
+    <script>
+        $('#status-value').on('change', function () {
+            $('#form-status').submit()
+        })
+    </script>
+    {% if order.status < 3 %}
+
+        <div class="modal" id="updateStatusModal" tabindex="-1" role="dialog"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Cancelamento de pedido</h5>
+                    </div>
+                    <div class="modal-body">
+                        <form id="updateStatusForm" method="post" action="{% url 'cancel-order' order.id %}">
+                            {% csrf_token %}
+                            <div class="alert alert-danger">
+
+                                <p class="error">Você tem certeza que deseja cancelar o pedido?</p>
+                                <p class="error">Essa ação não poderá ser desfeita.</p>
+
+
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary w-50" data-dismiss="modal">Fechar</button>
+
+                        <button type="submit" id="update-status-modal-button" form="updateStatusForm"
+                                class="btn btn-danger w-50">Cancelar
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
