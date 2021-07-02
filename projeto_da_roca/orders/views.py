@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 
 from products.models import Product
 from users.models import User, Address
@@ -189,6 +190,24 @@ class OrderView:
 
         return total
 
+    @classmethod
+    def cancel_order(cls, request):
+        if request.user.is_authenticated:
+            if request.method == "POST":
+                order_id = request.POST.get("order_id")
+                order = get_object_or_404(Order, id=order_id)
+                order.status = 4
+                order.save()
+            return redirect("list_all_orders")
+        return redirect('login')
+
+    @classmethod
+    def list_all_orders(cls, request):
+        if request.user.is_authenticated:
+            orders = Order.objects.all()
+            return render(request, '../templates/orders/list_seller_orders.html', {'orders': orders})
+        return redirect('login')
+
 class RatingView:
 
     @classmethod
@@ -216,3 +235,51 @@ class RatingView:
             return redirect('list_user_orders')
         return redirect('login')
 
+
+class SellerOrderView:
+    @classmethod
+    def list(cls, request):
+        if request.user.is_authenticated:
+            user = get_object_or_404(User, username=request.user.username)
+            orders = Order.objects.filter(orderproduct__product__user=user)
+
+            return render(request, '../templates/orders/list_seller_orders.html', {'orders': orders})
+
+        return redirect('login')
+
+    @classmethod
+    def index(cls, request):
+        order_id = request.GET.get('order_id', None)
+        if request.user.is_authenticated:
+            user = get_object_or_404(User, username=request.user.username)
+            order = Order.objects.get(id=order_id, orderproduct__product__user=user)
+            order_products = OrderProduct.objects.filter(order=order)
+
+            return render(request, '../templates/orders/details_seller_order.html', {
+                'order': order,
+                'order_products': order_products
+            })
+
+        return redirect('login')
+
+    @classmethod
+    def cancel(cls, request, order_id):
+        order = get_object_or_404(Order, pk=order_id, orderproduct__product__user=request.user)
+        if request.user.is_authenticated:
+            order.status = 4
+            order.save()
+            return redirect(reverse('seller-order-detail') + '?order_id={}'.format(order_id))
+
+        return redirect('login')
+
+    @classmethod
+    def update(cls, request, order_id):
+        status_value = request.POST.get('status_value', None)
+
+        order = get_object_or_404(Order, pk=order_id, orderproduct__product__user=request.user)
+        if request.user.is_authenticated:
+            order.status = status_value
+            order.save()
+            return redirect(reverse('seller-order-detail') + '?order_id={}'.format(order_id))
+
+        return redirect('login')

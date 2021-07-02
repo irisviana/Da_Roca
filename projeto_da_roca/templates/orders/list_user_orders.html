@@ -40,9 +40,17 @@
                 {% for order in orders %}
                     <tr>
                         <td>
-                            <a href="{% url 'view_order' order.id %}" class="btn btn-primary" title="Ver pedido">
-                                <span class="fas fa-eye"></span>
-                            </a>
+                            <div class="actions">
+                                <a href="{% url 'view_order' order.id %}" class="btn btn-primary" title="Ver pedido">
+                                    <span class="fas fa-eye"></span>
+                                </a>
+                                {% if order.status != 4 and user.is_admin %}
+                                    <button type="button" class="btn btn-danger" data-toggle="modal"
+                                        data-target="#includedModal" data-query="order_id={{ order.id }}" 
+                                        title="Cancelar compra"><span class="fas fa-ban"></span>                           
+                                    </button>
+                                {% endif %}
+                            </div>
                         </td>
                         <td>
                             {{ order.id }}
@@ -70,6 +78,7 @@
                                 R$ {{ order.total_price|floatformat:2|intcomma }}
                             {% endif %}
                         </td>
+                        
                     </tr>
                 {% endfor %}
             {% else %}
@@ -80,4 +89,6 @@
             </tbody>
         </table>
     </div>
+    {% url 'cancel_order' as action_url %}
+    {% include 'modal.html' with modal_id="includedModal" header="Cancelar compra?" message='Tem certeza que deseja cancelar a compra' confirm="Sim" cancel="Cancelar" %}
 {% endblock %}

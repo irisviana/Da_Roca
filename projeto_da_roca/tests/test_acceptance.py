@@ -1321,6 +1321,70 @@ class OrderTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath(f"//a[@href=\"/order/order/{order.id}\"]").click()
         assert banana.name in driver.page_source
 
+    def cancel_order(self):
+        user = User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+        Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='55370000',
+            state='PE',
+            city='Garanhuns',
+            district='Boa Vista',
+            street='Rua rua rua rua',
+            house_number=123,
+        )
+
+        address = Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='55370000',
+            state='PE',
+            city='Garanhuns',
+            district='Boa Vista',
+            street='Rua rua rua rua',
+            house_number=123,
+        )
+
+        category = Category.objects.create(
+            user=user,
+            name='Frutas'
+        )
+
+        banana = Product.objects.create(
+            user=user,
+            name='Banana',
+            variety='Prata',
+            expiration_days=7,
+            stock_amount=50,
+            category=category,
+        )
+
+        payment = Payment.objects.create(
+            type='C', status=0
+        )
+        order = Order.objects.create(
+            status=3, address=address, user=user, payment=payment, total_price=6
+        )
+        OrderProduct.objects.create(
+            quantity=2, product=banana, order=order
+        )
+
+        driver = self.selenium
+        self.test_login(user)
+
+        driver.get('%s%s' % (self.live_server_url, "/order/list_all_orders/"))
+        driver.find_element_by_xpath(f"//button[@data-query=\"order_id={order.id}\"]").click()
+        driver.find_element_by_xpath("//button[@class=\"btn btn-danger btn-confirm\"]").click()
+
+        assert 'Cancelado' in driver.page_source
+
+
 class RatingTest(StaticLiveServerTestCase):
 
     @classmethod
