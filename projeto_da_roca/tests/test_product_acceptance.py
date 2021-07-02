@@ -219,6 +219,65 @@ class FavoritesTest(StaticLiveServerTestCase):
         driver.find_element_by_class_name("favorite").click()
         assert "Favoritar" not in driver.page_source
 
+    
+    def test_access_product_from_favorite(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$216000$Dq1SuZLYh6Hu$Lo2SXFFPL08fXk4HZ2USt2lODDc/FwOZYt3L/1JZ3As=',
+            is_admin = True
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+
+        driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{maca_product.id}"))
+        driver.find_element_by_class_name("favorite").click()
+        driver.get('%s%s' % (self.live_server_url, "/product/favorites/list"))
+        driver.find_element_by_xpath(f'//a[@href="/product/products/view/{maca_product.id}"]').click()
+        assert "Comprar agora" in driver.page_source
+
+    def test_access_producer_from_favorite(self):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$216000$Dq1SuZLYh6Hu$Lo2SXFFPL08fXk4HZ2USt2lODDc/FwOZYt3L/1JZ3As=',
+            is_admin = True
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+
+        driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{maca_product.id}"))
+        driver.find_element_by_class_name("favorite").click()
+        driver.get('%s%s' % (self.live_server_url, "/product/favorites/list"))
+        driver.find_element_by_xpath(f'//a[@href="/user/seller/view/{maca_product.user.id}"]').click()
+        assert "Ver produtos" in driver.page_source
+
+
+
 class ProductsTest(StaticLiveServerTestCase):
 
     @classmethod
