@@ -189,7 +189,7 @@ class OrderView:
                 total += c.product.price * c.quantity
 
         return total
-    
+
     @classmethod
     def cancel_order(cls, request):
         if request.user.is_authenticated:
