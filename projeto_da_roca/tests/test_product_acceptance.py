@@ -2,6 +2,7 @@ import environ
 
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 
 from users.models import User
 from products.models import Category, Product, Favorite
@@ -190,7 +191,8 @@ class FavoritesTest(StaticLiveServerTestCase):
 
         driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{maca_product.id}"))
         driver.find_element_by_class_name("favorite").click()
-        assert "Desfavoritar" not in driver.page_source
+        unfav = driver.find_element_by_xpath("//button[@title=\"Desfavoritar\"]")
+        assert unfav
 
     def test_delete_favorite(self):
         user = User.objects.create(
@@ -217,7 +219,11 @@ class FavoritesTest(StaticLiveServerTestCase):
 
         driver.get('%s%s' % (self.live_server_url, f"/product/products/view/{maca_product.id}"))
         driver.find_element_by_class_name("favorite").click()
-        assert "Favoritar" not in driver.page_source
+        unfav = None
+        try:
+            driver.find_element_by_xpath("//button[@title=\"Desfavoritar\"]")
+        except NoSuchElementException:
+            assert not unfav
 
 class ProductsTest(StaticLiveServerTestCase):
 
