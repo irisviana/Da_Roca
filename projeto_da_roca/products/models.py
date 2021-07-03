@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import get_object_or_404
 from users.models import User
 
 class Category(models.Model):
@@ -19,6 +20,11 @@ class Product(models.Model):
     category = models.ForeignKey(
                Category, on_delete=models.CASCADE, null=False, blank=False)
     product_pic = models.ImageField(upload_to='static/productImages/',default='static/productImages/img_default.png')
+
+    def searchSellerName(self):
+        seller = get_object_or_404(User, id=self.user.id)
+        name = seller.first_name + ' ' + seller.last_name
+        return name
 
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)

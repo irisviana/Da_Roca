@@ -1,4 +1,5 @@
 from django.contrib import messages
+from users.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 from .models import Product, Category, Favorite
 from .forms import ProductForm, CategoryForm
@@ -76,6 +77,28 @@ class ProductView:
                 product.delete()
                 return redirect('list_products')
         return redirect('login')
+
+    @classmethod
+    def delete_product(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                product_id = request.POST['product_id']
+                product = get_object_or_404(
+                    Product, id=product_id)
+                product.delete()
+                return redirect('list_products')
+        return redirect('login')
+
+    @classmethod
+    def delete_product_admin(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'POST':
+                product_id = request.POST['product_id']
+                product = get_object_or_404(
+                    Product, id=product_id)
+                product.delete()
+                return render(request, 'product/manage_products.html')
+        return redirect('login')
     
     @classmethod
     def view_product(cls, request, product_id):
@@ -89,9 +112,6 @@ class ProductView:
                     'favorites': favorite
                 })
         return redirect('login')
-
-    
-        
 
     @classmethod
     def search_product(cls, request):
@@ -108,8 +128,13 @@ class ProductView:
         if request.user.is_authenticated:
             if request.method == 'GET':
                 search_string = request.GET.get('table-search')
+
+                sellers = User.objects.filter(
+                    Q(first_name__icontains=search_string) | Q(last_name__icontains=search_string))
+
                 products = Product.objects.filter(
-                    Q(name__icontains=search_string) | Q(variety__icontains=search_string))
+                    Q(name__icontains=search_string) | Q(variety__icontains=search_string) | Q(user__in=sellers))
+
                 return render(request, 'product/manage_products.html', {'products': products})
 
         return redirect('login')
@@ -120,7 +145,6 @@ class ProductView:
             return render(request, 'product/manage_products.html', )
         return redirect('login')
 
-        
 
 class CategoryView:
     @classmethod

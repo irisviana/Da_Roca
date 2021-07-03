@@ -30,7 +30,7 @@ class UsersTest(StaticLiveServerTestCase):
             cls.selenium = webdriver.Firefox(executable_path=env('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
-        cls.selenium.get('http://127.0.0.1:8000')
+        cls.selenium.get('http://127.0.0.1:4444')
 
     @classmethod
     def tearDownClass(cls):
@@ -398,6 +398,61 @@ class UsersTest(StaticLiveServerTestCase):
         search_input = driver.find_element_by_id("search_")
         search_input.send_keys(user.first_name)
         assert user.first_name not in driver.page_source
+
+    def test_update_delivery_price(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_seller=True,
+            delivery_price=5
+        )
+
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, "/user/seller/"))
+        price_old = driver.find_element_by_name("price").get_attribute('value')
+        search_input = driver.find_element_by_name("price")
+        search_input.clear()
+        search_input.send_keys("1")
+        driver.find_element_by_id("save").click()
+
+        assert price_old in driver.page_source
+
+    def test_delete_product_by_admin(self):
+        user = User.objects.create(
+            first_name='Iris Viana',
+            email='iris@gmail.com',
+            cpf='22222222222',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_seller=True,
+            is_admin=True
+        )
+
+        category = Category.objects.create(
+            name='Verdura'
+        )
+
+        product = Product.objects.create(
+            user=user,
+            name='Alface',
+            variety='Americano',
+            expiration_days=7,
+            price=2,
+            category=category,
+        )
+
+        driver = self.selenium
+        self.test_login(user)
+        driver.get('%s%s' % (self.live_server_url, "/product/products/see"))
+        search_input = driver.find_element_by_id("custom_table-search")
+        search_input.send_keys(product.name)
+        driver.find_element_by_id("button-search").click()
+        driver.find_element_by_id("button-delete").click()
+        driver.find_element_by_xpath("//*[text()='Remover permanentemente']").click()
+
+        assert product.name not in driver.page_source
 
 
 class DeliveryTimeTest(StaticLiveServerTestCase):
