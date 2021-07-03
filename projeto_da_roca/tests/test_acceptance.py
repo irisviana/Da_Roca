@@ -30,7 +30,7 @@ class UsersTest(StaticLiveServerTestCase):
             cls.selenium = webdriver.Firefox(executable_path=env('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
-        cls.selenium.get('http://127.0.0.1:4444')
+        cls.selenium.get('http://127.0.0.1:8000')
 
     @classmethod
     def tearDownClass(cls):
