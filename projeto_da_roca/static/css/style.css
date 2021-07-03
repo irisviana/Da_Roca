@@ -567,3 +567,12 @@
     overflow: hidden;
     overflow-y: auto;
   }
+
+  .product-img {
+    width: 100%;
+  }
+
+  .product-img img {
+    max-width: 500px;
+    width: 100%;
+  }
