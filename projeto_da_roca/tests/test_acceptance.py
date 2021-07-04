@@ -984,7 +984,7 @@ class CartProductTest(StaticLiveServerTestCase):
             password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
             is_admin = True
         )
-        Address.objects.create(
+        address = Address.objects.create(
             user = user,
             address_type = 'user',
             zip_code = '55370000',
@@ -1014,8 +1014,10 @@ class CartProductTest(StaticLiveServerTestCase):
         )
         driver.get('%s%s' % (self.live_server_url, f"/order/cart/"))
         driver.find_element_by_xpath("//a[@title=\"Prosseguir compra\"]").click()
+        address_element = driver.find_element_by_id(address.id)
+        address_element.click()
         driver.find_element_by_class_name("address").click()
-        driver.find_element_by_id("C").click()
+        driver.find_element_by_id("CC").click()
         driver.find_element_by_xpath("//button[@title=\"Finalizar compra\"]").click()
         assert 'Pedido feito com sucesso.' in driver.page_source
 
@@ -1221,6 +1223,98 @@ class CartProductTest(StaticLiveServerTestCase):
         payment_element = driver.find_element_by_id('CC')
         payment_element.click()
         assert check_has_class(payment_element.get_attribute("class"), "active")
+
+    def test_cash_payment_change(self):
+        user = User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+        address = Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='55370000',
+            state='PE',
+            city='Garanhuns',
+            district='Boa Vista',
+            street='Rua rua rua rua',
+            house_number=123,
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        CartProduct.objects.create(
+            user=user,
+            product=maca_product,
+            quantity=20
+        )
+        driver.get('%s%s' % (self.live_server_url, f"/order/cart/"))
+        driver.find_element_by_xpath("//a[@title=\"Prosseguir compra\"]").click()
+        address_element = driver.find_element_by_id(address.id)
+        address_element.click()
+        payment_element = driver.find_element_by_id('C')
+        payment_element.click()
+        change_input = driver.find_element_by_id('change')
+        change_input.send_keys(20)
+        driver.find_element_by_xpath("//button[@title=\"Finalizar compra\"]").click()
+        assert 'Pedido feito com sucesso.' in driver.page_source
+
+    def test_cash_payment_no_change(self):
+        user = User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+        address = Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='55370000',
+            state='PE',
+            city='Garanhuns',
+            district='Boa Vista',
+            street='Rua rua rua rua',
+            house_number=123,
+        )
+        driver = self.selenium
+        self.test_login(user)
+
+        fruit_category = Category.objects.create(name="Fruit")
+        maca_product = Product.objects.create(
+            name='Maça',
+            variety='Comum',
+            expiration_days=7,
+            price=1.5,
+            stock_amount=50,
+            category=fruit_category,
+            user=user
+        )
+        CartProduct.objects.create(
+            user=user,
+            product=maca_product,
+            quantity=20
+        )
+        driver.get('%s%s' % (self.live_server_url, f"/order/cart/"))
+        driver.find_element_by_xpath("//a[@title=\"Prosseguir compra\"]").click()
+        address_element = driver.find_element_by_id(address.id)
+        address_element.click()
+        payment_element = driver.find_element_by_id('C')
+        payment_element.click()
+        driver.find_element_by_xpath("//button[@title=\"Finalizar compra\"]").click()
+        assert 'Defina o valor do troco se for pagar em dinheiro.' in driver.page_source
 
 class OrderTest(StaticLiveServerTestCase):
 

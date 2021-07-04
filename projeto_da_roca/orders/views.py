@@ -124,7 +124,7 @@ class OrderView:
                         return redirect('confirm_order')
 
                     total_price = OrderView.get_total_price(cart)
-                    payment = Payment(type=payment_method, status=0, change=change)
+                    payment = Payment(type=payment_method, status=0, change=change if change else 0)
                     payment.save()
                     order = Order(
                         status=0, address=address, user=user, payment=payment, total_price=total_price)
