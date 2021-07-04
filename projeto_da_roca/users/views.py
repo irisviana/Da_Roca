@@ -317,6 +317,22 @@ class UserView:
         return redirect('home_seller')
 
     @classmethod
+    def update_delivery_price(cls, request):
+        user = get_object_or_404(User, username=request.user.username)
+
+        if request.user.is_authenticated:
+            if request.method == 'GET':
+                price = request.GET.get('price')
+                price.replace(",",".")
+
+                user.delivery_price = price
+                user.save()
+        else:
+            return redirect('login')
+
+        return redirect('home_seller')
+
+    @classmethod
     def search_seller(cls, request):
         if request.user.is_authenticated:
             if request.method == 'GET':

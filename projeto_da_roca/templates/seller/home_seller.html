@@ -54,13 +54,25 @@
                     <input type="text" class="form-control text-center" disabled name="status" value="{{ request.user.store_status }}">
                 </div>
                 <div class="card-footer">
-                    <a href="{% url 'store_status_update'%}" class="btn btn-primary" name="alterar">
+                    <a href="{% url 'store_status_update' %}" class="btn btn-primary" name="alterar">
                         {% if request.user.store_status == 'Aberto' %}
                             Fechar loja
                         {% else %}
                             Abrir loja
                         {% endif %}
                     </a>
+                </div>
+            </div>
+             <div class="card manage">
+                <div class="card-body">
+                    <span class="fas fa-truck fa-2x"></span>
+                    <h3 id="" class="card-title">
+                        Valor da entrega
+                    </h3>
+                    <form method="get" action="{% url 'delivery_price_update' %}">
+                        <input type="number" class="form-control text-center" name="price" value="{{ request.user.delivery_price }}">
+                        <button id="save" type="submit" class="btn btn-primary mt-2">Alterar</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -95,5 +107,4 @@
                     </div>
             </form>
         {% endif %}
-
 {% endblock %}

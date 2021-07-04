@@ -43,6 +43,7 @@ urlpatterns = [
     path('customer_home_search_seller', UserView.search_seller, name='search_sellers'),
     path('seller/', UserView.seller_home, name='home_seller'),
     path('seller/updateStoreStatus', UserView.update_users_store_status, name='store_status_update'),
+    path('seller/updateDeliveryPrice', UserView.update_delivery_price, name='delivery_price_update'),
     path('seller/request', UserView.request_seller, name='seller_request'),
     path('seller/manage_seller', UserView.manage_seller, name='seller_manage'),
     path('seller/view_seller_request/<int:user_id>', UserView.view_seller_request, name='view_request_seller'),

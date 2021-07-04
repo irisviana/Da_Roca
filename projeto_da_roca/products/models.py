@@ -1,4 +1,5 @@
 from django.db import models
+from django.shortcuts import get_object_or_404
 from users.models import User
 
 
@@ -25,6 +26,11 @@ class Product(models.Model):
     def __str__(self):
         return '{} | {} - {}'.format(self.id, self.name, self.variety)
 
+
+    def searchSellerName(self):
+        seller = get_object_or_404(User, id=self.user.id)
+        name = seller.first_name + ' ' + seller.last_name
+        return name
 
 class Favorite(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=False, blank=False)
