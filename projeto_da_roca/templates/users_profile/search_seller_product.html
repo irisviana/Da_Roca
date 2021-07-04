@@ -16,8 +16,9 @@
                                 <img class="rounded-circle" width="100" height="100" src="{{ user.user_pic.url }}">
                             </div>
 
-                            <div class="col-8 mt-5 ml-3">
+                            <div class="col-8 mt-4 ml-3">
                                 <a href="{% url 'view_seller' user.id %}" class="link-success h4">{{ user.first_name }} {{ user.last_name }}</a>
+                                <p class="h5 mt-2">{% if user.delivery_price > 0 %} Entrega: R$ {{ user.delivery_price }}0 {% else %} Entrega: Grátis {% endif %}</p>
                                 <p class="h6 mt-2">{{ user.store_status }}</p>
                             </div>
 
@@ -27,13 +28,14 @@
 
                         {% for product in products %}
 
-                            <div class="mt-4 col-3">
+                            <div class="mt-4 mb-3 col-3">
                                 <img class="rounded-circle" width="100" height="100" src="{{ product.product_pic.url }}">
                             </div>
 
-                            <div class="col-8 mt-5 ml-3">
+                            <div class="col-8 mt-4 mb-2 ml-3">
                                 <a href="{% url 'view_product' product.id %}" class="link-success h4">{{ product.name }}</a>
-                                <p class="h6 mt-2">R$ {{ product.price }}0</p>
+                                <p class="h6 mt-2">{{ product.variety }} R$ {{ product.price }}0</p>
+                                <p class="h6 mt-2">{{ product.searchSellerName }}</p>
                             </div>
 
                         {% endfor %}
