@@ -37,40 +37,37 @@
         {% csrf_token %}
         <input type="hidden" name="payment_method" id="payment_method" value="">
         <input type="hidden" name="address" id="address" value="">
-
         <div class="row mb-3">
-            <div class="col-6">
+            <div class="col-sm-12 col-md-6 col-lg-4 mr-auto" id="confirm-container">
                 <h4>Endereço de entrega</h4>
+                <div class="list-group m-0">
+                    {% for address in addresses %}
+                        <a id="{{ address.id }}" class="list-group-item address list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ address.city }} - {{ address.state }}</h5>
+                            </div>
+                            <p>{{ address.street }} {{ address.number }}</p>
+                            <p class="mb-1">{{ address.district }}</p>
+    
+                            <small>{{ address.zip_code }}</small>
+                        </a>
+                    {% endfor %}
+                </div>
             </div>
-            <div class="col-6">
+            <div class="col-sm-12 col-md-6 col-lg-6">
                 <h4>Formas de pagamento</h4>
-            </div>
-        </div>
-        <div class="row mb-3">
-            <div class="col-4 list-group" id="confirm-container">
-
-                {% for address in addresses %}
-                    <a id="{{ address.id }}" class="list-group-item address list-group-item-action">
-                        <div class="d-flex w-100 justify-content-between">
-                            <h5 class="mb-1">{{ address.city }} - {{ address.state }}</h5>
-                        </div>
-                        <p>{{ address.street }} {{ address.number }}</p>
-                        <p class="mb-1">{{ address.district }}</p>
-
-                        <small>{{ address.zip_code }}</small>
-                    </a>
-                {% endfor %}
-
-            </div>
-            <div class="col-2"></div>
-            <div class="col-6">
-
                 <div class="list-group">
                     <a id="C" class="list-group-item list-group-item-action payment">
                         Dinheiro
                     </a>
                     <a id="CC" class="list-group-item list-group-item-action payment">Cartão de credito</a>
                     <a id="DC" class="list-group-item list-group-item-action payment">Cartão de debito</a>
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="justify-content-end d-none" id="change-container">
+                    <label for="change" class="my-2 mr-2">Troco: R$</label>
+                    <input type="decimal" id="change" name="change" class="form-control w-auto" placeholder="0.00">
                 </div>
             </div>
         </div>
@@ -122,8 +119,8 @@
             {% endif %}
         </div>
         <div class="d-flex justify-content-between">
-            <a class="mt-4 btn btn-secondary w-25" href="{% url 'cart' %}" type="submit" title="Voltar para o carrinho">Voltar para o carrinho</a>
-            <button class="mt-4 btn btn-primary w-25" form="confirm-form" type="submit" title="Finalizar compra">Finalizar compra</button>
+            <a class="mt-4 btn btn-secondary w-auto" href="{% url 'cart' %}" type="submit" title="Voltar para o carrinho">Voltar para o carrinho</a>
+            <button class="mt-4 btn btn-primary w-auto" form="confirm-form" type="submit" title="Finalizar compra">Finalizar compra</button>
         </div>
     </form>
     <script>
@@ -137,6 +134,13 @@
             $(this).addClass('active')
             $('#payment_method').val($(this).attr('id'))
 
+            if ($(this).attr('id') == 'C') {
+                $('#change-container').addClass('d-flex')
+                $('#change-container').removeClass('d-none')
+            } else {
+                $('#change-container').removeClass('d-flex')
+                $('#change-container').addClass('d-none')
+            }
         })
 
     </script>
