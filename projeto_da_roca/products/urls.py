@@ -7,10 +7,13 @@ from .views import ProductView, CategoryView, FavoriteView
 
 urlpatterns = [
     path('products/list', ProductView.list_products, name='list_products'),
+    path('products/see', ProductView.see_products, name='see_products'),
+    path('products/admin', ProductView.search_product_to_admin, name='search_products_admin'),
     path('create', ProductView.create_product, name='create_product'),
     path('customer_home_search_product', ProductView.search_product, name='search_products'),
     path('products/update/<int:product_id>', ProductView.update_product, name='update_product'),
     path('products/delete', ProductView.delete_product, name='delete_product'),
+    path('products/deleteAdmin', ProductView.delete_product_admin, name='delete_product_admin'),
     path('products/view/<int:product_id>', ProductView.view_product, name='view_product'),
     path('categories/list', CategoryView.list_categories, name='list_categories'),
     path('categories/create', CategoryView.create_category, name='create_category'),

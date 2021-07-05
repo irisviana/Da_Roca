@@ -212,33 +212,6 @@ class OrderView:
             return render(request, '../templates/orders/list_seller_orders.html', {'orders': orders})
         return redirect('login')
 
-class RatingView:
-
-    @classmethod
-    def create(cls, request):
-        if request.user.is_authenticated:
-            user = request.user
-            if request.method == 'POST':
-                is_anonimous = request.POST.get('is_anonimous', True)
-                order_id = request.POST['order_id']
-                rate = request.POST['rate']
-                rate_message = request.POST.get('rate_message', None)
-
-                order = Order.objects.get(pk=order_id)
-                ratings = Rating.objects.filter(order_id=order.id)
-                if len(ratings):
-                    messages.error(request, 'Esse pedido já foi avaliado.')
-                    return redirect('list_user_orders')
-                rating = Rating(
-                    order=order,
-                    rate=rate,
-                    rate_message=rate_message,
-                    user=(user if not is_anonimous else None))
-                rating.save()
-                messages.success(request, 'Avaliação publicada com sucesso.')
-            return redirect('list_user_orders')
-        return redirect('login')
-
 
 class SellerOrderView:
     @classmethod
@@ -272,7 +245,7 @@ class SellerOrderView:
         if request.user.is_authenticated:
             order.status = 4
             order.save()
-            return redirect(reverse('seller-order-detail') + '?order_id={}'.format(order_id))
+            return redirect(reverse('seller_order_detail') + '?order_id={}'.format(order_id))
 
         return redirect('login')
 
@@ -284,6 +257,32 @@ class SellerOrderView:
         if request.user.is_authenticated:
             order.status = status_value
             order.save()
-            return redirect(reverse('seller-order-detail') + '?order_id={}'.format(order_id))
+            return redirect(reverse('seller_order_detail') + '?order_id={}'.format(order_id))
 
+        return redirect('login')
+class RatingView:
+
+    @classmethod
+    def create(cls, request):
+        if request.user.is_authenticated:
+            user = request.user
+            if request.method == 'POST':
+                is_anonimous = request.POST.get('is_anonimous', True)
+                order_id = request.POST['order_id']
+                rate = request.POST['rate']
+                rate_message = request.POST.get('rate_message', None)
+
+                order = Order.objects.get(pk=order_id)
+                ratings = Rating.objects.filter(order_id=order.id)
+                if len(ratings):
+                    messages.error(request, 'Esse pedido já foi avaliado.')
+                    return redirect('list_user_orders')
+                rating = Rating(
+                    order=order,
+                    rate=rate,
+                    rate_message=rate_message,
+                    user=(user if not is_anonimous else None))
+                rating.save()
+                messages.success(request, 'Avaliação publicada com sucesso.')
+            return redirect('list_user_orders')
         return redirect('login')

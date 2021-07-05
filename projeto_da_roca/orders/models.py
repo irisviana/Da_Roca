@@ -61,6 +61,11 @@ class Order(models.Model):
     def get_status(self):
         return dict(Order.ORDER_STATUS)[self.status]
 
+    def get_status_options(self):
+        options = dict(Order.ORDER_STATUS)
+        del options[4]
+        return options
+
     def get_producer(self):
         order_products = OrderProduct.objects.filter(
             order=self)
@@ -76,6 +81,7 @@ class OrderProduct(models.Model):
         Product, on_delete=models.CASCADE, null=False, blank=False)
     order = models.ForeignKey(
         Order, on_delete=CASCADE, null=False, blank=False)
+
 
 class Rating(models.Model):
     user = models.ForeignKey(
