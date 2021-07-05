@@ -25,6 +25,7 @@ class User(AbstractUser):
     seller_status = models.CharField(max_length=1, null=True, blank=True, choices=SELLER_STATUS)
     store_status = models.CharField(default='Fechado', max_length=8, null=True, blank=True)
     user_pic = models.ImageField(upload_to='static/userImages/',default='static/userImages/img_default.png')
+    delivery_price = models.FloatField(default=0.00,null=True, blank=True)
 
     def save(self, *args, **kwargs):
         self.username = uuid.uuid4().hex[:30]

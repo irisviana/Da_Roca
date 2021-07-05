@@ -46,18 +46,18 @@
                 <tr>
                     <td>
                         <div class="actions">
+                            <a class="btn btn-primary" href="{% url 'update_category' category.id %}" tittle="Editar categoria">
+                                <span class="fas fa-edit"></span>
+                            </a>
+
                             <button type="button"
                                 class="btn btn-danger"
                                 data-toggle="modal"
                                 data-target="#includedModal"
                                 data-query="category_id={{ category.id }}"
-                                tittle="Deletar categoria">
+                                title="Deletar categoria">
                                 <span class="fas fa-trash"></span>
                             </button>
-                          
-                            <a class="btn btn-primary" href="{% url 'update_category' category.id %}" tittle="Editar categoria">
-                                <span class="fas fa-edit"></span>
-                            </a>
                         </div>
                     </td>
                     <td>{{ category.name }}</td>

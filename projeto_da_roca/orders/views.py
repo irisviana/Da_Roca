@@ -190,6 +190,24 @@ class OrderView:
 
         return total
 
+    @classmethod
+    def cancel_order(cls, request):
+        if request.user.is_authenticated:
+            if request.method == "POST":
+                order_id = request.POST.get("order_id")
+                order = get_object_or_404(Order, id=order_id)
+                order.status = 4
+                order.save()
+            return redirect("list_all_orders")
+        return redirect('login')
+
+    @classmethod
+    def list_all_orders(cls, request):
+        if request.user.is_authenticated:
+            orders = Order.objects.all()
+            return render(request, '../templates/orders/list_seller_orders.html', {'orders': orders})
+        return redirect('login')
+
 
 class SellerOrderView:
     @classmethod
@@ -238,8 +256,6 @@ class SellerOrderView:
             return redirect(reverse('seller_order_detail') + '?order_id={}'.format(order_id))
 
         return redirect('login')
-
-
 class RatingView:
 
     @classmethod
@@ -266,4 +282,3 @@ class RatingView:
                 messages.success(request, 'Avaliação publicada com sucesso.')
             return redirect('list_user_orders')
         return redirect('login')
-

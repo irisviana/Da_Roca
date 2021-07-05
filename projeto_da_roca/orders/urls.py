@@ -1,7 +1,6 @@
 from django.urls import path
 
-from .views import SellerOrderView
-from .views import CartProductView, OrderView, RatingView
+from .views import CartProductView, OrderView, RatingView, SellerOrderView
 
 
 urlpatterns = [
@@ -12,9 +11,16 @@ urlpatterns = [
     path('confirm/', OrderView.list, name='confirm_order'),
     path('seller/', SellerOrderView.list, name='seller_orders'),
     path('seller/datails', SellerOrderView.index, name='seller_order_detail'),
-    path('cancel/<int:order_id>', SellerOrderView.cancel, name='cancel_order'),
+    path('cancel/<int:order_id>', SellerOrderView.cancel, name='seller_cancel_order'),
     path('update/status/<int:order_id>', SellerOrderView.update, name='update_status_order'),
     path('order/list', OrderView.list_order, name='list_user_orders'),
     path('order/<int:order_id>', OrderView.view_order, name='view_order'),
     path('order/rate', RatingView.create, name='create_rating'),
+    path('order/cancel', OrderView.cancel_order, name='cancel_order'),
+    path('seller/', SellerOrderView.list, name='seller-orders'),
+    path('seller/datails', SellerOrderView.index, name='seller-order-detail'),
+    path('cancel/<int:order_id>', SellerOrderView.cancel, name='cancel-order'),
+    path('update/status/<int:order_id>', SellerOrderView.update, name='update-status-order'),
+    path('list_all_orders/', OrderView.list_all_orders, name='list_all_orders'),
+
 ]
