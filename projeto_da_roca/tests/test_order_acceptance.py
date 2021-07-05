@@ -86,7 +86,7 @@ class OrderTest(StaticLiveServerTestCase):
             product=maca_product,
             quantity=20
         )
-        driver.get('%s%s' % (self.live_server_url, f"/order/cart/"))
+        driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
         driver.find_element_by_xpath("//a[@title=\"Prosseguir compra\"]").click()
         driver.find_element_by_class_name("address").click()
         driver.find_element_by_id("C").click()
@@ -97,7 +97,7 @@ class OrderTest(StaticLiveServerTestCase):
         driver = self.selenium
         self.test_create_order()
 
-        driver.get('%s%s' % (self.live_server_url, f"/order/seller/"))
+        driver.get('%s%s' % (self.live_server_url, "/order/seller/"))
         driver.find_element_by_class_name('order-cell')
         assert True
 
@@ -105,8 +105,8 @@ class OrderTest(StaticLiveServerTestCase):
         driver = self.selenium
         self.test_create_order()
 
-        driver.get('%s%s' % (self.live_server_url, f"/order/seller/"))
-        driver.find_element_by_xpath(f'//a[@title=\"Ver pedido\"]').click()
+        driver.get('%s%s' % (self.live_server_url, "/order/seller/"))
+        driver.find_element_by_xpath('//a[@title=\"Ver pedido\"]').click()
         driver.find_element_by_id('update-status-button').click()
         driver.find_element_by_id('update-status-modal-button').click()
         select_option = Select(driver.find_element_by_id('status-value')).first_selected_option.get_attribute(
@@ -118,8 +118,8 @@ class OrderTest(StaticLiveServerTestCase):
         driver = self.selenium
         self.test_create_order()
 
-        driver.get('%s%s' % (self.live_server_url, f"/order/seller/"))
-        driver.find_element_by_xpath(f'//a[@title=\"Ver pedido\"]').click()
+        driver.get('%s%s' % (self.live_server_url, "/order/seller/"))
+        driver.find_element_by_xpath('//a[@title=\"Ver pedido\"]').click()
         driver.find_element_by_xpath("//select[@name='status_value']/option[text()='Em rota de entrega']").click()
         select_option = Select(driver.find_element_by_id('status-value')).first_selected_option.get_attribute(
             "value")
@@ -130,8 +130,8 @@ class OrderTest(StaticLiveServerTestCase):
         driver = self.selenium
         self.test_create_order()
 
-        driver.get('%s%s' % (self.live_server_url, f"/order/seller/"))
-        driver.find_element_by_xpath(f'//a[@title=\"Ver pedido\"]').click()
+        driver.get('%s%s' % (self.live_server_url, "/order/seller/"))
+        driver.find_element_by_xpath('//a[@title=\"Ver pedido\"]').click()
         driver.find_element_by_xpath("//select[@name='status_value']/option[text()='Concluído']").click()
         select_option = Select(driver.find_element_by_id('status-value')).first_selected_option.get_attribute(
             "value")
