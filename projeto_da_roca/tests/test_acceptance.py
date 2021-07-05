@@ -1277,6 +1277,7 @@ class CartProductTest(StaticLiveServerTestCase):
         payment_element.click()
         assert check_has_class(payment_element.get_attribute("class"), "active")
 
+
 class OrderTest(StaticLiveServerTestCase):
 
     @classmethod
