@@ -350,6 +350,7 @@
     border-radius: 5px;
     width: 200px;
     top: 3em;
+    z-index: 99;
   }
 
   .filter-popup.disabled {

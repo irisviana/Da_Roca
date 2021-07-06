@@ -17,7 +17,7 @@
 					</button>
 					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 						{% for category in categories %}
-					  		<a class="dropdown-item" href="#">{{category.name}}</a>
+					  		<a class="dropdown-item" href="{% url 'filter_product_category' %}?category_id={{category.id}}">{{category.name}}</a>
 						{% endfor%}
 					</div>
 				  </div>

@@ -131,6 +131,25 @@ class ProductView:
         return redirect('login')
 
     @classmethod
+    def filter_product_category(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'GET':
+                category_id = request.GET.get('category_id')
+                products = []
+                if category_id:
+                    products = Product.objects.filter(category_id=category_id)
+                return render(
+                    request,
+                    '../templates/users_profile/search_seller_product.html',
+                    {
+                        'products': products,
+                        'filter': 'Produto'
+                    }
+                )
+
+        return redirect('login')
+
+    @classmethod
     def search_product_to_admin(cls, request):
         if request.user.is_authenticated:
             if request.method == 'GET':
