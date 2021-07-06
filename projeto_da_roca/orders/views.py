@@ -104,12 +104,16 @@ class OrderView:
                 if request.method == "POST":
                     payment_method = request.POST.get('payment_method')
                     address_id = request.POST.get('address')
+                    change = request.POST.get('change', None)
                     address = None
                     if not payment_method:
                         messages.error(request, 'Selecione um método de pagamento.')
                         return redirect('confirm_order')
                     if not address_id:
                         messages.error(request, 'Selecione um endereço de entrega.')
+                        return redirect('confirm_order')
+                    if not change and payment_method == 'C':
+                        messages.error(request, 'Defina o valor do troco se for pagar em dinheiro.')
                         return redirect('confirm_order')
                     try:
                         address = Address.objects.get(id=address_id, user=user)
@@ -120,7 +124,7 @@ class OrderView:
                         return redirect('confirm_order')
 
                     total_price = OrderView.get_total_price(cart)
-                    payment = Payment(type=payment_method, status=0)
+                    payment = Payment(type=payment_method, status=0, change=change if change else 0)
                     payment.save()
                     order = Order(
                         status=0, address=address, user=user, payment=payment, total_price=total_price)
