@@ -61,9 +61,15 @@
             <p>Endereço de entrega:
                 <strong>{{ order.address.street }}</strong>
             </p>
-            <p>Produtor
-                <strong><a href="{% url 'view_seller' order.get_producer.id %}">{{ order.get_producer.first_name }}</a></strong>
-            </p>
+            {% if order.get_producer %}
+                <p>Produtor
+                    <strong>
+                        <a href="{% url 'view_seller' order.get_producer.id %}">
+                            {{ order.get_producer.first_name }}
+                        </a>
+                    </strong>
+                </p>
+            {% endif %}
         </div>
         {% if messages %}
             {% for message in messages %}

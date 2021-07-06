@@ -71,7 +71,11 @@
                             {% endif %}
                         </td>
                         <td>
-                            <a href="{% url 'view_seller' order.get_producer.id %}">{{ order.get_producer.first_name }}</a>
+                            {% if order.get_producer %}
+                                <a href="{% url 'view_seller' order.get_producer.id %}">
+                                    {{ order.get_producer.first_name }}
+                                </a>
+                            {% endif %}
                         </td>
                         <td>
                             {% if order.total_price %}
