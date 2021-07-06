@@ -7,7 +7,27 @@
     <div class="search-bar input-group border-custom rounded-pill p-1">
         <form id="form-search" name="form-search" class="search-bar input-group" method="get" action="">
             <input id="search_" name="search" type="search" placeholder="O que você procura?" aria-describedby="button-addon3" class="form-control bg-none border-0">
-             <div class="input-group-append border-0">
+            <div class="input-group-append border-0 dropdown">
+                <button class="btn btn-secondary btn-nav dropdown-toggle" type="button" id="filterSearchDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Filtrar por:
+                    {% if filter %}
+                        {{ filter }}
+                    {% else %}
+                        Produto
+                    {% endif %}
+                </button>
+                <div class="dropdown-menu" aria-labelledby="filterSearchDropdown">
+                    <div class="form-control {% if filter and filter != 'Produtor' %} active {% elif not filter %} active {% endif %}">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="produto" value="option2" {% if filter and filter != 'Produtor' %} checked {% elif not filter %} checked {% endif %}>
+                        <label class="form-check-label" for="produto">Produto</label>
+                    </div>
+                    <div class="form-control {% if filter and filter == 'Produtor' %} active {% endif %}">
+                        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="vendedor" value="option1" {% if filter and filter == 'Produtor' %} checked {% endif %}>
+                        <label class="form-check-label" for="vendedor">Produtor</label>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group-append border-0">
                 <button id="button-addon3" type="submit" onclick="choice();" class="btn btn-primary"><i class="fa fa-search"></i></button>
             </div>
         </form>
@@ -53,4 +73,11 @@
         }
 
     }
+
+    document.getElementById('vendedor').addEventListener('change', function() {
+        document.getElementById('filterSearchDropdown').innerHTML = 'Filtrar por: Produtor '
+    })
+    document.getElementById('produto').addEventListener('change', function() {
+        document.getElementById('filterSearchDropdown').innerHTML = 'Filtrar por: Produto '
+    })
 </script>
