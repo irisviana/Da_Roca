@@ -1688,3 +1688,211 @@ class RatingTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath("//input[@id=\"rate-5\"]").click()
         driver.find_element_by_xpath("//button[@title=\"Avaliar\"]").click()
         assert 'Avaliação publicada com sucesso.' in driver.page_source
+
+
+class AddressTest(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+
+        cls.selenium = None
+
+        if TEST_ON_CHROME:
+            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+        elif TEST_ON_FIREFOX:
+            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+
+        cls.selenium.get('http://127.0.0.1:8000')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+
+    def test_login(self, user=False):
+        user = User.objects.create(
+            first_name = 'User',
+            email = 'user@gmail.com',
+            cpf = '11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin = True
+        ) if not user else user
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, '/login/'))
+        username_input = driver.find_element_by_name("username")
+        username_input.send_keys(user.email)
+        password_input = driver.find_element_by_name("password")
+        password_input.send_keys('abcde123456')
+        driver.find_element_by_xpath('//input[@value="Entrar"]').click()
+        assert 'email ou senha estão incorretos' not in driver.page_source
+
+    def test_add_address(self):
+
+        user = User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+
+        self.test_login(user)
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/user/address/list"))
+        driver.find_element_by_id("add_button").click()
+
+        zip_code = driver.find_element_by_id("id_zip_code")
+        zip_code.send_keys('56.640-000')
+        driver.find_element_by_xpath("//select[@id='id_state']/option[text()='Pernambuco']").click()
+        city = driver.find_element_by_id("id_city")
+        city.send_keys('Custódia')
+        district = driver.find_element_by_id("id_district")
+        district.send_keys('Centro')
+        street = driver.find_element_by_id("id_street")
+        street.send_keys('Ten Moura')
+        house_number = driver.find_element_by_id("id_house_number")
+        house_number.send_keys(610)
+
+        driver.find_element_by_id('submit-id-save').click()
+
+        assert '56.640-000' in driver.page_source and '610' in driver.page_source
+
+    def test_add_address_error(self):
+
+        user = User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+
+        self.test_login(user)
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/user/address/list"))
+        driver.find_element_by_id("add_button").click()
+
+        zip_code = driver.find_element_by_id("id_zip_code")
+        zip_code.send_keys('56.640-000')
+        driver.find_element_by_xpath("//select[@id='id_state']/option[text()='Pernambuco']").click()
+        city = driver.find_element_by_id("id_city")
+        city.send_keys('Custódia')
+        district = driver.find_element_by_id("id_district")
+        district.send_keys('Centro')
+        street = driver.find_element_by_id("id_street")
+        street.send_keys('Ten Moura')
+
+        driver.find_element_by_id('submit-id-save').click()
+
+        assert '56.640-000' not in driver.page_source and '610' not in driver.page_source
+
+    def test_remove_address(self):
+
+        user = User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+
+        address = Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='56640000',
+            state='PE',
+            city='Custódia',
+            district='Centro',
+            street='Ten Moura',
+            house_number=610,
+        )
+
+        self.test_login(user)
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/user/address/list"))
+        driver.find_element_by_id("btn_delete").click()
+        driver.find_element_by_xpath("//*[text()='Sim']").click()
+
+        assert '56.640-000' not in driver.page_source and '610' not in driver.page_source
+
+    def test_edit_address(self):
+
+        user = User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+
+        address = Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='56640000',
+            state='PE',
+            city='Custódia',
+            district='Centro',
+            street='Ten Moura',
+            house_number=610,
+        )
+
+        self.test_login(user)
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/user/address/list"))
+        driver.find_element_by_id("btn_edit").click()
+
+        zip_code = driver.find_element_by_id("id_zip_code")
+        zip_code.clear()
+        zip_code.send_keys('56.641-000')
+        house_number = driver.find_element_by_id("id_house_number")
+        house_number.clear()
+        house_number.send_keys(611)
+
+        driver.find_element_by_id('submit-id-save').click()
+
+        assert '56.641-000' in driver.page_source and '611' in driver.page_source
+
+    def test_edit_address_error(self):
+
+        user = User.objects.create(
+            first_name='User',
+            email='user@gmail.com',
+            cpf='11111111111',
+            password='pbkdf2_sha256$260000$TuHWxP0N32cFSfqCkGVVvl$33dSJ0TKPHQev0weDFHu97mPz8oIPAAdphqDLvo1A3U=',
+            is_admin=True
+        )
+
+        address = Address.objects.create(
+            user=user,
+            address_type='user',
+            zip_code='56640000',
+            state='PE',
+            city='Custódia',
+            district='Centro',
+            street='Ten Moura',
+            house_number=610,
+        )
+
+        self.test_login(user)
+
+        driver = self.selenium
+        driver.get('%s%s' % (self.live_server_url, "/user/address/list"))
+        driver.find_element_by_id("btn_edit").click()
+
+        zip_code = driver.find_element_by_id("id_zip_code")
+        zip_code.clear()
+        zip_code.send_keys('56.641-000')
+        house_number = driver.find_element_by_id("id_house_number")
+        house_number.clear()
+        house_number.send_keys(611)
+
+        driver.find_element_by_id('submit-id-save').click()
+
+        assert '56.640-000' not in driver.page_source and '610' not in driver.page_source
+
