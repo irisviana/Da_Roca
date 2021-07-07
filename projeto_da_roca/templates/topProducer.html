@@ -1,0 +1,162 @@
+<div class="container" style="margin-bottom:3cm;">
+    <div class="row blog">
+        <div class="col-md-12">
+            <div id="blogCarousel" class="carousel slide" data-ride="carousel">
+                {% if producers_recom|length > 4 %}
+                    <ol class="carousel-indicators">
+                        <li data-target="#blogCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#blogCarousel" data-slide-to="1"></li>
+                    </ol>
+                {% endif %}
+                <div class="d-flex justify-content-between">
+                    <p>TOP Produtores</p>
+                    <a class="btn btn-secondary w-auto" href="{%url 'search_sellers'%}"">Visualizar tudo</a>
+                </div>
+
+                <!-- Carousel items -->
+                <div class="carousel-inner">
+
+                    <div class="carousel-item active">
+                        <div class="row">
+                            {% if producers_recom|length > 0 %}
+                                <div class="imgcontainer">
+                                    <div class="header">
+                                        <a href="{%url 'view_seller' producers_recom.0.id%}">
+                                            <img src="{{ producers_recom.0.user_pic.url}}" alt="Image">
+                                        </a>
+                                    </div>
+                                    <div class="body">
+                                        <h4 class="mb-0 mt-2">{{producers_recom.0.first_name}}</h4>
+                                        <h6>Entrega: {{producers_recom.0.delivery_price}}</h6>
+                                        <p>Loja: {{producers_recom.0.store_status}}</p>
+                                        
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if producers_recom|length > 1 %}
+                                <div class="imgcontainer">
+                                    <div class="header">
+                                        <a href="{%url 'view_seller' producers_recom.1.id%}">
+                                            <img src="{{ producers_recom.1.user_pic.url}}" alt="Image">
+                                        </a>
+                                    </div>
+                                    <div class="body">
+                                        <h4 class="mb-0 mt-2">{{producers_recom.1.first_name}}</h4>
+                                        <h6>Entrega: {{producers_recom.1.delivery_price}}</h6>
+                                        <p>Loja: {{producers_recom.1.store_status}}</p>
+                                        
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if producers_recom|length > 2 %}
+                                <div class="imgcontainer">
+                                    <div class="header">
+                                        <a href="{%url 'view_seller' producers_recom.2.id%}">
+                                            <img src="{{ producers_recom.2.user_pic.url}}" alt="Image">
+                                        </a>
+                                    </div>
+                                    <div class="body">
+                                        <h4 class="mb-0 mt-2">{{producers_recom.2.first_name}}</h4>
+                                        <h6>Entrega: {{producers_recom.2.delivery_price}}</h6>
+                                        <p>Loja: {{producers_recom.2.store_status}}</p>
+                                        
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if producers_recom|length > 3 %}
+                                <div class="imgcontainer">
+                                    <div class="header">
+                                        <a href="{%url 'view_seller' producers_recom.3.id%}">
+                                            <img src="{{ producers_recom.3.user_pic.url}}" alt="Image">
+                                        </a>
+                                    </div>
+                                    <div class="body">
+                                        <h4 class="mb-0 mt-2">{{producers_recom.3.first_name}}</h4>
+                                        <h6>Entrega: {{producers_recom.3.delivery_price}}</h6>
+                                        <p>Loja: {{producers_recom.3.store_status}}</p>
+                                        
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                        </div>
+                        <!--.row-->
+                    </div>
+                    <!--.item-->
+                    {% if producers_recom|length > 4 %}
+                        <div class="carousel-item">
+                            <div class="row">
+                                {% if producers_recom|length > 4 %}
+                                    <div class="imgcontainer">
+                                        <div class="header">
+                                            <a href="{%url 'view_seller' producers_recom.4.id%}">
+                                                <img src="{{ producers_recom.4.user_pic.url}}" alt="Image">
+                                            </a>
+                                        </div>
+                                        <div class="body">
+                                            <h4 class="mb-0 mt-2">{{producers_recom.4.first_name}}</h4>
+                                            <h6>Entrega: {{producers_recom.4.delivery_price}}</h6>
+                                            <p>Loja: {{producers_recom.4.store_status}}</p>
+                                            
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if producers_recom|length > 5 %}
+                                    <div class="imgcontainer">
+                                        <div class="header">
+                                            <a href="{%url 'view_seller' producers_recom.5.id%}">
+                                                <img src="{{ producers_recom.5.user_pic.url}}" alt="Image">
+                                            </a>
+                                        </div>
+                                        <div class="body">
+                                            <h4 class="mb-0 mt-2">{{producers_recom.5.first_name}}</h4>
+                                            <h6>Entrega: {{producers_recom.5.delivery_price}}</h6>
+                                            <p>Loja: {{producers_recom.5.store_status}}</p>
+                                            
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if producers_recom|length > 6 %}
+                                    <div class="imgcontainer">
+                                        <div class="header">
+                                            <a href="{%url 'view_seller' producers_recom.6.id%}">
+                                                <img src="{{ producers_recom.6.user_pic.url}}" alt="Image">
+                                            </a>
+                                        </div>
+                                        <div class="body">
+                                            <h4 class="mb-0 mt-2">{{producers_recom.6.first_name}}</h4>
+                                            <h6>Entrega: {{producers_recom.6.delivery_price}}</h6>
+                                            <p>Loja: {{producers_recom.6.store_status}}</p>
+                                            
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if producers_recom|length > 7 %}
+                                    <div class="imgcontainer">
+                                        <div class="header">
+                                            <a href="{%url 'view_seller' producers_recom.7.id%}">
+                                                <img src="{{ producers_recom.7.user_pic.url}}" alt="Image">
+                                            </a>
+                                        </div>
+                                        <div class="body">
+                                            <h4 class="mb-0 mt-2">{{producers_recom.7.first_name}}</h4>
+                                            <h6>Entrega: {{producers_recom.7.delivery_price}}</h6>
+                                            <p>Loja: {{producers_recom.7.store_status}}</p>
+                                            
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!--.row-->
+                        </div>
+                        <!--.item-->
+                        {% endif %}
+
+                </div>
+                <!--.carousel-inner-->
+            </div>
+            <!--.Carousel-->
+
+        </div>
+    </div>
+</div>

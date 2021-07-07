@@ -7,5 +7,10 @@
 {% endblock %}
 
 {% block content %}
- 	 
+    {% if products_recom|length > 0 %}
+        {% include 'topProducts.html' %}
+    {% endif %}
+    {% if producers_recom|length > 0 %}
+        {% include 'topProducer.html' %}
+    {% endif %}
 {% endblock %}
