@@ -1,0 +1,162 @@
+<div class="container" style="margin-bottom:3cm;">
+    <div class="row blog">
+        <div class="col-md-12">
+            <div id="blogCarousel" class="carousel slide" data-ride="carousel">
+                {% if products_recom|length > 4 %}
+                    <ol class="carousel-indicators">
+                        <li data-target="#blogCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#blogCarousel" data-slide-to="1"></li>
+                    </ol>
+                {% endif %}
+                <div class="d-flex justify-content-between">
+                    <p>TOP Produtos</p>
+                    <a class="btn btn-secondary w-auto" href="{%url 'search_products'%}">Visualizar tudo</a>
+                </div>
+
+                <!-- Carousel items -->
+                <div class="carousel-inner">
+
+                    <div class="carousel-item active">
+                        <div class="row">
+                            {% if products_recom|length > 0 %}
+                                <div class="imgcontainer">
+                                    <div class="header">
+                                        <a href="{%url 'view_product' products_recom.0.id%}">
+                                            <img src="{{ products_recom.0.product_pic.url}}" alt="Image">
+                                        </a>
+                                    </div>
+                                    <div class="body">
+                                        <h4 class="mb-0 mt-2">{{products_recom.0.name}}</h4>
+                                        <p>{{products_recom.0.variety}}</p>
+                                        <h4>R$ {{products_recom.0.price}}</h4>
+                                        <p>Vendido por <a href="{%url 'view_seller' products_recom.0.user.id%}">{{products_recom.0.user.first_name}}</a></p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if products_recom|length > 1 %}
+                                <div class="imgcontainer">
+                                    <div class="header">
+                                        <a href="{%url 'view_product' products_recom.1.id%}">
+                                            <img src="{{ products_recom.1.product_pic.url}}" alt="Image">
+                                        </a>
+                                    </div>
+                                    <div class="body">
+                                        <h4 class="mb-0 mt-2">{{products_recom.1.name}}</h4>
+                                        <p>{{products_recom.1.variety}}</p>
+                                        <h4>R$ {{products_recom.1.price}}</h4>
+                                        <p>Vendido por <a href="{%url 'view_seller' products_recom.1.user.id%}">{{products_recom.1.user.first_name}}</a></p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if products_recom|length > 2 %}
+                                <div class="imgcontainer">
+                                    <div class="header">
+                                        <a href="{%url 'view_product' products_recom.2.id%}">
+                                            <img src="{{ products_recom.2.product_pic.url}}" alt="Image">
+                                        </a>
+                                    </div>
+                                    <div class="body">
+                                        <h4 class="mb-0 mt-2">{{products_recom.2.name}}</h4>
+                                        <p>{{products_recom.2.variety}}</p>
+                                        <h4>R$ {{products_recom.2.price}}</h4>
+                                        <p>Vendido por <a href="{%url 'view_seller' products_recom.2.user.id%}">{{products_recom.2.user.first_name}}</a></p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if products_recom|length > 3 %}
+                                <div class="imgcontainer">
+                                    <div class="header">
+                                        <a href="{%url 'view_product' products_recom.3.id%}">
+                                            <img src="{{ products_recom.3.product_pic.url}}" alt="Image">
+                                        </a>
+                                    </div>
+                                    <div class="body">
+                                        <h4 class="mb-0 mt-2">{{products_recom.3.name}}</h4>
+                                        <p>{{products_recom.3.variety}}</p>
+                                        <h4>R$ {{products_recom.3.price}}</h4>
+                                        <p>Vendido por <a href="{%url 'view_seller' products_recom.3.user.id%}">{{products_recom.3.user.first_name}}</a></p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                        </div>
+                        <!--.row-->
+                    </div>
+                    <!--.item-->
+                    {% if products_recom|length > 4 %}
+                        <div class="carousel-item">
+                            <div class="row">
+                                {% if products_recom|length > 4 %}
+                                    <div class="imgcontainer">
+                                        <div class="header">
+                                            <a href="{%url 'view_product' products_recom.4.id%}">
+                                                <img src="{{ products_recom.4.product_pic.url}}" alt="Image">
+                                            </a>
+                                        </div>
+                                        <div class="body">
+                                            <h4 class="mb-0 mt-2">{{products_recom.4.name}}</h4>
+                                            <p>{{products_recom.4.variety}}</p>
+                                            <h4>R$ {{products_recom.4.price}}</h4>
+                                            <p>Vendido por <a href="{%url 'view_seller' products_recom.4.user.id%}">{{products_recom.4.user.first_name}}</a></p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if products_recom|length > 5 %}
+                                    <div class="imgcontainer">
+                                        <div class="header">
+                                            <a href="{%url 'view_product' products_recom.5.id%}">
+                                                <img src="{{ products_recom.5.product_pic.url}}" alt="Image">
+                                            </a>
+                                        </div>
+                                        <div class="body">
+                                            <h4 class="mb-0 mt-2">{{products_recom.5.name}}</h4>
+                                            <p>{{products_recom.5.variety}}</p>
+                                            <h4>R$ {{products_recom.5.price}}</h4>
+                                            <p>Vendido por <a href="{%url 'view_seller' products_recom.5.user.id%}">{{products_recom.5.user.first_name}}</a></p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if products_recom|length > 6 %}
+                                    <div class="imgcontainer">
+                                        <div class="header">
+                                            <a href="{%url 'view_product' products_recom.6.id%}">
+                                                <img src="{{ products_recom.6.product_pic.url}}" alt="Image">
+                                            </a>
+                                        </div>
+                                        <div class="body">
+                                            <h4 class="mb-0 mt-2">{{products_recom.6.name}}</h4>
+                                            <p>{{products_recom.6.variety}}</p>
+                                            <h4>R$ {{products_recom.6.price}}</h4>
+                                            <p>Vendido por <a href="{%url 'view_seller' products_recom.6.user.id%}">{{products_recom.6.user.first_name}}</a></p>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                {% if products_recom|length > 7 %}
+                                    <div class="imgcontainer">
+                                        <div class="header">
+                                                <a href="{%url 'view_product' products_recom.7.id%}">
+                                                    <img src="{{ products_recom.7.product_pic.url}}" alt="Image">
+                                                </a>
+                                        </div>
+                                            <div class="body">
+                                                <h4 class="mb-0 mt-2">{{products_recom.7.name}}</h4>
+                                                <p>{{products_recom.7.variety}}</p>
+                                                <h4>R$ {{products_recom.7.price}}</h4>
+                                                <p>Vendido por <a href="{%url 'view_seller' products_recom.7.user.id%}">{{products_recom.7.user.first_name}}</a></p>
+                                            </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <!--.row-->
+                        </div>
+                        <!--.item-->
+                        {% endif %}
+
+                </div>
+                <!--.carousel-inner-->
+            </div>
+            <!--.Carousel-->
+
+        </div>
+    </div>
+</div>

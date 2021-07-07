@@ -12,6 +12,7 @@ from .models import DeliveryTime
 from .models import ServiceAddress
 from .models import User
 from orders.models import Order
+from products.models import Product
 
 
 # Create your views here.
@@ -211,7 +212,9 @@ class UserView:
 
     @classmethod
     def home(cls, request):
-        return render(request, 'home.html')
+        products_recom = Product.objects.all()
+        producers_recom = User.objects.filter(is_seller=True)
+        return render(request, 'home.html',{"products_recom":products_recom,"producers_recom":producers_recom})
 
     @classmethod
     def admin_home(cls, request):
@@ -331,8 +334,11 @@ class UserView:
     def search_seller(cls, request):
         if request.user.is_authenticated:
             if request.method == 'GET':
-                search_string = request.GET.get('search')
-                sellers = User.objects.filter(Q(first_name__icontains=search_string) | Q(last_name__icontains=search_string),is_seller=True)
+                search_string = request.GET.get('search',None)
+                if search_string:
+                    sellers = User.objects.filter(Q(first_name__icontains=search_string) | Q(last_name__icontains=search_string),is_seller=True)
+                else :
+                    sellers = User.objects.filter(is_seller=True)
                 return render(
                     request,
                     '../templates/users_profile/search_seller_product.html',
