@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="inner_container mt-4">
-        <a class="btn btn-primary" href="{% url 'create_customer_address' %}">
+        <a id="add_button" class="btn btn-primary" href="{% url 'create_customer_address' %}">
             Adicionar
         </a>
         <table class="custom_table mt-5">
@@ -34,9 +34,10 @@
                         <td>
                             <div class="actions">
                                 <a class="btn btn-primary" href="{% url 'update_address' address.id %}">
-                                    <span class="fas fa-edit"></span>
+                                    <span id="btn_edit" class="fas fa-edit"></span>
                                 </a>
                                 <button type="button"
+                                    id="btn_delete"
                                     class="btn btn-danger"
                                     data-toggle="modal"
                                     data-target="#includedModal"
