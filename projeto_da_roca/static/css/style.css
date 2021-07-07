@@ -201,6 +201,22 @@
   .btn.btn-nav {
     width: min-content;
     margin: 0 0.5em;
+    border-radius: 5px !important;
+  }
+
+  .input-group-append .form-control {
+    background-color: var(--color-white);
+    border: 1px solid var(--color-transparent);
+  }
+
+  .input-group-append .form-control:hover, .input-group-append .form-control:active {
+    background-color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    color: var(--color-white);
+  }
+
+  .input-group-append .dropdown-menu {
+    padding: 0.5em 0.5em 0.5em 1em;
   }
 
   .btn-primary, .btn-primary:visited, .btn-primary:link {
@@ -226,6 +242,7 @@
     border: 1px solid var(--color-primary);
     color: var(--color-primary) !important;
     box-shadow: var(--shadow-button);
+    border-radius: 5px !important;
   }
 
   .btn.btn-primary:disabled {
@@ -333,6 +350,7 @@
     border-radius: 5px;
     width: 200px;
     top: 3em;
+    z-index: 99;
   }
 
   .filter-popup.disabled {
@@ -614,3 +632,12 @@
 .carousel-indicators{
   bottom: -20px;
 }
+
+  .product-img {
+    width: 100%;
+  }
+
+  .product-img img {
+    max-width: 500px;
+    width: 100%;
+  }

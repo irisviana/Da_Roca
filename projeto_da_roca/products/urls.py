@@ -11,6 +11,7 @@ urlpatterns = [
     path('products/admin', ProductView.search_product_to_admin, name='search_products_admin'),
     path('create', ProductView.create_product, name='create_product'),
     path('customer_home_search_product', ProductView.search_product, name='search_products'),
+    path('customer_home_filter_product_category', ProductView.filter_product_category, name='filter_product_category'),
     path('products/update/<int:product_id>', ProductView.update_product, name='update_product'),
     path('products/delete', ProductView.delete_product, name='delete_product'),
     path('products/deleteAdmin', ProductView.delete_product_admin, name='delete_product_admin'),

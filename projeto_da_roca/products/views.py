@@ -117,12 +117,39 @@ class ProductView:
     def search_product(cls, request):
         if request.user.is_authenticated:
             if request.method == 'GET':
+
                 search_string = request.GET.get('search',None)
                 if search_string:
                     products = Product.objects.filter(Q(name__icontains=search_string) | Q(variety__icontains=search_string))
                 else:
                     products = Product.objects.all()
-                return render(request, '../templates/users_profile/search_seller_product.html', {'products': products})
+                return render(
+                    request,
+                    '../templates/users_profile/search_seller_product.html',
+                    {
+                        'products': products,
+                        'filter': 'Produto'
+                    }
+                )
+
+        return redirect('login')
+
+    @classmethod
+    def filter_product_category(cls, request):
+        if request.user.is_authenticated:
+            if request.method == 'GET':
+                category_id = request.GET.get('category_id')
+                products = []
+                if category_id:
+                    products = Product.objects.filter(category_id=category_id)
+                return render(
+                    request,
+                    '../templates/users_profile/search_seller_product.html',
+                    {
+                        'products': products,
+                        'filter': 'Produto'
+                    }
+                )
 
         return redirect('login')
 

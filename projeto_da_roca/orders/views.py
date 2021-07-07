@@ -104,12 +104,16 @@ class OrderView:
                 if request.method == "POST":
                     payment_method = request.POST.get('payment_method')
                     address_id = request.POST.get('address')
+                    change = request.POST.get('change', None)
                     address = None
                     if not payment_method:
                         messages.error(request, 'Selecione um método de pagamento.')
                         return redirect('confirm_order')
                     if not address_id:
                         messages.error(request, 'Selecione um endereço de entrega.')
+                        return redirect('confirm_order')
+                    if not change and payment_method == 'C':
+                        messages.error(request, 'Defina o valor do troco se for pagar em dinheiro.')
                         return redirect('confirm_order')
                     try:
                         address = Address.objects.get(id=address_id, user=user)
@@ -120,7 +124,7 @@ class OrderView:
                         return redirect('confirm_order')
 
                     total_price = OrderView.get_total_price(cart)
-                    payment = Payment(type=payment_method, status=0)
+                    payment = Payment(type=payment_method, status=0, change=change if change else 0)
                     payment.save()
                     order = Order(
                         status=0, address=address, user=user, payment=payment, total_price=total_price)
@@ -208,33 +212,6 @@ class OrderView:
             return render(request, '../templates/orders/list_seller_orders.html', {'orders': orders})
         return redirect('login')
 
-class RatingView:
-
-    @classmethod
-    def create(cls, request):
-        if request.user.is_authenticated:
-            user = request.user
-            if request.method == 'POST':
-                is_anonimous = request.POST.get('is_anonimous', True)
-                order_id = request.POST['order_id']
-                rate = request.POST['rate']
-                rate_message = request.POST.get('rate_message', None)
-
-                order = Order.objects.get(pk=order_id)
-                ratings = Rating.objects.filter(order_id=order.id)
-                if len(ratings):
-                    messages.error(request, 'Esse pedido já foi avaliado.')
-                    return redirect('list_user_orders')
-                rating = Rating(
-                    order=order,
-                    rate=rate,
-                    rate_message=rate_message,
-                    user=(user if not is_anonimous else None))
-                rating.save()
-                messages.success(request, 'Avaliação publicada com sucesso.')
-            return redirect('list_user_orders')
-        return redirect('login')
-
 
 class SellerOrderView:
     @classmethod
@@ -268,7 +245,7 @@ class SellerOrderView:
         if request.user.is_authenticated:
             order.status = 4
             order.save()
-            return redirect(reverse('seller-order-detail') + '?order_id={}'.format(order_id))
+            return redirect(reverse('seller_order_detail') + '?order_id={}'.format(order_id))
 
         return redirect('login')
 
@@ -280,6 +257,32 @@ class SellerOrderView:
         if request.user.is_authenticated:
             order.status = status_value
             order.save()
-            return redirect(reverse('seller-order-detail') + '?order_id={}'.format(order_id))
+            return redirect(reverse('seller_order_detail') + '?order_id={}'.format(order_id))
 
+        return redirect('login')
+class RatingView:
+
+    @classmethod
+    def create(cls, request):
+        if request.user.is_authenticated:
+            user = request.user
+            if request.method == 'POST':
+                is_anonimous = request.POST.get('is_anonimous', True)
+                order_id = request.POST['order_id']
+                rate = request.POST['rate']
+                rate_message = request.POST.get('rate_message', None)
+
+                order = Order.objects.get(pk=order_id)
+                ratings = Rating.objects.filter(order_id=order.id)
+                if len(ratings):
+                    messages.error(request, 'Esse pedido já foi avaliado.')
+                    return redirect('list_user_orders')
+                rating = Rating(
+                    order=order,
+                    rate=rate,
+                    rate_message=rate_message,
+                    user=(user if not is_anonimous else None))
+                rating.save()
+                messages.success(request, 'Avaliação publicada com sucesso.')
+            return redirect('list_user_orders')
         return redirect('login')

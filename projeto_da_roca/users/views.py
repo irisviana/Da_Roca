@@ -55,14 +55,9 @@ class UserView:
     @classmethod
     def view_seller(cls, request, user_id):
         seller = get_object_or_404(User, id=user_id)
-        service_adds = ServiceAddress.objects.filter(user=seller)
-        deliveryTimes = DeliveryTime.objects.filter(service_address=service_adds)
         if request.user.is_authenticated:
             if request.method == 'GET':
-                return render(request, 'seller/view_seller.html', {
-                    'seller':  seller, 'service_adds':service_adds,
-                    "deliveryTimes": deliveryTimes
-                })
+                return render(request, 'seller/view_seller.html')
         return redirect('login')
 
     @classmethod
@@ -326,7 +321,7 @@ class UserView:
         if request.user.is_authenticated:
             if request.method == 'GET':
                 price = request.GET.get('price')
-                price.replace(",",".")
+                price = price.replace(",",".")
 
                 user.delivery_price = price
                 user.save()
@@ -344,8 +339,14 @@ class UserView:
                     sellers = User.objects.filter(Q(first_name__icontains=search_string) | Q(last_name__icontains=search_string),is_seller=True)
                 else :
                     sellers = User.objects.filter(is_seller=True)
-        
-                return render(request, '../templates/users_profile/search_seller_product.html', {'sellers': sellers})
+                return render(
+                    request,
+                    '../templates/users_profile/search_seller_product.html',
+                    {
+                        'sellers': sellers,
+                        'filter': 'Produtor'
+                    }
+                )
 
         return redirect('login')
 
