@@ -222,7 +222,7 @@ class OrderView:
     @classmethod
     def list_all_orders(cls, request):
         if request.user.is_authenticated:
-            orders = Order.objects.all()
+            orders = Order.objects.all().order_by('-id')
             return render(request, '../templates/orders/list_seller_orders.html', {'orders': orders})
         return redirect('login')
 
@@ -232,7 +232,7 @@ class SellerOrderView:
     def list(cls, request):
         if request.user.is_authenticated:
             user = get_object_or_404(User, username=request.user.username)
-            orders = Order.objects.filter(orderproduct__product__user=user)
+            orders = Order.objects.filter(orderproduct__product__user=user).order_by('-id')
 
             return render(request, '../templates/orders/list_seller_orders.html', {'orders': orders})
 
