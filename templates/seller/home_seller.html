@@ -13,81 +13,74 @@
     </div>
     {% if request.user.is_seller %}
         <div class="row justify-content-center mb-3">
-            <div class="card manage">
-                <div class="card-body">
-                    <span class="fa fa-user-circle fa-2x"></span>
-                    <h3 class="card-title">
-                    Endereço de atendimento
-                    </h3>
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'create_service_address'%}" class="btn btn-primary">
-                        Adicionar
-                    </a>
-                    <a href="{% url 'list_service_address'%}"class="btn btn-primary">
-                        Gerenciar
-                    </a>
-                </div>
-            </div>
-            <div class="card manage">
-                <div class="card-body">
-                    <span class="fab fa-product-hunt fa-2x"></span>
-                    <h3 class="card-title">
-                        Produtos
-                    </h3>
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'create_product'%}" class="btn btn-primary">
-                        Adicionar
-                    </a>
-                    <a href="{% url 'list_products'%}"class="btn btn-primary">
-                        Gerenciar
-                    </a>
-                </div>
-            </div>
-            <div class="card manage">
-                <div class="card-body">
-                    <span class="fas fa-store fa-2x"></span>
-                    <h3 id="status" class="card-title">
-                        Status da loja
-                    </h3>
-                    <input type="text" class="form-control text-center" disabled name="status" value="{{ request.user.store_status }}">
-                </div>
-                <div class="card-footer">
-                    <a href="{% url 'store_status_update' %}" class="btn btn-primary" name="alterar">
-                        {% if request.user.store_status == 'Aberto' %}
-                            Fechar loja
-                        {% else %}
-                            Abrir loja
-                        {% endif %}
-                    </a>
-                </div>
-            </div>
-             <div class="card manage">
-                <div class="card-body">
-                    <span class="fas fa-truck fa-2x"></span>
-                    <h3 id="" class="card-title">
-                        Valor da entrega
-                    </h3>
-                    <form method="get" action="{% url 'delivery_price_update' %}">
-                        <input type="decimal" class="form-control text-center" name="price" value="{{ request.user.delivery_price }}">
-                        <button id="save" type="submit" class="btn btn-primary mt-2">Alterar</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="card manage">
-                <div class="card-body">
+            <div class="list-group d-flex flex-row justify-content-center align-items-start flex-wrap custom-list-group">
+			    <div class="list-group-item list-group-item-action custom-list-item">
                     <span class="fas fa-shopping-basket fa-2x"></span>
-                    <h3 id="status" class="card-title">
-                        Pedidos
-                    </h3>
+                    <h5>Pedidos</h5>
+                    <div class="list-item-actions">
+                        <a href="{% url 'seller_orders' %}" class="btn btn-primary" title="Gerenciar pedidos">
+                            <span class="fas fa-cog"></span>
+                        </a>
+                    </div>
                 </div>
-                <div class="card-footer">
-                    <a href="{% url 'seller_orders' %}" class="btn btn-primary">
-                        Gerenciar
-                    </a>
+                <div class="list-group-item list-group-item-action custom-list-item">
+                    <span class="fa fa-apple-alt fa-2x"></span>
+                    <h5>Produtos</h5>
+                    <div class="list-item-actions">
+                        <a href="{% url 'create_product'%}" class="btn btn-primary" title="Novo produto">
+                            <span class="fas fa-plus"></span>
+                        </a>
+                        <a href="{% url 'list_products'%}"class="btn btn-primary" title="Gerenciar produtos">
+                            <span class="fas fa-cog"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="list-group-item list-group-item-action custom-list-item">
+                    <span class="fas fa-map-marked-alt fa-2x"></span>
+                    <h5 title="Endereços de atendimento">
+                        End. de atendimento
+                    </h5>
+                    <div class="list-item-actions">
+                        <a href="{% url 'create_service_address'%}" class="btn btn-primary" title="Adicionar endereços de atendimento">
+                            <span class="fas fa-plus"></span>
+                        </a>
+                        <a href="{% url 'list_service_address'%}"class="btn btn-primary" title="Gerenciar endereços de atendimento">
+                            <span class="fas fa-cog"></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="list-group-item list-group-item-action custom-list-item">
+                    <span class="fas fa-store fa-2x"></span>
+                    <h5>
+                        Status da loja
+                    </h5>
+                    <input type="text" class="form-control text-center" disabled name="status" value="{{ request.user.store_status }}">
+                    <div class="list-item-actions">
+                        <a href="{% url 'store_status_update' %}" class="btn btn-primary w-100" name="alterar">
+                            {% if request.user.store_status == 'Aberto' %}
+                                Fechar loja
+                            {% else %}
+                                Abrir loja
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+                <div class="list-group-item list-group-item-action custom-list-item">
+                    <span class="fas fa-truck fa-2x"></span>
+                    <h5>
+                        Valor da entrega
+                    </h5>
+                    <div class="list-item-actions">
+                        <form method="get" action="{% url 'delivery_price_update' %}">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">R$</span>
+                                </div>
+                                <input type="decimal" class="form-control text-center" aria-label="Valor do frete" aria-describedby="basic-addon1" name="price" value="{{ request.user.delivery_price }}">
+                            </div>
+                            <button id="save" type="submit" class="btn btn-primary m-0 mt-2 w-100">Alterar</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
