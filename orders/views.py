@@ -105,6 +105,7 @@ class OrderView:
                     payment_method = request.POST.get('payment_method')
                     address_id = request.POST.get('address')
                     change = request.POST.get('change', None)
+                    change = change.replace(',', '.')
                     address = None
                     if not payment_method:
                         messages.error(request, 'Selecione um método de pagamento.')
@@ -131,6 +132,9 @@ class OrderView:
                     order.save()
 
                     for c in cart:
+                        c.product.stock_amount -= c.quantity
+                        c.product.save()
+
                         orderProduct = OrderProduct(
                             quantity=c.quantity, product=c.product, order=order)
                         orderProduct.save()
@@ -202,7 +206,17 @@ class OrderView:
                 order = get_object_or_404(Order, id=order_id)
                 order.status = 4
                 order.save()
-            return redirect("list_all_orders")
+
+                order_products = OrderProduct.objects.filter(order_id=order.id)
+                for order_product in order_products:
+                    product = order_product.product
+                    product.stock_amount += order_product.quantity
+                    product.save()
+
+            if request.user.is_admin:
+                return redirect("list_all_orders")
+            else:
+                return redirect("list_user_orders")
         return redirect('login')
 
     @classmethod
