@@ -55,7 +55,6 @@ class UserView:
     @classmethod
     def view_seller(cls, request, user_id):
         seller = get_object_or_404(User, id=user_id)
-        
         if request.method == 'GET':
             return render(request, 'seller/view_seller.html')
         

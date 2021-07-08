@@ -61,8 +61,3 @@ def check_has_class(classes, occurrence):
     if occurrence in classes:
         return True
     return False
-    
-    
-    
-        
-        
