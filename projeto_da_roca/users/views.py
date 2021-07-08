@@ -13,7 +13,6 @@ from .models import ServiceAddress
 from .models import User
 from orders.models import Order
 from products.models import Product
-from .utils import top_selling_products
 
 
 # Create your views here.
@@ -222,7 +221,7 @@ class UserView:
                 producers_recom = []
                 for sv in services_adre:
                     if sv.city == user_address[0].city:
-                        producers_recom.append(sv.user)   
+                        producers_recom.append(sv.user)
             else:
                 producers_recom = producers
                  
