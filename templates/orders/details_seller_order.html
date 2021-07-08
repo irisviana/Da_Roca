@@ -120,14 +120,15 @@
                     <div class="body">
                         <div class="product">
                             <div class="img">
-                                {% comment %} Foto do produto aqui {% endcomment %}
-                                <img style="width: 138px; height: 100px"
-                                     src="{{ order_product.product.product_pic.url }}">
+                                <a href="{% url 'view_product' order_product.product.id %}">
+                                    <img style="width: 138px; height: 100px"
+                                        src="{{ order_product.product.product_pic.url }}">
+                                </a>
                             </div>
                             <div>
-                                <h5>{{ order_product.product.name }}</h5>
+                                <h5><a href="{% url 'view_product' order_product.product.id %}">{{ order_product.product.name }}</a></h5>
                                 <p>{{ order_product.product.variety }}</p>
-                                <p>Vendedor: {{ order_product.product.user.first_name }}</p>
+                                <p>Vendedor: <a href="{% url 'view_seller' order_product.product.user.id %}">{{ order_product.product.user.first_name }}</a></p>
                             </div>
                         </div>
                         <div class="unit-value">
