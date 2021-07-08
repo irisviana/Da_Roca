@@ -56,7 +56,7 @@ class UserView:
     def view_seller(cls, request, user_id):
         seller = get_object_or_404(User, id=user_id)
         if request.method == 'GET':
-            return render(request, 'seller/view_seller.html')
+            return render(request, 'seller/view_seller.html', { 'seller': seller })
 
     @classmethod
     def update_users(cls, request):
