@@ -25,6 +25,11 @@ class CartProductView:
             if request.method == 'POST':
                 product_id = request.POST['product_id']
                 quantity = request.POST['quantity']
+                product = Product.objects.get(pk=product_id)
+                if product.stock_amount < int(quantity):
+                    messages.error(request,
+                        'Estoque do produto excedido, tente comprar de outro produtor.')
+                    return redirect('view_product', product_id=product_id)
                 try:
                     cart_product = CartProduct.objects.get(
                         user_id=user.id, product_id=product_id)
@@ -32,7 +37,6 @@ class CartProductView:
                     cart_product.save()
 
                 except CartProduct.DoesNotExist:
-                    product = Product.objects.get(pk=product_id)
                     cart_products = CartProduct.objects.filter(
                         user_id=user.id)
 
