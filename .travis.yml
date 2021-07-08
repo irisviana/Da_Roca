@@ -1,14 +1,15 @@
-language: python
-python:
-- "3.9"
-# setup environment
-env:
-- DJANGO_VERSION=1.11.2
-- DJANGO_SETTINGS_MODULE='di_photouploader.settings.production'
-# install dependencies
-install:
-- pip install -r requirements.txt
-
-# run test scripts
-script:
-- python manage.py test 
+language: python # => 1
+    python: # => 2
+      - "3.7"
+      - "3.8"
+      - "3.9"
+    services: # => 3
+      - mysql
+    env: # => 4
+      -DJANGO=1.8 DB=mysql
+    install: # => 5
+      - pip install -r requirements.txt
+    before_script: # => 6
+      - mysql -e 'create database test;' -u root
+    script: # => 7
+      - python manage.py test

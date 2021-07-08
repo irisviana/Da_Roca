@@ -98,6 +98,12 @@
             {% endif %}
         </div>
         {% if cart|length > 0%}
+            <div class="my-2 ml-auto w-100 d-flex justify-content-end">
+                <h5>{% if not delivery_price %}Frete grátis{% else %}Frete: R$ {{ delivery_price }} {% endif %}</h5>
+            </div>
+            <div class="my-2 ml-auto w-100 d-flex justify-content-end">
+                <h5>Valor total: R$ {{ total_value }}</h5>
+            </div>
             <div class="my-2 mx-auto w-25">
                 <a href="{% url 'confirm_order' %}" type="submit" class="btn btn-primary " title="Prosseguir compra">Prosseguir compra</a>
             </div>

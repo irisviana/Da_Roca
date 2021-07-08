@@ -67,7 +67,7 @@
             <div class="col-12">
                 <div class="justify-content-end d-none" id="change-container">
                     <label for="change" class="my-2 mr-2">Troco: R$</label>
-                    <input type="decimal" id="change" name="change" class="form-control w-auto" placeholder="0.00">
+                    <input type="decimal" id="change" name="change" class="form-control w-auto" placeholder="0,00">
                 </div>
             </div>
         </div>
@@ -96,7 +96,7 @@
                                 <div>
                                     <h5>{{ cart_product.product.name }}</h5>
                                     <p>{{ cart_product.product.variety }}</p>
-                                    <p>Vendedor: {{ cart_product.user.first_name }}</p>
+                                    <p>Produtor: {{ cart_product.user.first_name }}</p>
                                 </div>
                             </div>
                             <div class="unit-value">
@@ -117,6 +117,12 @@
                     <div>Nenhum produto na cesta de compras</div>
                 </div>
             {% endif %}
+        </div>
+        <div class="my-2 ml-auto w-100 d-flex justify-content-end">
+            <h5>{% if not delivery_price %}Frete grátis{% else %}Frete: R$ {{ delivery_price }} {% endif %}</h5>
+        </div>
+        <div class="my-2 ml-auto w-100 d-flex justify-content-end">
+            <h5>Valor total: R$ {{ total_value }}</h5>
         </div>
         <div class="d-flex justify-content-between">
             <a class="mt-4 btn btn-secondary w-auto" href="{% url 'cart' %}" type="submit" title="Voltar para o carrinho">Voltar para o carrinho</a>

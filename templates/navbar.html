@@ -2,36 +2,41 @@
 {% load static %}
   <div>
 	<nav class="navbar navbar-expand-lg navbar-light" style="background-color:#DCFFEE;">
-		<a title="Voltar" href="#" class="btn btn-secondary btn-thin" type="button" onclick="history.back()">
-			<span class="fas fa-chevron-left"></span>
-		</a>
+		{% if request.resolver_match.url_name != 'home' %}
+			<a title="Voltar" href="#" class="btn btn-secondary btn-thin" type="button" onclick="history.back()">
+				<span class="fas fa-chevron-left"></span>
+			</a>
+		{% endif %}
 	  	<a class="btn btn-secondary btn-nav" href="{% url 'home' %}" style="color:darkgreen;">Início <span class="sr-only">(current)</span></a>
+		<div class="dropdown">
+			<button class="btn btn-secondary btn-nav dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Compre por categoria
+			</button>
+			<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+				{% for category in categories %}
+					<a class="dropdown-item" href="{% url 'filter_product_category' %}?category_id={{category.id}}">{{category.name}}</a>
+				{% endfor%}
+			</div>
+		</div>
 		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>
 		</button>
 		<div class="collapse navbar-collapse" id="navbarText">
 			<ul class="navbar-nav mr-auto">
-				<div class="dropdown">
-					<button class="btn btn-secondary btn-nav dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-						Categorias
-					</button>
-					<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-						{% for category in categories %}
-					  		<a class="dropdown-item" href="{% url 'filter_product_category' %}?category_id={{category.id}}">{{category.name}}</a>
-						{% endfor%}
-					</div>
-				  </div>
-
-
-
-				{% if request.user.is_authenticated %}
+				{% if request.user.is_seller %}
 				<li class="nav-item">
-					<a class="btn btn-secondary btn-nav" href="{% url 'home_seller' %}">Vender</a>
+					<a class="btn btn-secondary btn-nav" href="{% url 'home_seller' %}">
+						{% if request.user.is_seller %}
+							Painel do produtor
+						{% endif %}
+					</a>
 				</li>
 				{% endif %}
 				{% if request.user.is_admin %}
 				<li class="nav-item">
-					<a class="btn btn-secondary btn-nav" href="{% url 'home_admin' %}">Administrar</a>
+					<a class="btn btn-secondary btn-nav" href="{% url 'home_admin' %}">
+						Painel do administrador
+					</a>
 				</li>
 				{% endif %}
 			</ul>

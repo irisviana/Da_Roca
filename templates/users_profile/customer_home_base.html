@@ -18,22 +18,50 @@
     <div class="row">
         <div class="col-sm-12 col-lg-2 text-left p-0">
             <nav class="user-menu active">
-                <ul class="list-unstyled d-flex flex-wrap justify-content-center">
+                <ul class="list-unstyled d-flex flex-wrap justify-content-center my-sidebar">
                     <li class="active">
-                        <a href="{% url 'list_user_orders' %}" class="btn btn-secondary"><i class="fas fa-box-open"></i>
+                        <a href="{% url 'list_user_orders' %}"
+                            class="btn btn-{% if request.resolver_match.url_name == 'list_user_orders' %}primary{% else %}secondary{% endif %}">
+                            <i class="fas fa-box-open"></i>
                             Pedidos
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'update_customer' %}" class="btn btn-secondary"><i class="fas fa-user"></i>
+                        <a href="{% url 'update_customer' %}"
+                            class="btn btn-{% if request.resolver_match.url_name == 'update_customer' %}primary{% else %}secondary{% endif %}">
+                            <i class="fas fa-user"></i>
                             Cadastro
                         </a>
                     </li>
                     <li>
-                        <a href="{% url 'list_customer_address' %}" class="btn btn-secondary"><i class="fas fa-map-marked-alt"></i>
+                        <a href="{% url 'list_customer_address' %}"
+                            class="btn btn-{% if request.resolver_match.url_name == 'list_customer_address' %}primary{% else %}secondary{% endif %}">
+                            <i class="fas fa-map-marked-alt"></i>
                             Endereços
                         </a>
                     </li>
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{% url 'home_seller' %}"
+                            class="btn btn-{% if request.resolver_match.url_name == 'home_seller' %}primary{% else %}secondary{% endif %}">
+                            <i class="fas fa-user-tag"></i>
+                            {% if request.user.is_seller %}
+                                Painel do produtor
+                            {% else %}
+                                Tornar-se produtor
+                            {% endif %}
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if request.user.is_admin %}
+                    <li class="nav-item">
+                        <a href="{% url 'home_admin' %}" title="Painel do administrador"
+                            class="btn btn-{% if request.resolver_match.url_name == 'home_admin' %}primary{% else %}secondary{% endif %}">
+                            <i class="fas fa-user-shield"></i>
+                            Painel do admin.
+                        </a>
+                    </li>
+                    {% endif %}
                 </ul>
             </nav>
         </div>

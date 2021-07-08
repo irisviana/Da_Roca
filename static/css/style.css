@@ -362,10 +362,6 @@
   .user-menu li {
     padding: 1em 1.5em 1em 0;
   }
-
-  .user-menu a {
-    color: var(--color-primary);
-  }
   /* 4- FIM USER-MENU */
 
   /* 5- CUSTOM TABLE */
@@ -640,4 +636,9 @@
   .product-img img {
     max-width: 500px;
     width: 100%;
+  }
+
+  .my-sidebar {
+    border-right: 1px solid var(--color-primary);
+    padding-right: 2em;
   }
