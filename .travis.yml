@@ -11,6 +11,7 @@ env:
     - PYTHONPATH="/home/travis/build/irisviana/Da_Roca"
     - PIP_USE_MIRRORS=true
     - BUILD_ON_TRAVIS=true
+    - FIREFOXDRIVER_PATH="geckodriver-v0.29.1-linux64/geckodriver"
   matrix:
     - DJANGO=1.7 DB=sqlite3
 
