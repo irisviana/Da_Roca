@@ -6,11 +6,11 @@ from selenium.webdriver.support.ui import Select
 from orders.models import CartProduct
 from products.models import Category, Product
 from users.models import User, Address
-
+import os 
 env = environ.Env()
 
-TEST_ON_CHROME = True if env('TEST_ON_CHROME') == 'on' else False
-TEST_ON_FIREFOX = True if env('TEST_ON_FIREFOX') == 'on' else False
+TEST_ON_CHROME = True if os.getenv('TEST_ON_CHROME') == 'on' else False
+TEST_ON_FIREFOX = True if os.getenv('TEST_ON_FIREFOX') == 'on' else False
 
 
 class OrderTest(StaticLiveServerTestCase):
