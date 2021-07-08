@@ -16,6 +16,18 @@
         </div>
     </div>
     <div class="inner_container mt-4">
+        <form class="input-group mb-4 border-custom rounded-pill mt-5 p-1" method="get" action="{% url 'list_all_orders' %}">
+            <input id="custom_table-search" required name="search"
+                value="{% if search %}{{search}}{%endif%}" type="search"
+                placeholder="Procure por nome do cliente, ID ou cidade do pedido"
+                aria-describedby="button-addon3" class="form-control bg-white border-0">
+            <div class="input-group-append">
+                {% if search %} <a class="btn btn-secondary mr-1" href="{% url 'list_all_orders' %}">&times;</a> {% endif%}
+            </div>
+            <div class="input-group-append border-0">
+              <button id="button-search" type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
+            </div>
+        </form>
         <table class="custom_table mt-5 table-hover">
             <thead>
             <tr>
@@ -84,7 +96,7 @@
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="7">Nenhum pedido feito</td>
+                    <td colspan="7">{% if search %}Nenhum pedido encontrado na pesquisa{% else %}Nenhum pedido feito{% endif %}</td>
                 </tr>
             {% endif %}
             </tbody>

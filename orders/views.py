@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.db.models.query_utils import Q
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 
@@ -245,8 +246,22 @@ class OrderView:
     @classmethod
     def list_all_orders(cls, request):
         if request.user.is_authenticated:
-            orders = Order.objects.all().order_by('-id')
-            return render(request, '../templates/orders/list_seller_orders.html', {'orders': orders})
+            orders = []
+            search = ''
+            if request.method == 'GET' and request.GET.get('search', False):
+                search = request.GET.get('search', None)
+                try:
+                    orders = Order.objects.filter(
+                        Q(user__first_name__icontains=search) | Q(pk=search) | Q(address__city__icontains=search)).order_by('-id')
+                except ValueError:
+                    orders = Order.objects.filter(
+                        Q(user__first_name__icontains=search) | Q(address__city__icontains=search)).order_by('-id')
+            else:
+                orders = Order.objects.all().order_by('-id')
+            return render(request, '../templates/orders/list_seller_orders.html', {
+                'orders': orders,
+                'search': search
+            })
         return redirect('login')
 
 
