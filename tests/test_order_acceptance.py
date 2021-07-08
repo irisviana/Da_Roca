@@ -9,13 +9,9 @@ from users.models import User, Address
 import os 
 env = environ.Env()
 
-if os.getenv('BUILD_ON_TRAVIS', None):
-    TEST_ON_FIREFOX=True
-    TEST_ON_CHROME=False
-    FIREFOXDRIVER_PATH="geckodriver-v0.29.1-linux64/geckodriver"
-else:
-    TEST_ON_CHROME = True if env('TEST_ON_CHROME') == 'on' else False
-    TEST_ON_FIREFOX = True if env('TEST_ON_FIREFOX') == 'on' else False
+
+TEST_ON_CHROME = True if os.getenv('TEST_ON_CHROME') == 'on' else False
+TEST_ON_FIREFOX = True if os.getenv('TEST_ON_FIREFOX') == 'on' else False
 
 
 class OrderTest(StaticLiveServerTestCase):
@@ -26,9 +22,9 @@ class OrderTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path=env('CHROMEDRIVER_PATH'))
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'))
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path=env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path=os.getenv('FIREFOXDRIVER_PATH'))
 
         cls.selenium.get('http://127.0.0.1:8000')
 
