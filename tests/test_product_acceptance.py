@@ -9,8 +9,11 @@ from products.models import Category, Product, Favorite
 import os
 env = environ.Env()
 
-TEST_ON_CHROME = True if os.getenv('TEST_ON_CHROME') == 'on' else False
-TEST_ON_FIREFOX = True if os.getenv('TEST_ON_FIREFOX') == 'on' else False
+if os.getenv('BUILD_ON_TRAVIS', None):
+    TEST_ON_CHROME='on'
+else:
+    TEST_ON_CHROME = True if env('TEST_ON_CHROME') == 'on' else False
+    TEST_ON_FIREFOX = True if env('TEST_ON_FIREFOX') == 'on' else False
 
 
 class ProductsTest(StaticLiveServerTestCase):
