@@ -222,7 +222,6 @@ class UserView:
                         producers_recom.append(sv.user)
             else:
                 producers_recom = producers
-                 
         else:
             products_recom = Product.objects.all()
             producers_recom = User.objects.filter(is_seller=True)
