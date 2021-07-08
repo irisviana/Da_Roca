@@ -320,7 +320,7 @@ class UsersTest(StaticLiveServerTestCase):
         driver = self.selenium
         self.test_login(user)
         driver.get('%s%s' % (self.live_server_url, "/user/admin/users/producer"))
-        driver.find_element_by_xpath(f"//button[@title=\"Tirar privilégios de vendedor\" and @data-query=\"user_id={user_to_remove.id},user_type=producer\"]").click()
+        driver.find_element_by_xpath(f"//button[@title=\"Tirar privilégios de produtor\" and @data-query=\"user_id={user_to_remove.id},user_type=producer\"]").click()
         driver.find_element_by_xpath("//*[text()='Remover produtor']").click()
         assert user_to_remove.first_name not in driver.page_source
 
@@ -344,7 +344,7 @@ class UsersTest(StaticLiveServerTestCase):
         driver = self.selenium
         self.test_login(user)
         driver.get('%s%s' % (self.live_server_url, "/user/admin/users/producer"))
-        driver.find_element_by_xpath(f"//button[@title=\"Tirar privilégios de vendedor\" and @data-query=\"user_id={user_to_remove.id},user_type=producer\"]").click()
+        driver.find_element_by_xpath(f"//button[@title=\"Tirar privilégios de produtor\" and @data-query=\"user_id={user_to_remove.id},user_type=producer\"]").click()
         driver.find_element_by_xpath("//div[@id=\"includedModalRemoveProducer\"]/div/div/div/button[@class=\"btn btn-primary w-50\"]").click()
         assert user_to_remove.first_name in driver.page_source
 
