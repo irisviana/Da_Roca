@@ -13,8 +13,18 @@ class CartProductView:
         if request.user.is_authenticated:
             user = request.user
             cart = CartProduct.objects.filter(user_id=user.id).order_by('-id')
+
+            total_value = OrderView.get_total_price(cart)
+            delivery_price = 0
+            if len(cart):
+                delivery_price = cart[0].get_delivery_price()
+
+            total_value += delivery_price
+
             return render(request, 'cart/home.html', {
                 "cart": cart,
+                'total_value': total_value,
+                'delivery_price': delivery_price
             })
         return redirect('login')
 
@@ -129,6 +139,8 @@ class OrderView:
                         return redirect('confirm_order')
 
                     total_price = OrderView.get_total_price(cart)
+                    total_price += cart[0].get_delivery_price()
+
                     payment = Payment(type=payment_method, status=0, change=change if change else 0)
                     payment.save()
                     order = Order(
@@ -150,9 +162,16 @@ class OrderView:
 
                 addresses = Address.objects.filter(user=user)
                 cart = CartProduct.objects.filter(user_id=user.id).order_by('-id')
+                total_value = OrderView.get_total_price(cart)
+                delivery_price = 0
+                if len(cart):
+                    delivery_price = cart[0].get_delivery_price()
+                total_value += delivery_price
                 return render(request, 'cart/confirm_order.html', {
                     "cart": cart,
                     "addresses": addresses,
+                    "total_value": total_value,
+                    "delivery_price": delivery_price
                 })
 
             return redirect('cart')
@@ -246,8 +265,7 @@ class SellerOrderView:
     def index(cls, request):
         order_id = request.GET.get('order_id', None)
         if request.user.is_authenticated:
-            user = get_object_or_404(User, username=request.user.username)
-            order = Order.objects.get(id=order_id, orderproduct__product__user=user)
+            order = Order.objects.get(id=order_id)
             order_products = OrderProduct.objects.filter(order=order)
 
             return render(request, '../templates/orders/details_seller_order.html', {

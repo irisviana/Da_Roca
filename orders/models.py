@@ -14,6 +14,8 @@ class CartProduct(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=False, blank=False)
 
+    def get_delivery_price(self):
+        return self.product.user.delivery_price
 
 class Payment(models.Model):
     PAYMENT_TYPE = (
@@ -75,6 +77,11 @@ class Order(models.Model):
         options = dict(Order.ORDER_STATUS)
         del options[4]
         return options
+
+    def get_liquid_value(self):
+        order_products = OrderProduct.objects.filter(
+            order=self)
+        return float(self.total_price) - order_products[0].get_delivery_price()
 class OrderProduct(models.Model):
     quantity = models.IntegerField(null=False, blank=False)
     product = models.ForeignKey(
@@ -82,6 +89,8 @@ class OrderProduct(models.Model):
     order = models.ForeignKey(
         Order, on_delete=CASCADE, null=False, blank=False)
 
+    def get_delivery_price(self):
+        return self.product.user.delivery_price
 
 class Rating(models.Model):
     user = models.ForeignKey(

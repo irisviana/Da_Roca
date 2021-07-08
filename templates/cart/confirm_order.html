@@ -118,6 +118,12 @@
                 </div>
             {% endif %}
         </div>
+        <div class="my-2 ml-auto w-100 d-flex justify-content-end">
+            <h5>{% if not delivery_price %}Frete grátis{% else %}Frete: R$ {{ delivery_price }} {% endif %}</h5>
+        </div>
+        <div class="my-2 ml-auto w-100 d-flex justify-content-end">
+            <h5>Valor total: R$ {{ total_value }}</h5>
+        </div>
         <div class="d-flex justify-content-between">
             <a class="mt-4 btn btn-secondary w-auto" href="{% url 'cart' %}" type="submit" title="Voltar para o carrinho">Voltar para o carrinho</a>
             <button class="mt-4 btn btn-primary w-auto" form="confirm-form" type="submit" title="Finalizar compra">Finalizar compra</button>

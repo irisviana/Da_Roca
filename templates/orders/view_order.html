@@ -55,7 +55,9 @@
             </div>
         {% endif %}
         <div class="w-100 align-left">
-            <p>Total: <strong>R$ {{ order.total_price|floatformat:2|intcomma }}</strong></p>
+            <p>Total a pagar: <strong>R$ {{ order.total_price|floatformat:2|intcomma }}</strong></p>
+            <p>Total líquido: R$ {{ order.get_liquid_value }}</p>
+            <p>Frete: R$ {{ order_products.0.get_delivery_price }}</p>
             <p>Forma de pagamento: <strong>{{ order.payment.get_type }}</strong>{% if order.payment.type == 'C' %}, troco R$ {{ order.payment.change }}{% endif %}</p>
             <p>Status do pagamento: <strong>{{ order.payment.get_status }}</strong></p>
             <p>Endereço de entrega:
