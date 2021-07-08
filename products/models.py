@@ -22,7 +22,7 @@ class Product(models.Model):
     category = models.ForeignKey(
                Category, on_delete=models.CASCADE, null=False, blank=False)
     product_pic = models.ImageField(upload_to='static/productImages/', default='static/productImages/img_default.png')
-
+    stock_amount_prev = models.IntegerField(null=True, blank=True)
     def __str__(self):
         return '{} | {} - {}'.format(self.id, self.name, self.variety)
 

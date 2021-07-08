@@ -34,6 +34,7 @@ class ProductView:
                 if form.is_valid():
                     product = form.save(commit=False)
                     product.user = user
+                    product.stock_amount_prev = product.stock_amount
                     product.save()
 
                     return redirect('list_products')
@@ -111,7 +112,13 @@ class ProductView:
                     'product': product,
                     'favorites': favorite
                 })
-        return redirect('login')
+        else:
+            if request.method == 'GET':
+                favorite = None
+                return render(request, 'product/view_product.html', {
+                    'product': product,
+                    'favorites': favorite
+                })
 
     @classmethod
     def search_product(cls, request):
@@ -131,8 +138,15 @@ class ProductView:
                         'filter': 'Produto'
                     }
                 )
-
-        return redirect('login')
+        products = Product.objects.all()
+        return render(
+                    request,
+                    '../templates/users_profile/search_seller_product.html',
+                    {
+                        'products': products,
+                        'filter': 'Produto'
+                    }
+                )
 
     @classmethod
     def filter_product_category(cls, request):
