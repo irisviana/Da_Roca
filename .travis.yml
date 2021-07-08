@@ -3,9 +3,9 @@ python:
   - "3.9"
 env:
   - DJANGO_VERSION=2.1.13
-  - SECRET_KEY='django-insecure-=4p!wv+irvwg=&sdnmmk2!ws*o89ing(ai=wgdbh7!b8%st$2-'
-  - DATABASE_ENGINE='django.db.backends.sqlite3'
-  - DATABASE_NAME='roca'
+  - SECRET_KEY=django-insecure-=4p!wv+irvwg=&sdnmmk2!ws*o89ing(ai=wgdbh7!b8%st$2-
+  - DATABASE_ENGINE=django.db.backends.sqlite3
+  - DATABASE_NAME=roca
   - DATABASE_USER=''
   - DATABASE_PASS=''
   - DATABASE_PORT=''
