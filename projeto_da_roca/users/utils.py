@@ -61,3 +61,27 @@ def check_has_class(classes, occurrence):
     if occurrence in classes:
         return True
     return False
+
+def top_selling_products(products):
+    percentages = []
+    best_products = []
+    percent_products = []
+    for p in products :
+        (p.stock_amount * 100)/p.stock_amount_prev
+        percentages.append((p.stock_amount * 100)/p.stock_amount_prev)
+        percent_products.append(p)
+    prev_porcentage = 0
+    for i in range (len(percentages)):
+        if perc[i] > prev_porcentage:
+            best_products.append(percent_products[i])
+            
+        prev_porcentage = perc[i]
+            
+    print("---->perc",percentages)
+    print("---->best",best_products)
+    
+    
+    
+    
+        
+        

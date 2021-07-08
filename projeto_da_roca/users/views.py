@@ -13,6 +13,7 @@ from .models import ServiceAddress
 from .models import User
 from orders.models import Order
 from products.models import Product
+from .utils import top_selling_products
 
 
 # Create your views here.
@@ -55,10 +56,10 @@ class UserView:
     @classmethod
     def view_seller(cls, request, user_id):
         seller = get_object_or_404(User, id=user_id)
-        if request.user.is_authenticated:
-            if request.method == 'GET':
-                return render(request, 'seller/view_seller.html')
-        return redirect('login')
+        
+        if request.method == 'GET':
+            return render(request, 'seller/view_seller.html')
+        
 
     @classmethod
     def update_users(cls, request):
@@ -187,7 +188,7 @@ class UserView:
 
             if user is not None:
                 login(request, user)
-                return redirect('customer_home')
+                return redirect('home')
             else:
                 messages.error(request, 'email ou senha estão incorretos')
 
@@ -212,8 +213,22 @@ class UserView:
 
     @classmethod
     def home(cls, request):
-        products_recom = Product.objects.all()
-        producers_recom = User.objects.filter(is_seller=True)
+        if request.user.is_authenticated:
+            products_recom= Product.objects.filter().order_by('stock_amount')[:8]
+            services_adre = ServiceAddress.objects.all()
+            producers = User.objects.filter(is_seller=True)
+            user_address = Address.objects.filter(user=request.user.pk)
+            if user_address:
+                producers_recom = []
+                for sv in services_adre:
+                    if sv.city == user_address[0].city:
+                        producers_recom.append(sv.user)   
+            else:
+                producers_recom = producers
+                 
+        else:
+            products_recom = Product.objects.all()
+            producers_recom = User.objects.filter(is_seller=True)
         return render(request, 'home.html',{"products_recom":products_recom,"producers_recom":producers_recom})
 
     @classmethod
@@ -347,8 +362,15 @@ class UserView:
                         'filter': 'Produtor'
                     }
                 )
-
-        return redirect('login')
+        sellers = User.objects.filter(is_seller=True)
+        return render(
+                    request,
+                    '../templates/users_profile/search_seller_product.html',
+                    {
+                        'sellers': sellers,
+                        'filter': 'Produtor'
+                    }
+                )
 
 
 class AddressView:
