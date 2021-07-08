@@ -4,7 +4,7 @@
 {% load crispy_forms_tags %}
 
 {% block title %} 
-<title>Visualizar vendedor</title>
+<title>Visualizar produtor</title>
 {% endblock %}
 
 {% block header %}
@@ -24,6 +24,16 @@
         {% if seller.phone_number %}
           <p>{{ seller.phone_number }}</p>
         {% endif %}
+        {% if seller.store_status %}
+          <p>Loja: {{ seller.store_status }}</p>
+        {% endif %}
+        <p>
+          {% if seller.delivery_price %}
+            Frete: R$ {{ seller.delivery_price }}
+          {% else %}
+            Grátis
+          {% endif %}
+        </p>
         <p>
           {{ seller.sale_description }}
         </p>

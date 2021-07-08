@@ -10,7 +10,7 @@
                 {% endif %}
                 <div class="d-flex justify-content-between">
                     <p>TOP Produtores</p>
-                    <a class="btn btn-secondary w-auto" href="{%url 'search_sellers'%}"">Visualizar tudo</a>
+                    <a class="btn btn-secondary w-auto" href="{%url 'search_sellers'%}">Visualizar tudo</a>
                 </div>
 
                 <!-- Carousel items -->
@@ -26,8 +26,12 @@
                                         </a>
                                     </div>
                                     <div class="body">
-                                        <h4 class="mb-0 mt-2">{{producers_recom.0.first_name}}</h4>
-                                        <h6>Entrega: {{producers_recom.0.delivery_price}}</h6>
+                                        <h4 class="mb-0 mt-2">
+                                            <a href="{%url 'view_seller' producers_recom.0.id%}">
+                                                {{producers_recom.0.first_name}}
+                                            </a>
+                                        </h4>
+                                        <h6>Entrega: R$ {{producers_recom.0.delivery_price}}</h6>
                                         <p>Loja: {{producers_recom.0.store_status}}</p>
                                         
                                     </div>
@@ -41,7 +45,11 @@
                                         </a>
                                     </div>
                                     <div class="body">
-                                        <h4 class="mb-0 mt-2">{{producers_recom.1.first_name}}</h4>
+                                        <h4 class="mb-0 mt-2">
+                                            <a href="{%url 'view_seller' producers_recom.1.id%}">
+                                                {{producers_recom.1.first_name}}
+                                            </a>
+                                        </h4>
                                         <h6>Entrega: {{producers_recom.1.delivery_price}}</h6>
                                         <p>Loja: {{producers_recom.1.store_status}}</p>
                                         
@@ -56,7 +64,11 @@
                                         </a>
                                     </div>
                                     <div class="body">
-                                        <h4 class="mb-0 mt-2">{{producers_recom.2.first_name}}</h4>
+                                        <h4 class="mb-0 mt-2">
+                                            <a href="{%url 'view_seller' producers_recom.2.id%}">
+                                                {{producers_recom.2.first_name}}
+                                            </a>    
+                                        </h4>
                                         <h6>Entrega: {{producers_recom.2.delivery_price}}</h6>
                                         <p>Loja: {{producers_recom.2.store_status}}</p>
                                         
@@ -71,7 +83,11 @@
                                         </a>
                                     </div>
                                     <div class="body">
-                                        <h4 class="mb-0 mt-2">{{producers_recom.3.first_name}}</h4>
+                                        <h4 class="mb-0 mt-2">
+                                            <a href="{%url 'view_seller' producers_recom.2.id%}">
+                                                {{producers_recom.3.first_name}}
+                                            </a>
+                                        </h4>
                                         <h6>Entrega: {{producers_recom.3.delivery_price}}</h6>
                                         <p>Loja: {{producers_recom.3.store_status}}</p>
                                         
@@ -94,7 +110,11 @@
                                             </a>
                                         </div>
                                         <div class="body">
-                                            <h4 class="mb-0 mt-2">{{producers_recom.4.first_name}}</h4>
+                                            <h4 class="mb-0 mt-2">
+                                                <a href="{%url 'view_seller' producers_recom.4.id%}">
+                                                    {{producers_recom.4.first_name}}
+                                                </a>
+                                            </h4>
                                             <h6>Entrega: {{producers_recom.4.delivery_price}}</h6>
                                             <p>Loja: {{producers_recom.4.store_status}}</p>
                                             
@@ -109,7 +129,11 @@
                                             </a>
                                         </div>
                                         <div class="body">
-                                            <h4 class="mb-0 mt-2">{{producers_recom.5.first_name}}</h4>
+                                            <h4 class="mb-0 mt-2">
+                                                <a href="{%url 'view_seller' producers_recom.5.id%}">
+                                                    {{producers_recom.5.first_name}}
+                                                </a>
+                                            </h4>
                                             <h6>Entrega: {{producers_recom.5.delivery_price}}</h6>
                                             <p>Loja: {{producers_recom.5.store_status}}</p>
                                             
@@ -124,7 +148,11 @@
                                             </a>
                                         </div>
                                         <div class="body">
-                                            <h4 class="mb-0 mt-2">{{producers_recom.6.first_name}}</h4>
+                                            <h4 class="mb-0 mt-2">
+                                                <a href="{%url 'view_seller' producers_recom.6.id%}">
+                                                    {{producers_recom.6.first_name}}
+                                                </a>
+                                            </h4>
                                             <h6>Entrega: {{producers_recom.6.delivery_price}}</h6>
                                             <p>Loja: {{producers_recom.6.store_status}}</p>
                                             
@@ -139,7 +167,11 @@
                                             </a>
                                         </div>
                                         <div class="body">
-                                            <h4 class="mb-0 mt-2">{{producers_recom.7.first_name}}</h4>
+                                            <h4 class="mb-0 mt-2">
+                                                <a href="{%url 'view_seller' producers_recom.7.id%}">
+                                                    {{producers_recom.7.first_name}}
+                                                </a>
+                                            </h4>
                                             <h6>Entrega: {{producers_recom.7.delivery_price}}</h6>
                                             <p>Loja: {{producers_recom.7.store_status}}</p>
                                             

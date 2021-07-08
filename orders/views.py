@@ -13,8 +13,18 @@ class CartProductView:
         if request.user.is_authenticated:
             user = request.user
             cart = CartProduct.objects.filter(user_id=user.id).order_by('-id')
+
+            total_value = OrderView.get_total_price(cart)
+            delivery_price = 0
+            if len(cart):
+                delivery_price = cart[0].get_delivery_price()
+
+            total_value += delivery_price
+
             return render(request, 'cart/home.html', {
                 "cart": cart,
+                'total_value': total_value,
+                'delivery_price': delivery_price
             })
         return redirect('login')
 
@@ -25,6 +35,11 @@ class CartProductView:
             if request.method == 'POST':
                 product_id = request.POST['product_id']
                 quantity = request.POST['quantity']
+                product = Product.objects.get(pk=product_id)
+                if product.stock_amount < int(quantity):
+                    messages.error(request,
+                        'Estoque do produto excedido, tente comprar de outro produtor.')
+                    return redirect('view_product', product_id=product_id)
                 try:
                     cart_product = CartProduct.objects.get(
                         user_id=user.id, product_id=product_id)
@@ -32,7 +47,6 @@ class CartProductView:
                     cart_product.save()
 
                 except CartProduct.DoesNotExist:
-                    product = Product.objects.get(pk=product_id)
                     cart_products = CartProduct.objects.filter(
                         user_id=user.id)
 
@@ -105,6 +119,7 @@ class OrderView:
                     payment_method = request.POST.get('payment_method')
                     address_id = request.POST.get('address')
                     change = request.POST.get('change', None)
+                    change = change.replace(',', '.')
                     address = None
                     if not payment_method:
                         messages.error(request, 'Selecione um método de pagamento.')
@@ -124,6 +139,8 @@ class OrderView:
                         return redirect('confirm_order')
 
                     total_price = OrderView.get_total_price(cart)
+                    total_price += cart[0].get_delivery_price()
+
                     payment = Payment(type=payment_method, status=0, change=change if change else 0)
                     payment.save()
                     order = Order(
@@ -131,6 +148,9 @@ class OrderView:
                     order.save()
 
                     for c in cart:
+                        c.product.stock_amount -= c.quantity
+                        c.product.save()
+
                         orderProduct = OrderProduct(
                             quantity=c.quantity, product=c.product, order=order)
                         orderProduct.save()
@@ -142,9 +162,16 @@ class OrderView:
 
                 addresses = Address.objects.filter(user=user)
                 cart = CartProduct.objects.filter(user_id=user.id).order_by('-id')
+                total_value = OrderView.get_total_price(cart)
+                delivery_price = 0
+                if len(cart):
+                    delivery_price = cart[0].get_delivery_price()
+                total_value += delivery_price
                 return render(request, 'cart/confirm_order.html', {
                     "cart": cart,
                     "addresses": addresses,
+                    "total_value": total_value,
+                    "delivery_price": delivery_price
                 })
 
             return redirect('cart')
@@ -202,13 +229,23 @@ class OrderView:
                 order = get_object_or_404(Order, id=order_id)
                 order.status = 4
                 order.save()
-            return redirect("list_all_orders")
+
+                order_products = OrderProduct.objects.filter(order_id=order.id)
+                for order_product in order_products:
+                    product = order_product.product
+                    product.stock_amount += order_product.quantity
+                    product.save()
+
+            if request.user.is_admin:
+                return redirect("list_all_orders")
+            else:
+                return redirect("list_user_orders")
         return redirect('login')
 
     @classmethod
     def list_all_orders(cls, request):
         if request.user.is_authenticated:
-            orders = Order.objects.all()
+            orders = Order.objects.all().order_by('-id')
             return render(request, '../templates/orders/list_seller_orders.html', {'orders': orders})
         return redirect('login')
 
@@ -218,7 +255,7 @@ class SellerOrderView:
     def list(cls, request):
         if request.user.is_authenticated:
             user = get_object_or_404(User, username=request.user.username)
-            orders = Order.objects.filter(orderproduct__product__user=user)
+            orders = Order.objects.filter(orderproduct__product__user=user).order_by('-id')
 
             return render(request, '../templates/orders/list_seller_orders.html', {'orders': orders})
 
@@ -228,8 +265,7 @@ class SellerOrderView:
     def index(cls, request):
         order_id = request.GET.get('order_id', None)
         if request.user.is_authenticated:
-            user = get_object_or_404(User, username=request.user.username)
-            order = Order.objects.get(id=order_id, orderproduct__product__user=user)
+            order = Order.objects.get(id=order_id)
             order_products = OrderProduct.objects.filter(order=order)
 
             return render(request, '../templates/orders/details_seller_order.html', {

@@ -14,7 +14,7 @@
 {% block content %}
     <div class="inner_container mt-4">
         <form class="input-group mb-4 border-custom rounded-pill mt-5 p-1" method="get" action="{% url 'search_products_admin'%}">
-            <input id="custom_table-search" name="table-search" type="search" placeholder="Procure por nome do produtor ou nome do produto" aria-describedby="button-addon3" class="form-control bg-white border-0">
+            <input id="custom_table-search" required name="table-search" type="search" placeholder="Procure por nome do produtor ou nome do produto" aria-describedby="button-addon3" class="form-control bg-white border-0">
             <div class="input-group-append border-0">
               <button id="button-search" type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
             </div>
