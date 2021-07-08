@@ -10,7 +10,8 @@ import os
 env = environ.Env()
 
 if os.getenv('BUILD_ON_TRAVIS', None):
-    TEST_ON_CHROME='on'
+    TEST_ON_FIREFOX='on'
+    FIREFOXDRIVER_PATH="geckodriver-v0.29.1-linux64/geckodriver"
 else:
     TEST_ON_CHROME = True if env('TEST_ON_CHROME') == 'on' else False
     TEST_ON_FIREFOX = True if env('TEST_ON_FIREFOX') == 'on' else False
