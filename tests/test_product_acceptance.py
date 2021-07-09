@@ -3,14 +3,17 @@ import environ
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 
 from users.models import User
 from products.models import Category, Product, Favorite
-
+import os
 env = environ.Env()
+chrome_options = Options()
 
-TEST_ON_CHROME = True if env('TEST_ON_CHROME') == 'on' else False
-TEST_ON_FIREFOX = True if env('TEST_ON_FIREFOX') == 'on' else False
+
+TEST_ON_CHROME = True if os.getenv('TEST_ON_CHROME') == 'on' else False
+TEST_ON_FIREFOX = True if os.getenv('TEST_ON_FIREFOX') == 'on' else False
 
 
 class ProductsTest(StaticLiveServerTestCase):
@@ -21,9 +24,12 @@ class ProductsTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
@@ -138,9 +144,12 @@ class FavoritesTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
@@ -292,9 +301,12 @@ class ProductsTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
