@@ -1,13 +1,39 @@
-language: python # => 1
-    python: # => 2
-      - "3.9"
-    services: # => 3
-      - mysql
-    env: # => 4
-      -DJANGO=1.8 DB=mysql
-    install: # => 5
-      - pip install -r requirements.txt
-    before_script: # => 6
-      - mysql -e 'create database test;' -u root
-    script: # => 7
-      - python manage.py test
+language: python
+
+python:
+  - "3.9"
+
+addons:
+  chrome: stable
+
+env:
+  global:
+    - DJANGO_SETTINGS_MODULE="Da_Roca.settings"
+    - PYTHONPATH="/home/travis/build/irisviana/Da_Roca"
+    - PIP_USE_MIRRORS=true
+    - BUILD_ON_TRAVIS=true
+    - TEST_ON_CHROME=on
+    - TEST_ON_FIREFOX=off
+    - CHROMEDRIVER_PATH="/usr/local/bin/chromedriver"
+  matrix:
+    - DJANGO=1.7 DB=sqlite3
+
+#commands to install dependencies
+install:
+  - pip install -q Django==$DJANGO
+  - pip install -q -r requirements.txt
+
+before_script:
+  - cp .env.travis Da_Roca/.env
+  - wget "https://chromedriver.storage.googleapis.com/91.0.4472.101/chromedriver_linux64.zip"
+  - unzip chromedriver_linux64.zip
+  - sudo mv chromedriver /usr/local/bin
+  - python manage.py makemigrations
+  - python manage.py migrate
+  - python manage.py runserver &
+
+
+#command to run the test suite
+script:
+  - python manage.py test
+
