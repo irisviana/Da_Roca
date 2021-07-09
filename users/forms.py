@@ -234,7 +234,7 @@ class AddressForm(forms.ModelForm):
             Field('house_number', placeholder='Número', min='0'),
             Submit('save', 'Cadastrar'),
         )
-       
+
 
 
 
