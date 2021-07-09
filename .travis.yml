@@ -10,7 +10,6 @@ addons:
 env:
   global:
     - DJANGO_SETTINGS_MODULE="Da_Roca.settings"
-    - PYTHONPATH="/home/travis/build/irisviana/Da_Roca"
     - PIP_USE_MIRRORS=true
     - BUILD_ON_TRAVIS=true
     - TEST_ON_CHROME=off
