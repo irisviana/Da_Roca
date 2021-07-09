@@ -5,12 +5,15 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 
 from orders.models import CartProduct, Order, OrderProduct, Payment
 from products.models import Category, Product
 from users.models import User, DeliveryTime, ServiceAddress, Address
 from users.utils import check_has_class
 import os 
+
+chrome_options = Options()
 env = environ.Env()
 
 
@@ -26,7 +29,11 @@ class UsersTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
+            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path=os.getenv('FIREFOXDRIVER_PATH'))
 
@@ -464,6 +471,8 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
             cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'))
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
@@ -669,7 +678,10 @@ class CategoryTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
@@ -819,7 +831,9 @@ class CartProductTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
@@ -1381,7 +1395,10 @@ class OrderTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
@@ -1544,7 +1561,10 @@ class RatingTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
@@ -1700,7 +1720,10 @@ class AddressTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 

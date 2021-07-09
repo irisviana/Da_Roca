@@ -3,12 +3,13 @@ import environ
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 
 from users.models import User
 from products.models import Category, Product, Favorite
 import os
 env = environ.Env()
-
+chrome_options = Options()
 
 
 TEST_ON_CHROME = True if os.getenv('TEST_ON_CHROME') == 'on' else False
@@ -23,7 +24,10 @@ class ProductsTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
@@ -140,7 +144,10 @@ class FavoritesTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
@@ -294,7 +301,10 @@ class ProductsTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 

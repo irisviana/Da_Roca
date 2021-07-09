@@ -2,13 +2,14 @@ import environ
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.chrome.options import Options
 
 from orders.models import CartProduct
 from products.models import Category, Product
 from users.models import User, Address
 import os 
 env = environ.Env()
-
+chrome_options = Options()
 
 TEST_ON_CHROME = True if os.getenv('TEST_ON_CHROME') == 'on' else False
 TEST_ON_FIREFOX = True if os.getenv('TEST_ON_FIREFOX') == 'on' else False
@@ -22,7 +23,10 @@ class OrderTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path=os.getenv('FIREFOXDRIVER_PATH'))
 
