@@ -54,6 +54,10 @@
                             </td>
                         </tr>
                     {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="7">{% if search %}Nenhum produto encontrado na pesquisa{% else %}Nenhum produto cadastrado{% endif %}</td>
+                    </tr>
                 {% endif %}
             </tbody>
         </table>
