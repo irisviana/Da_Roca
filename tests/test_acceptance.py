@@ -11,7 +11,7 @@ from orders.models import CartProduct, Order, OrderProduct, Payment
 from products.models import Category, Product
 from users.models import User, DeliveryTime, ServiceAddress, Address
 from users.utils import check_has_class
-import os 
+import os
 
 chrome_options = Options()
 env = environ.Env()
@@ -32,8 +32,6 @@ class UsersTest(StaticLiveServerTestCase):
             chrome_options.add_argument("--headless")
             chrome_options.add_argument('--no-sandbox')
             cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
-            
-            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path=os.getenv('FIREFOXDRIVER_PATH'))
 
