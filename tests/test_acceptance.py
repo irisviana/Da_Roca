@@ -386,6 +386,8 @@ class UsersTest(StaticLiveServerTestCase):
         driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
         search_input = driver.find_element_by_id("search_")
         search_input.send_keys(user.first_name)
+        driver.find_element_by_id("filterSearchDropdown").click()
+        driver.find_element_by_xpath("//input[@value=\"option1\"]").click()
         driver.find_element_by_id("button-addon3").click()
         assert user.first_name in driver.page_source
 
@@ -402,6 +404,8 @@ class UsersTest(StaticLiveServerTestCase):
         self.test_login()
         driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
         search_input = driver.find_element_by_id("search_")
+        driver.find_element_by_id("filterSearchDropdown").click()
+        driver.find_element_by_xpath("//input[@value=\"option1\"]").click()
         search_input.send_keys(user.first_name)
         assert user.first_name not in driver.page_source
 
@@ -424,7 +428,7 @@ class UsersTest(StaticLiveServerTestCase):
         search_input.send_keys("1")
         driver.find_element_by_id("save").click()
 
-        assert price_old in driver.page_source
+        assert price_old != driver.find_element_by_name("price").get_attribute('value')
 
     def test_delete_product_by_admin(self):
         user = User.objects.create(

@@ -435,8 +435,9 @@ class ProductsTest(StaticLiveServerTestCase):
         self.test_login()
         driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
         search_input = driver.find_element_by_id('search_')
-        driver.find_element_by_xpath("//input[@id=\"produto\"]").click()
         search_input.send_keys(maca_product.name)
+        driver.find_element_by_id("filterSearchDropdown").click()
+        driver.find_element_by_xpath("//input[@value=\"option2\"]").click()
         driver.find_element_by_id("button-addon3").click()
         assert maca_product.name in driver.page_source
 
@@ -463,6 +464,7 @@ class ProductsTest(StaticLiveServerTestCase):
         self.test_login()
         driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
         search_input = driver.find_element_by_id('search_')
-        driver.find_element_by_xpath("//input[@id=\"produto\"]").click()
+        driver.find_element_by_id("filterSearchDropdown").click()
+        driver.find_element_by_xpath("//input[@value=\"option2\"]").click()
         search_input.send_keys(maca_product.name)
         assert maca_product.name not in driver.page_source
