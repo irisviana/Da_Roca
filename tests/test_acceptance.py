@@ -475,9 +475,9 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         if TEST_ON_CHROME:
             chrome_options.add_argument("--headless")
             chrome_options.add_argument('--no-sandbox')
-            cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path=os.getenv('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
@@ -632,7 +632,8 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Sexta-feira']").click()
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
 
-        assert 'Quando você irá atender?' == driver.title
+        input_required = driver.find_element_by_xpath('//input[@required=\"\"]')
+        assert input_required
 
     def test_delete_delivery_time(self):
         # Use already created delivery time
@@ -683,7 +684,6 @@ class CategoryTest(StaticLiveServerTestCase):
             chrome_options.add_argument("--headless")
             chrome_options.add_argument('--no-sandbox')
             cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
-            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
@@ -981,7 +981,7 @@ class CartProductTest(StaticLiveServerTestCase):
         driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
         quantity = driver.find_element_by_name("quantity")
         quantity.clear()
-        quantity.send_keys('30')
+        quantity.send_keys(30)
         quantity.send_keys(Keys.TAB)
         assert '30' == quantity.get_attribute('value')
 
@@ -1400,7 +1400,6 @@ class OrderTest(StaticLiveServerTestCase):
             chrome_options.add_argument("--headless")
             chrome_options.add_argument('--no-sandbox')
             cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
-            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
@@ -1566,7 +1565,6 @@ class RatingTest(StaticLiveServerTestCase):
             chrome_options.add_argument("--headless")
             chrome_options.add_argument('--no-sandbox')
             cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
-            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
@@ -1725,7 +1723,6 @@ class AddressTest(StaticLiveServerTestCase):
             chrome_options.add_argument("--headless")
             chrome_options.add_argument('--no-sandbox')
             cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
-            
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
