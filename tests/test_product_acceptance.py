@@ -3,14 +3,17 @@ import environ
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.options import Options
 
 from users.models import User
 from products.models import Category, Product, Favorite
-
+import os
 env = environ.Env()
+chrome_options = Options()
 
-TEST_ON_CHROME = True if env('TEST_ON_CHROME') == 'on' else False
-TEST_ON_FIREFOX = True if env('TEST_ON_FIREFOX') == 'on' else False
+
+TEST_ON_CHROME = True if os.getenv('TEST_ON_CHROME') == 'on' else False
+TEST_ON_FIREFOX = True if os.getenv('TEST_ON_FIREFOX') == 'on' else False
 
 
 class ProductsTest(StaticLiveServerTestCase):
@@ -21,9 +24,12 @@ class ProductsTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
@@ -138,9 +144,12 @@ class FavoritesTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
@@ -292,9 +301,12 @@ class ProductsTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
@@ -423,8 +435,9 @@ class ProductsTest(StaticLiveServerTestCase):
         self.test_login()
         driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
         search_input = driver.find_element_by_id('search_')
-        driver.find_element_by_xpath("//input[@id=\"produto\"]").click()
         search_input.send_keys(maca_product.name)
+        driver.find_element_by_id("filterSearchDropdown").click()
+        driver.find_element_by_xpath("//input[@value=\"option2\"]").click()
         driver.find_element_by_id("button-addon3").click()
         assert maca_product.name in driver.page_source
 
@@ -451,6 +464,7 @@ class ProductsTest(StaticLiveServerTestCase):
         self.test_login()
         driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
         search_input = driver.find_element_by_id('search_')
-        driver.find_element_by_xpath("//input[@id=\"produto\"]").click()
+        driver.find_element_by_id("filterSearchDropdown").click()
+        driver.find_element_by_xpath("//input[@value=\"option2\"]").click()
         search_input.send_keys(maca_product.name)
         assert maca_product.name not in driver.page_source

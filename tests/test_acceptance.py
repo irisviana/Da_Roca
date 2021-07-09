@@ -5,16 +5,20 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.chrome.options import Options
 
 from orders.models import CartProduct, Order, OrderProduct, Payment
 from products.models import Category, Product
 from users.models import User, DeliveryTime, ServiceAddress, Address
 from users.utils import check_has_class
+import os
 
+chrome_options = Options()
 env = environ.Env()
 
-TEST_ON_CHROME = True if env('TEST_ON_CHROME') == 'on' else False
-TEST_ON_FIREFOX = True if env('TEST_ON_FIREFOX') == 'on' else False
+
+TEST_ON_CHROME = True if os.getenv('TEST_ON_CHROME') == 'on' else False
+TEST_ON_FIREFOX = True if os.getenv('TEST_ON_FIREFOX') == 'on' else False
 
 
 class UsersTest(StaticLiveServerTestCase):
@@ -25,9 +29,11 @@ class UsersTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path=env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path=env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path=os.getenv('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
@@ -380,6 +386,8 @@ class UsersTest(StaticLiveServerTestCase):
         driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
         search_input = driver.find_element_by_id("search_")
         search_input.send_keys(user.first_name)
+        driver.find_element_by_id("filterSearchDropdown").click()
+        driver.find_element_by_xpath("//input[@value=\"option1\"]").click()
         driver.find_element_by_id("button-addon3").click()
         assert user.first_name in driver.page_source
 
@@ -396,6 +404,8 @@ class UsersTest(StaticLiveServerTestCase):
         self.test_login()
         driver.get('%s%s' % (self.live_server_url, f"/user/customer_home"))
         search_input = driver.find_element_by_id("search_")
+        driver.find_element_by_id("filterSearchDropdown").click()
+        driver.find_element_by_xpath("//input[@value=\"option1\"]").click()
         search_input.send_keys(user.first_name)
         assert user.first_name not in driver.page_source
 
@@ -418,7 +428,7 @@ class UsersTest(StaticLiveServerTestCase):
         search_input.send_keys("1")
         driver.find_element_by_id("save").click()
 
-        assert price_old in driver.page_source
+        assert price_old != driver.find_element_by_name("price").get_attribute('value')
 
     def test_delete_product_by_admin(self):
         user = User.objects.create(
@@ -463,9 +473,11 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
 
         cls.selenium = None
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path=os.getenv('FIREFOXDRIVER_PATH'))
 
         #Choose your url to visit
         cls.selenium.get('http://127.0.0.1:8000')
@@ -616,11 +628,12 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
 
         # Update fields
         time_input = driver.find_element_by_name("time")
-        time_input.send_keys('')
+        time_input.clear()
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Sexta-feira']").click()
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
 
-        assert 'Quando você irá atender?' == driver.title
+        validation = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='time']")))
+        assert validation.get_attribute("validationMessage")
 
     def test_delete_delivery_time(self):
         # Use already created delivery time
@@ -668,9 +681,11 @@ class CategoryTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
         cls.selenium.get('http://127.0.0.1:8000')
 
@@ -818,9 +833,11 @@ class CartProductTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
         cls.selenium.get('http://127.0.0.1:8000')
 
@@ -962,11 +979,10 @@ class CartProductTest(StaticLiveServerTestCase):
             quantity=1
         )
         driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
-        quantity = driver.find_element_by_name("quantity")
-        quantity.clear()
-        quantity.send_keys('30')
-        quantity.send_keys(Keys.TAB)
-        assert '30' == quantity.get_attribute('value')
+        quantity_type = driver.find_element_by_name("quantity")
+        quantity_type.send_keys(Keys.DELETE + '30' + Keys.TAB)
+        quantity_assert = driver.find_element_by_name("quantity")
+        assert '30' == quantity_assert.get_attribute('value')
 
     def test_remove_cart_product(self):
         user = User.objects.create(
@@ -1026,8 +1042,7 @@ class CartProductTest(StaticLiveServerTestCase):
         )
         driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
         quantity = driver.find_element_by_name("quantity")
-        quantity.send_keys('1')
-        quantity.send_keys(Keys.TAB)
+        quantity.send_keys('1' + Keys.TAB)
         WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[@class=\"alert cart-item message error\"]")))
         assert 'Quantidade de estoque excedida.' in driver.page_source
 
@@ -1380,9 +1395,11 @@ class OrderTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
         cls.selenium.get('http://127.0.0.1:8000')
 
@@ -1543,9 +1560,11 @@ class RatingTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
         cls.selenium.get('http://127.0.0.1:8000')
 
@@ -1699,9 +1718,11 @@ class AddressTest(StaticLiveServerTestCase):
         cls.selenium = None
 
         if TEST_ON_CHROME:
-            cls.selenium = webdriver.Chrome(executable_path = env('CHROMEDRIVER_PATH'))
+            chrome_options.add_argument("--headless")
+            chrome_options.add_argument('--no-sandbox')
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
         elif TEST_ON_FIREFOX:
-            cls.selenium = webdriver.Firefox(executable_path = env('FIREFOXDRIVER_PATH'))
+            cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
         cls.selenium.get('http://127.0.0.1:8000')
 
