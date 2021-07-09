@@ -4,7 +4,8 @@ python:
   - "3.9"
 
 addons:
-  firefox: stable
+  firefox: 
+    - "89.0.2"
 
 env:
   global:
