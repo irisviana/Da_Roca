@@ -979,11 +979,10 @@ class CartProductTest(StaticLiveServerTestCase):
             quantity=1
         )
         driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
-        quantity = driver.find_element_by_name("quantity")
-        quantity.clear()
-        quantity.send_keys(30)
-        quantity.send_keys(Keys.TAB)
-        assert '30' == quantity.get_attribute('value')
+        quantity_type = driver.find_element_by_name("quantity")
+        quantity_type.send_keys(Keys.DELETE + '30' + Keys.TAB)
+        quantity_assert = driver.find_element_by_name("quantity")
+        assert '30' == quantity_assert.get_attribute('value')
 
     def test_remove_cart_product(self):
         user = User.objects.create(
@@ -1043,8 +1042,7 @@ class CartProductTest(StaticLiveServerTestCase):
         )
         driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
         quantity = driver.find_element_by_name("quantity")
-        quantity.send_keys('1')
-        quantity.send_keys(Keys.TAB)
+        quantity.send_keys('1' + Keys.TAB)
         WebDriverWait(driver, 20).until(EC.visibility_of_element_located((By.XPATH, "//div[@class=\"alert cart-item message error\"]")))
         assert 'Quantidade de estoque excedida.' in driver.page_source
 
