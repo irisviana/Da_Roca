@@ -3,7 +3,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 
-from orders.models import CartProduct
+from orders.models import CartProduct, Order
 from products.models import Category, Product
 from users.models import User, Address
 
@@ -89,7 +89,7 @@ class OrderTest(StaticLiveServerTestCase):
         driver.get('%s%s' % (self.live_server_url, "/order/cart/"))
         driver.find_element_by_xpath("//a[@title=\"Prosseguir compra\"]").click()
         driver.find_element_by_class_name("address").click()
-        driver.find_element_by_id("C").click()
+        driver.find_element_by_id("CC").click()
         driver.find_element_by_xpath("//button[@title=\"Finalizar compra\"]").click()
         assert 'Pedido feito com sucesso.' in driver.page_source
 
@@ -137,3 +137,45 @@ class OrderTest(StaticLiveServerTestCase):
             "value")
 
         assert select_option == '3'
+
+    def test_search_order_by_id(self):
+        driver = self.selenium
+        self.test_create_order()
+        order = Order.objects.all()[:1].get()
+        driver.get('%s%s' % (self.live_server_url, "/order/list_all_orders/"))
+        search_input = driver.find_element_by_xpath('//input[@placeholder=\"Procure por nome do cliente, ID ou cidade do pedido\"]')
+        search_input.send_keys(order.id)
+        driver.find_element_by_id("button-search").click()
+
+        driver.find_element_by_xpath(f"//a[@href=\"/order/seller/datails?order_id={order.id}\"]")
+
+    def test_search_order_by_client_name(self):
+        driver = self.selenium
+        self.test_create_order()
+        order = Order.objects.all()[:1].get()
+        driver.get('%s%s' % (self.live_server_url, "/order/list_all_orders/"))
+        search_input = driver.find_element_by_xpath('//input[@placeholder=\"Procure por nome do cliente, ID ou cidade do pedido\"]')
+        search_input.send_keys(order.user.first_name)
+        driver.find_element_by_id("button-search").click()
+
+        driver.find_element_by_xpath(f"//a[@href=\"/order/seller/datails?order_id={order.id}\"]")
+
+    def test_search_order_by_inexistent_id(self):
+        driver = self.selenium
+        self.test_create_order()
+        driver.get('%s%s' % (self.live_server_url, "/order/list_all_orders/"))
+        search_input = driver.find_element_by_xpath('//input[@placeholder=\"Procure por nome do cliente, ID ou cidade do pedido\"]')
+        search_input.send_keys('0')
+        driver.find_element_by_id("button-search").click()
+
+        assert 'Nenhum pedido encontrado na pesquisa' in driver.page_source
+
+    def test_search_order_by_inexistent_client_name(self):
+        driver = self.selenium
+        self.test_create_order()
+        driver.get('%s%s' % (self.live_server_url, "/order/list_all_orders/"))
+        search_input = driver.find_element_by_xpath('//input[@placeholder=\"Procure por nome do cliente, ID ou cidade do pedido\"]')
+        search_input.send_keys('Maria')
+        driver.find_element_by_id("button-search").click()
+
+        assert 'Nenhum pedido encontrado na pesquisa' in driver.page_source
