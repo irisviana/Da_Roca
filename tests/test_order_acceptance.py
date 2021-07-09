@@ -160,7 +160,7 @@ class OrderTest(StaticLiveServerTestCase):
 
         driver.find_element_by_xpath(f"//a[@href=\"/order/seller/datails?order_id={order.id}\"]")
 
-    def test_search_order_by_id(self):
+    def test_search_order_by_inexistent_id(self):
         driver = self.selenium
         self.test_create_order()
         driver.get('%s%s' % (self.live_server_url, "/order/list_all_orders/"))
@@ -170,7 +170,7 @@ class OrderTest(StaticLiveServerTestCase):
 
         assert 'Nenhum pedido encontrado na pesquisa' in driver.page_source
 
-    def test_search_order_by_name(self):
+    def test_search_order_by_inexistent_client_name(self):
         driver = self.selenium
         self.test_create_order()
         driver.get('%s%s' % (self.live_server_url, "/order/list_all_orders/"))
