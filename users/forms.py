@@ -31,8 +31,8 @@ class UserForm(forms.ModelForm):
         self.helper = FormHelper(self)
         self.helper.form_show_labels = False
         self.helper.layout = Layout(
-            Field('first_name', placeholder='Nome'),
-            Field('last_name', placeholder='Sobrenome'),
+            Field('first_name', placeholder='Nome', minlength='3'),
+            Field('last_name', placeholder='Sobrenome', minlength='3'),
             Field('cpf', placeholder='CPF'),
             Field('phone_number', placeholder='Número de telefone'),
             Field('email', placeholder='E-mail'),
@@ -81,9 +81,9 @@ class UserUpdateForm(forms.ModelForm):
         self.helper.form_show_labels = False
         self.helper.layout = Layout(
             Field('user_pic',placeholder='Foto'),
-            Field('first_name', placeholder='Nome'),
-            Field('last_name', placeholder='Sobrenome'),
-            Field('phone_number', placeholder='Número de telefone'),
+            Field('first_name', placeholder='Nome', minlength='3', type='text'),
+            Field('last_name', placeholder='Sobrenome', minlength='3', type='text'),
+            Field('phone_number', placeholder='Número de telefone', minlength='15'),
             Submit('save', 'Atualizar'),
 
         )
@@ -228,12 +228,14 @@ class AddressForm(forms.ModelForm):
         self.helper.layout = Layout(
             Field('zip_code', placeholder='CEP'),
             Field('state', placeholder='Estado'),
-            Field('city', placeholder='Cidade'),
-            Field('district', placeholder='Bairro'),
-            Field('street', placeholder='Rua'),
-            Field('house_number', placeholder='Número'),
+            Field('city', placeholder='Cidade', minlength='5', type='text'),
+            Field('district', placeholder='Bairro', minlength='5', type='text'),
+            Field('street', placeholder='Rua', minlength='5', type='text'),
+            Field('house_number', placeholder='Número', min='0'),
             Submit('save', 'Cadastrar'),
         )
+
+
 
 
 class DeliveryTimeForm(forms.ModelForm):

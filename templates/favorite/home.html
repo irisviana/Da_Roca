@@ -39,7 +39,7 @@
                         </div>
                     </td>
                     <td><a href="{% url 'view_product' favorite.product.id %}">{{ favorite.product.name }}</a></td>
-                    <td><a href="{% url 'view_seller' favorite.product.user.id %}">{{ favorite.user.first_name }}</a></td>
+                    <td><a href="{% url 'view_seller' favorite.product.user.id %}">{{ favorite.product.user.first_name }}</a></td>
                     <td>{{ favorite.product.variety}}</td>
                 </tr>
                 {% endfor %}
