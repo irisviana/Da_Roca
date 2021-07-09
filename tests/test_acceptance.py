@@ -475,7 +475,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         if TEST_ON_CHROME:
             chrome_options.add_argument("--headless")
             chrome_options.add_argument('--no-sandbox')
-            cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'))
+            cls.selenium = webdriver.Chrome(executable_path = os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path = os.getenv('FIREFOXDRIVER_PATH'))
 
