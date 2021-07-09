@@ -475,7 +475,7 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
         if TEST_ON_CHROME:
             chrome_options.add_argument("--headless")
             chrome_options.add_argument('--no-sandbox')
-            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'),options=chrome_options)
+            cls.selenium = webdriver.Chrome(executable_path=os.getenv('CHROMEDRIVER_PATH'))#,options=chrome_options)
         elif TEST_ON_FIREFOX:
             cls.selenium = webdriver.Firefox(executable_path=os.getenv('FIREFOXDRIVER_PATH'))
 
@@ -628,12 +628,12 @@ class DeliveryTimeTest(StaticLiveServerTestCase):
 
         # Update fields
         time_input = driver.find_element_by_name("time")
-        time_input.send_keys('')
+        time_input.clear()
         driver.find_element_by_xpath("//select[@name='day']/option[text()='Sexta-feira']").click()
         driver.find_element_by_xpath("//input[@type=\"submit\"]").click()
 
-        input_required = driver.find_element_by_xpath('//input[@required=\"\"]')
-        assert input_required
+        validation = WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='time']")))
+        assert validation.get_attribute("validationMessage")
 
     def test_delete_delivery_time(self):
         # Use already created delivery time
