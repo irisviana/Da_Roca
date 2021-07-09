@@ -4,6 +4,8 @@ mercializar seus produtos, recebendo pedidos de clientes da região e realizando
 Já os clientes dos produtos poderão acessar a vitrine de produtos disponíveis, pesquisar por
 produtos, realizar a compra e aguardar receber sem sair de casa.
 
+[![Build Status](https://app.travis-ci.com/irisviana/Da_Roca.svg?branch=main)](https://app.travis-ci.com/irisviana/Da_Roca)
+
 ## Equipe
 - [Amanda Colatino](https://github.com/amandacl)
 - [Íris Viana](https://github.com/irisviana)
